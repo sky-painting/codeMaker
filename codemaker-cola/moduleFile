@@ -1,0 +1,6 @@
+1.cola-adapter:适配器对外接口模块
+2.cola-app:上层应用模块
+3.cola-client:客户端依赖模块
+4.cola-domain:领域服务模块
+5.cola-infrastructure:基础设施模块
+6.cola-start:应用启动服务模块
