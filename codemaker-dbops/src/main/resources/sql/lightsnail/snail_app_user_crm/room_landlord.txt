@@ -1,0 +1,9 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT  COMMENT "房东id，主键id",
+chinese_name  varchar(50)    NOT NULL default "" comment "房东姓名",
+card_number varchar(50) NOT NULL DEFAULT "" comment "房东身份证号",
+card_number_urls varchar(200) NOT NULL DEFAULT "" comment "房东人身份证图片(正反面)",
+handphone varchar(20) NOT NULL DEFAULT "" comment "房东电话",
+check_status tinyint(4) NOT NULL DEFAULT 0 comment "审核状态",
+PRIMARY KEY (id),
+INDEX `idx_handphone` (`handphone`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房东表";

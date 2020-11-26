@@ -1,0 +1,6 @@
+1.resource/sql文件夹下的是应用名（比如轻蜗牛租房业务，优品电商，云OA平台,轻蜗牛下的房产买卖业务）
+2.resource/sql/lightsnail/文件夹下的是整个业务中的不同领域表结构设计文件
+3.resource/sql/lightsnail/sql-readme说明整体的子模块分别负责什么表
+4.resource/sql/lightsnail/snail_app_room:轻蜗牛租房架构中的房源信息模块
+5.resource/sql/lightsnail/snail_app_room/ops:轻蜗牛租房架构中的房源信息模块中的字段变更
+包括column 和index 字段

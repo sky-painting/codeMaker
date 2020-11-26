@@ -1,0 +1,13 @@
+(id   BIGINT(20)  unsigned  NOT NULL   AUTO_INCREMENT COMMENT "主键id",
+chinese_name  VARCHAR(100)  NOT NULL default "" comment "招商对象名称",
+handphone   VARCHAR(20)    NOT NULL default "" comment "联系电话",
+investment_type  tinyint(4)  NOT NULL default 0 comment "招商类型",
+company_address   VARCHAR(200) NOT NULL default "" comment "公司地址",
+start_time   Date NOT NULL DEFAULT "2001-01-01" comment "合作开始时间",
+end_time   Date NOT NULL DEFAULT "2001-01-01" comment "合作结束时间",
+is_openaccount tinyint(4) NOT NULL default 0 comment "是否开通账号",
+account_id BIGINT(20) NOT NULL default 0 comment "会员账号id",
+create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "记录创建时间",
+PRIMARY KEY (id),
+INDEX `idx_account_id` (`account_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "招商服务注册表";

@@ -1,0 +1,11 @@
+(id   BIGINT(20)  unsigned  NOT NULL   AUTO_INCREMENT COMMENT "代理人id，主键id" ,
+publisher_id  BIGINT(20)   NOT NULL default 0 comment "发布人id",
+publisher_type  tinyint(4)   NOT NULL default 0 comment "发布人类型(0:房东直发,1:代理人发布,2:中介发布)",
+room_source_id BIGINT(20) NOT NULL DEFAULT 0 comment "真实房源id",
+publish_source_id BIGINT(20) NOT NULL DEFAULT 0 comment "发布的房源id",
+create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "记录创建时间/发布时间",
+PRIMARY KEY (id),
+INDEX `idx_room_agent_id` (`publisher_id`) USING BTREE,
+INDEX `idx_room_source_id` (`room_source_id`) USING BTREE,
+INDEX `idx_publish_source_id` (`publish_source_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "代理人-房源发布表";

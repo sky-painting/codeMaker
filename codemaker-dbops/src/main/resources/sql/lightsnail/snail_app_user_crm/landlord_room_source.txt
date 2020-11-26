@@ -1,0 +1,12 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT COMMENT "房源表id",
+landlord_id  BIGINT(20)   NOT NULL default 0 comment "房东id",
+area_id    int(11)  NOT NULL default 0 comment "房源所属行政区域id",
+area_code   varchar(50) NOT NULL DEFAULT "" comment "房源所属小区",
+floor_address varchar(200) NOT NULL DEFAULT "" comment "房源所在楼层单元地址",
+handphone varchar(20) NOT NULL DEFAULT "" comment "房东电话",
+`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "账号创建时间",
+room_form_type tinyint(4) NOT NULL DEFAULT 0 comment "户型类型",
+source_numbers tinyint(4) NOT NULL DEFAULT 0 comment "可出租房间数量",
+PRIMARY KEY (id),
+INDEX `idx_landlord_id` (`landlord_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房东-房源表";

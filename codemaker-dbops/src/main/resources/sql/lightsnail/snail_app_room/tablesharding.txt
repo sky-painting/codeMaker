@@ -1,0 +1,6 @@
+room_source:4
+room_picture:8
+room_content:8
+room_meeting:8
+room_comment:8
+room_like:8

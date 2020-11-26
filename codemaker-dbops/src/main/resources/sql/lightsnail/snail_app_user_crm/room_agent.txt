@@ -1,0 +1,8 @@
+(id   BIGINT(20)  unsigned  NOT NULL  AUTO_INCREMENT COMMENT "代理人id，主键id" ,
+chinese_name  varchar(50)   NOT NULL default "" comment "代理人姓名",
+card_number varchar(50) NOT NULL DEFAULT "" comment "代理人身份证号",
+card_number_urls varchar(200) NOT NULL DEFAULT "" comment "代理人身份证图片(正反面)",
+handphone varchar(20) NOT NULL DEFAULT "" comment "代理人电话",
+area_codes varchar(50) NOT NULL DEFAULT "" comment "代理小区列表",
+PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "代理人表";

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lightsnail.app.user.crm.core.mapper.RoomAgentOrderMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lightsnail.app.user.crm.core.entity.RoomAgentOrderEntity">
+        <result column="id" property="id" />
+        <result column="agent_account_id" property="agentAccountId" />
+        <result column="landlord_account_id" property="landlordAccountId" />
+        <result column="room_source_id" property="roomSourceId" />
+        <result column="create_time" property="createTime" />
+        <result column="order_time" property="orderTime" />
+        <result column="tip_money" property="tipMoney" />
+        <result column="settlement_form" property="settlementForm" />
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,agent_account_id,landlord_account_id,room_source_id,create_time,order_time,tip_money,settlement_form
+    </sql>
+
+    <insert id="insert" parameterType="com.lightsnail.app.user.crm.core.entity.RoomAgentOrderEntity">
+        insert into room_agent_order(
+        agent_account_landlord_account_room_source_create_time,order_time,tip_money,settlement_form
+        )
+        values(
+        #{agent_account_id},#{landlord_account_id},#{room_source_id},#{create_time},#{order_time},#{tip_money},#{settlement_form}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lightsnail.app.user.crm.core.entity.RoomAgentOrderEntity">
+        update room_agent_order
+        set
+        agent_account_id=#{agent_account_id},landlord_account_id=#{landlord_account_id},room_source_id=#{room_source_id},create_time=#{create_time},order_time=#{order_time},tip_money=#{tip_money},settlement_form=#{settlement_form}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultType="com.lightsnail.app.user.crm.core.entity.RoomAgentOrderEntity">
+        select <include refid="Base_Column_List" />  from room_agent_order
+    </select>
+
+    <select id="getById" parameterType="com.lightsnail.app.user.crm.core.entity.RoomAgentOrderEntity"
+            resultType="com.lightsnail.app.user.crm.core.entity.RoomAgentOrderEntity">
+        select <include refid="Base_Column_List" /> from room_agent_order  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from room_agent_order where id = #{id}
+    </delete>
+
+</mapper>

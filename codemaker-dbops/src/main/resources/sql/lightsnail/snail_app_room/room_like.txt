@@ -1,0 +1,5 @@
+(room_source_id   BIGINT(20)  unsigned  NOT NULL default 0  COMMENT "房源id",
+snail_user_id  BIGINT(20)  unsigned  NOT NULL default 0 comment "用户id",
+create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "创建时间",
+PRIMARY KEY (room_source_id,snail_user_id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房源收藏/关注表";

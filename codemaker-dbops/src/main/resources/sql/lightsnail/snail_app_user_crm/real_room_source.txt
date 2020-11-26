@@ -1,0 +1,16 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT COMMENT "出租房源表id",
+landlord_id  BIGINT(20)   NOT NULL default 0 comment "房东id",
+landlord_room_source_id  BIGINT(20)   NOT NULL default 0 comment "房源表主表id",
+room_status tinyint(4) NOT NULL DEFAULT 0 comment "房屋状态",
+support_equipments varchar(100) NOT NULL DEFAULT "" comment "支持的房屋设备",
+money_water int(11) NOT NULL DEFAULT 0 comment "水费/吨",
+money_thunder int(11) NOT NULL DEFAULT 0 comment "电费/度",
+internet int(11) NOT NULL DEFAULT 0 comment "网费/月",
+manage_cost int(11) NOT NULL DEFAULT 0 comment "物业费/月",
+car_park_cost int(11) NOT NULL DEFAULT 0 comment "停车费/月",
+rent_start_time Date NOT NULL DEFAULT "2001-01-01" comment "出租开始时间",
+rent_end_time Date NOT NULL DEFAULT "2001-01-01" comment "出租结束时间",
+PRIMARY KEY (id),
+INDEX `idx_landlord_id` (`landlord_id`) USING BTREE,
+INDEX `idx_landlord_room_source_id` (`landlord_room_source_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房东-房源表";

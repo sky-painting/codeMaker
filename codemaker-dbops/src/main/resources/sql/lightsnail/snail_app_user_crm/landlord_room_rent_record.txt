@@ -1,0 +1,14 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT  COMMENT "主键id" ,
+landlord_id  BIGINT(20)   NOT NULL default 0 comment "房东id",
+room_source_id BIGINT(20) NOT NULL DEFAULT 0 comment "房源id",
+room_agent_id BIGINT(20) NOT NULL DEFAULT 0 comment "代理人id",
+room_source_index int(11) NOT NULL DEFAULT 0 comment "房源房屋序号索引",
+user_id BIGINT(20) NOT NULL DEFAULT 0 comment "用户id",
+contract_id BIGINT(20) NOT NULL DEFAULT 0 comment "合同ID",
+rent_start_time Date NOT NULL DEFAULT "2001-01-01" comment "出租开始时间",
+rent_end_time Date NOT NULL DEFAULT "2001-01-01" comment "出租结束时间",
+real_end_time Date NOT NULL DEFAULT "2001-01-01" comment "出租实际结束时间",
+create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "记录创建时间",
+update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "记录修改时间",
+PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房源出租记录表";

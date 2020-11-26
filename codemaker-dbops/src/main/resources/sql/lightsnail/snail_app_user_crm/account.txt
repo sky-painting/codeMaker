@@ -1,0 +1,10 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT  COMMENT "账号id",
+nick_name  varchar(100)   NOT NULL default "" comment "账号昵称",
+pass_word varchar(100) NOT NULL DEFAULT "" comment "密码",
+account_type tinyint(4) NOT NULL DEFAULT 0 comment "账号类型（代理人，房东，招商用户）",
+member_id BIGINT(20)    NOT NULL default 0  COMMENT "代理人，房东，招商用户id ",
+status tinyint(4) NOT NULL DEFAULT 0 comment "账号状态",
+handphone varchar(100) NOT NULL DEFAULT "" comment "电话号码",
+PRIMARY KEY (id),
+INDEX `idx_member_id` (`member_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "合作用户表";

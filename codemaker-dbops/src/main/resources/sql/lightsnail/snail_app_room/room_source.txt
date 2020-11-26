@@ -1,0 +1,18 @@
+(id   BIGINT(20)  unsigned  NOT NULL  COMMENT "",
+publish_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "发布时间",
+publish_user_id bigint(20) not null default 0 comment "发布人id",
+publish_user_type tinyint(4) not null default 0 comment "发布人类型",
+city_id int(11) NOT null default 0 comment "所在城市",
+area_id int(11) NOT null default 0 comment "所在商圈\行政区域",
+area_address varchar(100) NOT null default "" comment "小区名称",
+area_floor int(11) NOT null default 1 comment "所在楼层",
+room_source_type tinyint(4) not null default 0 comment "房源类型",
+room_area_size int(11) NOT NULL default 0 comment "房屋面积/平方米",
+room_direction varchar(100) NOT null default "" comment "房屋朝向",
+room_form_type tinyint(4) not null default 0 comment "房屋类型",
+cost_per_month int(11) not null default 0 comment "房屋费用(月/元)",
+rent_form tinyint(4) not null default 0 comment "出租形式",
+equipment_support varchar(40) not null default 0 comment "房屋设备支持,多个逗号分隔",
+PRIMARY KEY (id),
+INDEX `idx_publish_user_id` (`publish_user_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房源信息主表";

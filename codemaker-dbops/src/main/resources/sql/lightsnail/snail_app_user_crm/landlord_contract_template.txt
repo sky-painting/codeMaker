@@ -1,0 +1,7 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT COMMENT "房源表id",
+landlord_id  BIGINT(20)     NOT NULL default 0 comment "房东id",
+contract_template_id  BIGINT(20)     NOT NULL default 0 comment "合同模板id",
+create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "记录创建时间",
+PRIMARY KEY (id),
+INDEX `idx_landlord_id` (`landlord_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房东合同模板表";

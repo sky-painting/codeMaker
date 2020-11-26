@@ -1,0 +1,12 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT COMMENT "主键id",
+room_agent_id  BIGINT(20)   NOT NULL default 0 comment "代理人id",
+landlord_id  BIGINT(20)   NOT NULL default 0 comment "房东id",
+room_source_id BIGINT(20) NOT NULL DEFAULT 0 comment "房源id",
+create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "记录创建时间",
+order_time Date NOT NULL DEFAULT "2001-01-01" comment "签单时间",
+tip_money  int(11)  NOT NULL default 0 comment "佣金额度/元",
+settlement_form  tinyint(11)  NOT NULL default 0 comment "结算形式/一单一结，月结",
+PRIMARY KEY (id),
+INDEX `idx_landlord_id` (`landlord_id`) USING BTREE,
+INDEX `idx_room_agent_id` (`room_agent_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "代理人-签单表";

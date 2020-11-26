@@ -1,0 +1,8 @@
+(id  BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT comment "主键",
+room_source_id   BIGINT(20)  unsigned  NOT NULL default 0  COMMENT "房源id",
+content  varchar(3000) not null default "" comment "评价内容",
+is_hidden int(11) not null default 0 comment "是否匿名",
+create_time  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "评价时间",
+PRIMARY KEY (id),
+INDEX `idx_room_source_id` (`room_source_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房源评论表";

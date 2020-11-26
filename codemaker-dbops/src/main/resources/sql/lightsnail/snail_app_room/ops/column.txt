@@ -1,0 +1,17 @@
+alter table:room_source: add COLUMN `room_desc` varchar(500) NOT NULL DEFAULT 0 COMMENT '房屋描述';
+alter table:room_source: add COLUMN `landlord_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '房东id';
+alter table:room_source: add COLUMN `landlord_roomsource_id`  bigint(20) NOT NULL DEFAULT 0 COMMENT '房源表主表id';
+alter table:room_source: add COLUMN `real_roomsource_id`  bigint(20)  NOT NULL DEFAULT 0 COMMENT '房源表-具体房间主表id';
+alter table:room_source: add COLUMN `room_index`  varchar(10)  NOT NULL DEFAULT "1" COMMENT '房屋编号';
+alter table:room_source: add COLUMN `room_price` DECIMAL(6,2) NOT NULL DEFAULT 0 COMMENT '出租价格 元/月';
+alter table:room_source: add COLUMN `room_rentform` tinyint(4) NOT NULL DEFAULT 0 COMMENT '出租形式(整租,合租,转租)';
+alter table:room_source: add COLUMN `room_payform` tinyint(4) NOT NULL DEFAULT 0 COMMENT '租金形式(月付,季度付,半年付,整年付)';
+alter table:room_source: add COLUMN `servicePrice` DECIMAL(6,2) NOT NULL DEFAULT 0 COMMENT '服务费（中介房源，与押金类似）';
+alter table:room_source: add COLUMN `require_info` varchar(500) NOT NULL DEFAULT 0 COMMENT '出租要求';
+alter table:room_source: add COLUMN `decorate_info` tinyint(4) NOT NULL DEFAULT 0 COMMENT '装修情况，精装修，简装修，毛坯房 ';
+alter table:room_source: add COLUMN `money_water` DECIMAL(6,2) NOT NULL DEFAULT 0 COMMENT '水费 元/吨';
+alter table:room_source: add COLUMN `money_thunder` DECIMAL(6,2) NOT NULL DEFAULT 0 COMMENT '电费 元/度';
+alter table:room_source: add COLUMN `money_internet` DECIMAL(6,2) NOT NULL DEFAULT 0 COMMENT '网费 元/月';
+alter table:room_source: add COLUMN `money_manage` DECIMAL(6,2) NOT NULL DEFAULT 0 COMMENT '物业管理 元/月';
+alter table:room_source: add COLUMN `money_carpark` DECIMAL(6,2) NOT NULL DEFAULT 0 COMMENT '停车费 元/月';
+alter table:room_source: add COLUMN `support_allrent` tinyint(4) NOT NULL DEFAULT 0 COMMENT '是否支持整租';

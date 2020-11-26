@@ -1,0 +1,11 @@
+account:1
+attract_investment:1
+landlord_contract_template:1
+landlord_room_rent_record:1
+landlord_room_source:1
+real_room_source:1
+room_agent:1
+room_agent_order:1
+room_publish:1
+room_subscribe:1
+room_landlord:1

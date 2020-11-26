@@ -1,0 +1,52 @@
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity " score 分数表" as score {
+    id: 主键/bigint
+    course_id: 课程Id/bigint
+    student_id: 学生ID/bigint
+    score_num: 分数/int
+}
+
+
+entity " teacher 老师表" as teacher {
+    id: 主键/bigint
+    teacher_name: 教师姓名/varchar
+    age: 教师年龄/int
+    post_name: 教师职称/varchar
+}
+
+entity " student 学生表" as student {
+    id: 主键/bigint
+    chinese_name: 姓名/varchar
+    age: 年龄/int
+    class_id: 所属班级/bigint
+}
+
+entity " course 课程表" as course {
+    id: 主键/bigint
+    course_name: 课程名称/varchar
+    teacher_id: 上课老师/bigint
+    course_num: 课时数/int
+}
+
+entity " class 班级表" as class {
+    id: 主键/bigint
+    class_name: 班级名称/varchar
+    class_num: 班级序号/int
+    student_num: 学生数/int
+}
+
+
+
+teacher ||--o{ course
+student ||--o{ score
+course ||--o{ score
+class ||--o{ student
+
+
+@enduml

@@ -1,0 +1,5 @@
+天马行空,画码成星. 天画项目组
+1.codermaker-core:根据数据库表结构和配置的代码模板生成项目代码
+2.codermaker-dberPicture:根据数据库表结构或者按照指定数据接口生成对应数据模型e-r图(基于plantUML)
+3.codermaker-dbops:数据库表结构运维工具,根据配置的sql字段内容生成单表或者多表或者分库分表的sql脚本
+4.codermaker-web:根据codermaker-core项目生成的代码会在这个工程里展示,所见即所得,所操作即所得.

@@ -1,0 +1,1 @@
+alter table:room_source: add COLUMN `room_status` int(11) DEFAULT 0 COMMENT '房屋状态';

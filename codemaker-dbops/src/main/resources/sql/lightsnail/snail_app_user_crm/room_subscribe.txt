@@ -1,0 +1,13 @@
+(id   BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT COMMENT "主键id",
+room_agent_id  BIGINT(20)   unsigned  NOT NULL default 0 comment "代理人id",
+room_agent_type  tinyint(4)   unsigned  NOT NULL default 0 comment "代理人类型0:房东,1:代理人,2:中介",
+user_id       BIGINT(11) unsigned NOT NULL default 0 comment "用户id",
+area_code   varchar(50) NOT NULL DEFAULT "" comment "房源所属小区/看房小区",
+floor_address varchar(200) NOT NULL DEFAULT "" comment "房源所在楼层单元地址",
+mind_hourse_before  int(11) NOT NULL DEFAULT 0 comment "提前N小时提醒",
+handphone varchar(20) NOT NULL DEFAULT "" comment "用户电话",
+is_mind  int(11) NOT NULL DEFAULT 0 comment "是否进行预约提醒",
+subscribe_time Date NOT NULL DEFAULT "2001-01-01" comment "预约时间",
+subscribe_result varchar(500) NOT NULL DEFAULT 0 comment "看房结果",
+PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "代理人-预约看房记录表";
