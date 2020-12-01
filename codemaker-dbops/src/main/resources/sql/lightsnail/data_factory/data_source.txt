@@ -1,0 +1,11 @@
+(id  BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT comment "主键",
+source_name    varchar(200)  not null default ""   COMMENT "数据源名称",
+source_code  varchar(200) not null default "" comment "数据源code,唯一",
+source_type int(11) not null default 0 comment "数据源类型/(nacos,api,enum)",
+provider_sr cvarchar(200) not null default "" comment "数据源提供来源",
+tokent varchar(400) not null default "" comment "访问token",
+url  varchar(400) not null default "" comment "接待人类型",
+status int(11) not null default 0 comment "接待人类型",
+visit_strategy int(11) not null default 0 comment "访问策略（0动态获取/1本地缓存）",
+PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "数据源管理表";

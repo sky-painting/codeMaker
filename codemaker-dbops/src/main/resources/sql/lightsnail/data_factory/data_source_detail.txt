@@ -1,0 +1,10 @@
+(id  BIGINT(20)  unsigned  NOT NULL AUTO_INCREMENT comment "主键",
+room_source_id   BIGINT(20)  unsigned  NOT NULL default 0  COMMENT "房源id",
+chinese_name  varchar(30) not null default "" comment "预约人姓名",
+handphone varchar(30) not null default "" comment "预约人电话",
+meet_date date not null default "2000-01-01" comment "预约时间",
+meet_members varchar(400) not null default "2000-01-01" comment "接待人",
+meet_member_type int(11) not null default 0 comment "接待人类型",
+PRIMARY KEY (id),
+INDEX `idx_room_source_id` (`room_source_id`) USING BTREE
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "房源预约表";
