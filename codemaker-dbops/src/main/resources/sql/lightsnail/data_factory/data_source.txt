@@ -2,7 +2,7 @@
 source_name    varchar(200)  not null default ""   COMMENT "数据源名称",
 source_code  varchar(200) not null default "" comment "数据源code,唯一",
 source_type int(11) not null default 0 comment "数据源类型/(nacos,api,enum)",
-provider_sr cvarchar(200) not null default "" comment "数据源提供来源",
+provider_src varchar(200) not null default "" comment "数据源提供来源",
 tokent varchar(400) not null default "" comment "访问token",
 url  varchar(400) not null default "" comment "数据源访问url",
 status int(11) not null default 0 comment "状态(0正常,1过期)",
