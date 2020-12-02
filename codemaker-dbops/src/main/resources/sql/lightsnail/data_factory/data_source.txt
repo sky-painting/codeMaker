@@ -4,8 +4,13 @@ source_code  varchar(200) not null default "" comment "数据源code,唯一",
 source_type int(11) not null default 0 comment "数据源类型/(nacos,api,enum)",
 provider_sr cvarchar(200) not null default "" comment "数据源提供来源",
 tokent varchar(400) not null default "" comment "访问token",
-url  varchar(400) not null default "" comment "接待人类型",
-status int(11) not null default 0 comment "接待人类型",
+url  varchar(400) not null default "" comment "数据源访问url",
+status int(11) not null default 0 comment "状态(0正常,1过期)",
 visit_strategy int(11) not null default 0 comment "访问策略（0动态获取/1本地缓存）",
+create_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "创建时间",
+update_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP comment "修改时间",
+create_user_id BIGINT(20) NOT NULL DEFAULT 0 comment "创建人id",
+update_user_id BIGINT(20) NOT NULL DEFAULT 0 comment "修改人id",
+
 PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 collate=utf8mb4_general_ci comment "数据源管理表";
