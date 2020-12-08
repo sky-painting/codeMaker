@@ -1,5 +1,6 @@
 package com.coderman.codemaker.service;
 
+import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import org.apache.commons.lang3.StringUtils;
@@ -31,9 +32,11 @@ public class MapperXmlVarRegistry extends AbstractVarRegistry {
 
         for (Map.Entry<String,TableBean> entry : tableBeanMap.entrySet()){
             List<String> columnNameList = columnBeanListMap.get(entry.getKey()).stream().map(ColumnBean::getColumnName).collect(Collectors.toList());
+            List<String> columnFieldNameList = columnBeanListMap.get(entry.getKey()).stream().map(ColumnBean::getColumnFieldName).collect(Collectors.toList());
+            System.out.println(JSON.toJSONString(columnFieldNameList)+"================");
             entry.getValue().setColumnNameList(StringUtils.join(columnNameList,","));
-            entry.getValue().setInsertColumnNameList(getInsertColumnNameList(columnNameList).replace("#{id},",""));
-            entry.getValue().setUpdateColumnNameList(getUpdateColumnNameList(columnNameList).replace("id=#{id},",""));
+            entry.getValue().setInsertColumnNameList(getInsertColumnNameList(columnFieldNameList).replace("#{id},",""));
+            entry.getValue().setUpdateColumnNameList(getUpdateColumnNameList(columnBeanListMap.get(entry.getKey())).replace("id=#{id},",""));
             entry.getValue().setInsertColumnNames(StringUtils.join(columnNameList,",").replace("id,",""));
         }
         Map<String, Object> map = new HashMap<>();
@@ -55,14 +58,14 @@ public class MapperXmlVarRegistry extends AbstractVarRegistry {
     }
 
     /**
-     * 插入sql value生成
+     * update sql value生成
      * @param columnNameList
      * @return
      */
-    private String getUpdateColumnNameList(List<String> columnNameList){
+    private String getUpdateColumnNameList(List<ColumnBean> columnNameList){
         List<String> list = new ArrayList<>();
-        for (String columnName : columnNameList){
-            String columnStr = columnName+"=#{"+columnName+"}";
+        for (ColumnBean columnBean : columnNameList){
+            String columnStr = columnBean.getColumnName()+"=#{"+columnBean.getColumnFieldName()+"}";
             list.add(columnStr);
         }
         return StringUtils.join(list,",");
