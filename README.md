@@ -45,22 +45,22 @@ codermaker-web:根据codermaker-core项目生成的代码会在这个工程里�
 4.  浏览器访问localhost:8099/下的接口
 com.coderman.codemaker.controller.CodeMakerController
 com.coderman.codemaker.controller.GeneratorController
-#### projecttemplate.properties配置文件
-#####目标工程根包名称
+####  projecttemplate.properties配置文件
+#####  目标工程根包名称
 codemaker.global.package=com.lightsnail.tianhua.datafactory
-#####作者
+#####  作者
 codemaker.global.author=fanchunshuai
-#####数据库名称
+#####  数据库名称
 codemaker.global.dbName=data_factory
-#####项目名称
+#####  项目名称
 codemaker.pom.projectName=tianhua-datafactory
-#####maven坐标-GAV
+#####  maven坐标-GAV
 codemaker.pom.groupId=com.lightsnail.tianhua.datafactory
 codemaker.pom.artifactId=tianhua-datafactory
 codemaker.pom.version=1.0.0.SNAPSHOT
-#####目标工程输出目录，这里填写对应的codemaker-web工程的绝对路径
+#####  目标工程输出目录，这里填写对应的codemaker-web工程的绝对路径
 codemaker.code.outpath=E:\\workspace\\tianhua-workspace\\code-maker\\codemaker-web
-#####引用的springboot版本
+#####  引用的springboot版本
 codemaker.spring.parentversion=2.3.1.RELEASE
 
 
