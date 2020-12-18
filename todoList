@@ -2,8 +2,10 @@
 [2]:codemaker-dbops增加生成数据库表e-r图的功能，类似预览功能
 [3]:codemaker-core增加代码生成增量功能，对已生成表结构模块做版本快照存储，新生成版本模块在codemaker-web中展示
 [4]:codemaker-core增加极速版代码生成特性，具体
-   1.引入lombok插件
-   2.代码全链路引入调用，从controller->service->mapper生成即可运行，即可测试
+   1.引入lombok插件（down）
+   2.代码全链路引入调用，从controller->service->mapper生成即可运行，即可测试（down）
 [5]:codemaker-core全面梳理其他文件的生成依赖数据，具体
    比如pom.xml需要的公共dependency
-   应用application启动类
+   应用application启动类（down）
+[6]:增加cola架构代码生成器功能
+[7]:增加对枚举数据的代码生成
