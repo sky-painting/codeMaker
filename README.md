@@ -2,7 +2,7 @@
 
 #### 介绍
 为大规模微服务构建而创建的代码生成工具,属于天画项目中的基础产品
-天画项目链接：https://gitee.com/codergit.com/tianhua.git
+天画项目链接：https://gitee.com/sky-painting
 coderMaker 立足于低代码平台，致力于解决软件开发过程中的效率问题
 1.  不依赖任何代码生成工具
 2.  基于mysql + mybatis + spring boot生成项目增删改查等功能
