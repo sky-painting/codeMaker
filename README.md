@@ -37,14 +37,7 @@ codermaker-web:根据codermaker-core项目生成的代码会在这个工程里�
 2.  实现数据库表sql生成功能 1.0.0
 3.  实现数据库表e-r图生成功能 1.0.1
 4.  实现代码生成极速模式  1.0.2
-#### 安装教程
 
-1.  工程down下来
-2.  调整application.properties和projecttemplate.properties配置文件
-3.  启动codemaker-core工工程
-4.  浏览器访问localhost:8099/下的接口
-com.coderman.codemaker.controller.CodeMakerController
-com.coderman.codemaker.controller.GeneratorController
 ####  projecttemplate.properties配置文件
 #####  目标工程根包名称
 codemaker.global.package=com.lightsnail.tianhua.datafactory
@@ -64,8 +57,11 @@ codemaker.code.outpath=E:\\workspace\\tianhua-workspace\\code-maker\\codemaker-w
 codemaker.spring.parentversion=2.3.1.RELEASE
 
 
+#### sql表结构生成服务使用文档
+##### 数据库支持
+目前仅支持mysql数据库,其他数据库可基于本项目二次开发进行支持
 
-#### 使用文档
+#### 代码生成服务使用文档
 
 1.  配置codemaker-core的application.properties中的数据库访问配置项，其他默认即可
 2.  根据说明配置codemaker-core的projecttemplate.properties配置文件
