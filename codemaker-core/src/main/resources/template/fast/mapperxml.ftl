@@ -33,12 +33,12 @@
         where  id = <#noparse>#{</#noparse>id<#noparse>}</#noparse>
     </update>
 
-    <select id="getAll" resultType="${package}.entity.${table.humpClassName}Entity">
+    <select id="getAll"  resultMap="BaseResultMap">
         select <include refid="Base_Column_List" />  from ${table.tableName}
     </select>
 
     <select id="getById" parameterType="${package}.entity.${table.humpClassName}Entity"
-            resultType="${package}.entity.${table.humpClassName}Entity">
+            resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from ${table.tableName}  where id = <#noparse>#{</#noparse>id<#noparse>}</#noparse>
     </select>
 
