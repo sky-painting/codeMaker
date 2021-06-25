@@ -14,22 +14,30 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        ${table.columnNameList}
+        <#list columns as column>
+            ${column.columnName},
+        </#list>
     </sql>
 
     <insert id="insert" parameterType="${package}.entity.${table.humpClassName}Entity">
         insert into ${table.tableName}(
-        ${table.insertColumnNames}
+        <#list columns as column>
+            ${column.columnName},
+        </#list>
         )
         values(
-        ${table.insertColumnNameList}
+        <#list columns as column>
+            <#noparse>#{</#noparse>${column.columnFieldName}<#noparse>}</#noparse>,
+        </#list>
         )
     </insert>
 
     <update id="update" parameterType="${package}.entity.${table.humpClassName}Entity">
         update ${table.tableName}
         set
-        ${table.updateColumnNameList}
+        <#list columns as column>
+            ${column.columnName}=<#noparse>#{</#noparse>${column.columnFieldName}<#noparse>}</#noparse>,
+        </#list>
         where  id = <#noparse>#{</#noparse>id<#noparse>}</#noparse>
     </update>
 
