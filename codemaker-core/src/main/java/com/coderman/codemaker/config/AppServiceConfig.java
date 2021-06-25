@@ -7,6 +7,7 @@ import com.coderman.codemaker.service.IWriteFileService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -39,6 +40,12 @@ public class AppServiceConfig {
 
     @Resource(name = "springBootAppService")
     private AppService springBootAppService;
+
+    @Autowired
+    private ProjectTemplateConfig projectTemplateConfig;
+
+    @Autowired
+    private ProjectTemplateDubboConfig projectTemplateDubboConfig;
 
     /**
      * 从应用框架的视角获取应用服务
@@ -110,4 +117,17 @@ public class AppServiceConfig {
     public String getApplicationType(){
         return applicationType;
     }
+
+
+    public String getDbName() {
+        if (applicationType.equals(ModuleEnum.SPRING_BOOT_WEB.getAppName())) {
+            return projectTemplateConfig.getDbName();
+        } else if (applicationType.equals(ModuleEnum.DUBBO_API.getAppName())) {
+            return projectTemplateDubboConfig.getDbName();
+        } else if (applicationType.equals(ModuleEnum.COLA_ADAPTER.getAppName())) {
+            return projectTemplateConfig.getDbName();
+        }
+        return "";
+    }
+
 }

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lightsnail.app.user.crm.core.mapper.AccountMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lightsnail.app.user.crm.core.entity.AccountEntity">
+        <result column="id" property="id" />
+        <result column="nick_name" property="nickName" />
+        <result column="pass_word" property="passWord" />
+        <result column="account_type" property="accountType" />
+        <result column="member_id" property="memberId" />
+        <result column="status" property="status" />
+        <result column="handphone" property="handphone" />
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,nick_name,pass_word,account_type,member_id,status,handphone
+    </sql>
+
+    <insert id="insert" parameterType="com.lightsnail.app.user.crm.core.entity.AccountEntity">
+        insert into account(
+        nick_name,pass_word,account_type,member_status,handphone
+        )
+        values(
+        #{nick_name},#{pass_word},#{account_type},#{member_id},#{status},#{handphone}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lightsnail.app.user.crm.core.entity.AccountEntity">
+        update account
+        set
+        nick_name=#{nick_name},pass_word=#{pass_word},account_type=#{account_type},member_id=#{member_id},status=#{status},handphone=#{handphone}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultType="com.lightsnail.app.user.crm.core.entity.AccountEntity">
+        select <include refid="Base_Column_List" />  from account
+    </select>
+
+    <select id="getById" parameterType="com.lightsnail.app.user.crm.core.entity.AccountEntity"
+            resultType="com.lightsnail.app.user.crm.core.entity.AccountEntity">
+        select <include refid="Base_Column_List" /> from account  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from account where id = #{id}
+    </delete>
+
+</mapper>
