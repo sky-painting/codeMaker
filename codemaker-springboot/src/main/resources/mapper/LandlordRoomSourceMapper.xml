@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lightsnail.app.user.crm.core.mapper.LandlordRoomSourceMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lightsnail.app.user.crm.core.entity.LandlordRoomSourceEntity">
+        <result column="id" property="id" />
+        <result column="landlord_account_id" property="landlordAccountId" />
+        <result column="area_id" property="areaId" />
+        <result column="area_code" property="areaCode" />
+        <result column="floor_address" property="floorAddress" />
+        <result column="handphone" property="handphone" />
+        <result column="create_time" property="createTime" />
+        <result column="room_form_type" property="roomFormType" />
+        <result column="source_numbers" property="sourceNumbers" />
+        <result column="size_info" property="sizeInfo" />
+        <result column="living_room_num" property="livingRoomNum" />
+        <result column="kitchen_num" property="kitchenNum" />
+        <result column="toilet_num" property="toiletNum" />
+        <result column="require_info" property="requireInfo" />
+        <result column="decorate_info" property="decorateInfo" />
+        <result column="support_equipments" property="supportEquipments" />
+        <result column="money_water" property="moneyWater" />
+        <result column="money_thunder" property="moneyThunder" />
+        <result column="money_internet" property="moneyInternet" />
+        <result column="money_manage" property="moneyManage" />
+        <result column="money_car_park" property="moneyCarPark" />
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,landlord_account_id,area_id,area_code,floor_address,handphone,create_time,room_form_type,source_numbers,size_info,living_room_num,kitchen_num,toilet_num,require_info,decorate_info,support_equipments,money_water,money_thunder,money_internet,money_manage,money_car_park
+    </sql>
+
+    <insert id="insert" parameterType="com.lightsnail.app.user.crm.core.entity.LandlordRoomSourceEntity">
+        insert into landlord_room_source(
+        landlord_account_area_area_code,floor_address,handphone,create_time,room_form_type,source_numbers,size_info,living_room_num,kitchen_num,toilet_num,require_info,decorate_info,support_equipments,money_water,money_thunder,money_internet,money_manage,money_car_park
+        )
+        values(
+        #{landlord_account_id},#{area_id},#{area_code},#{floor_address},#{handphone},#{create_time},#{room_form_type},#{source_numbers},#{size_info},#{living_room_num},#{kitchen_num},#{toilet_num},#{require_info},#{decorate_info},#{support_equipments},#{money_water},#{money_thunder},#{money_internet},#{money_manage},#{money_car_park}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lightsnail.app.user.crm.core.entity.LandlordRoomSourceEntity">
+        update landlord_room_source
+        set
+        landlord_account_id=#{landlord_account_id},area_id=#{area_id},area_code=#{area_code},floor_address=#{floor_address},handphone=#{handphone},create_time=#{create_time},room_form_type=#{room_form_type},source_numbers=#{source_numbers},size_info=#{size_info},living_room_num=#{living_room_num},kitchen_num=#{kitchen_num},toilet_num=#{toilet_num},require_info=#{require_info},decorate_info=#{decorate_info},support_equipments=#{support_equipments},money_water=#{money_water},money_thunder=#{money_thunder},money_internet=#{money_internet},money_manage=#{money_manage},money_car_park=#{money_car_park}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultType="com.lightsnail.app.user.crm.core.entity.LandlordRoomSourceEntity">
+        select <include refid="Base_Column_List" />  from landlord_room_source
+    </select>
+
+    <select id="getById" parameterType="com.lightsnail.app.user.crm.core.entity.LandlordRoomSourceEntity"
+            resultType="com.lightsnail.app.user.crm.core.entity.LandlordRoomSourceEntity">
+        select <include refid="Base_Column_List" /> from landlord_room_source  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from landlord_room_source where id = #{id}
+    </delete>
+
+</mapper>

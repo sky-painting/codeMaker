@@ -57,11 +57,11 @@ codemaker.code.outpath=E:\\workspace\\tianhua-workspace\\code-maker\\codemaker-w
 codemaker.spring.parentversion=2.3.1.RELEASE
 
 
-#### sql表结构生成服务使用文档
+#### sql表结构生成服务使用流程
 ##### 数据库支持
 目前仅支持mysql数据库,其他数据库可基于本项目二次开发进行支持
 
-#### 代码生成服务使用文档
+#### 代码生成服务使用流程
 
 1.  配置codemaker-core的application.properties中的数据库访问配置项，其他默认即可
 2.  根据说明配置codemaker-core的projecttemplate.properties配置文件

@@ -1,11 +1,14 @@
+/*
 import org.junit.Test;
 
+*/
 /**
  * description: TestTableName <br>
  * date: 2020/7/7 20:42 <br>
  * author: coderman <br>
  * version: 1.0 <br>
- */
+ *//*
+
 public class TestTableName {
     @Test
     public void testHumpTableName(){
@@ -29,3 +32,4 @@ public class TestTableName {
 
     }
 }
+*/

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lightsnail.schoolmanager.mapper.StudentMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lightsnail.schoolmanager.entity.StudentEntity">
+        <result column="id" property="id" />
+        <result column="student_name" property="studentName" />
+        <result column="student_code" property="studentCode" />
+        <result column="sex" property="sex" />
+        <result column="age" property="age" />
+        <result column="class_id" property="classId" />
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+            id,
+            student_name,
+            student_code,
+            sex,
+            age,
+            class_id,
+    </sql>
+
+    <insert id="insert" parameterType="com.lightsnail.schoolmanager.entity.StudentEntity">
+        insert into student(
+            id,
+            student_name,
+            student_code,
+            sex,
+            age,
+            class_id,
+        )
+        values(
+            #{id},
+            #{studentName},
+            #{studentCode},
+            #{sex},
+            #{age},
+            #{classId},
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lightsnail.schoolmanager.entity.StudentEntity">
+        update student
+        set
+            id=#{id},
+            student_name=#{studentName},
+            student_code=#{studentCode},
+            sex=#{sex},
+            age=#{age},
+            class_id=#{classId},
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultType="com.lightsnail.schoolmanager.entity.StudentEntity">
+        select <include refid="Base_Column_List" />  from student
+    </select>
+
+    <select id="getById" parameterType="com.lightsnail.schoolmanager.entity.StudentEntity"
+            resultType="com.lightsnail.schoolmanager.entity.StudentEntity">
+        select <include refid="Base_Column_List" /> from student  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from student where id = #{id}
+    </delete>
+
+</mapper>

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Configuration
 @Component
-@PropertySource( "classpath:projecttemplate.properties")
+@PropertySource( "classpath:projecttemplate-springboot.properties")
 public class ProjectTemplateConfig {
 
     @Value(value = "${codemaker.global.package}")

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lightsnail.schoolmanager.common.mapper.ClassMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lightsnail.schoolmanager.common.dataobject.ClassDO">
+        <result column="id" property="id" />
+        <result column="manager" property="manager" />
+        <result column="student_count" property="studentCount" />
+        <result column="grade_num" property="gradeNum" />
+        <result column="class_num" property="classNum" />
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,manager,student_count,grade_num,class_num
+    </sql>
+
+    <insert id="insert" parameterType="com.lightsnail.schoolmanager.common.dataobject.ClassDO">
+        insert into class(
+        manager,student_count,grade_num,class_num
+        )
+        values(
+        #{manager},#{student_count},#{grade_num},#{class_num}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lightsnail.schoolmanager.common.dataobject.ClassDO">
+        update class
+        set
+        manager=#{manager},student_count=#{student_count},grade_num=#{grade_num},class_num=#{class_num}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultType="com.lightsnail.schoolmanager.common.dataobject.ClassDO">
+        select <include refid="Base_Column_List" />  from class
+    </select>
+
+    <select id="getById" parameterType="com.lightsnail.schoolmanager.common.dataobject.ClassDO"
+            resultType="com.lightsnail.schoolmanager.common.dataobject.ClassDO">
+        select <include refid="Base_Column_List" /> from class  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from class where id = #{id}
+    </delete>
+
+</mapper>

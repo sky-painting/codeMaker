@@ -1,3 +1,4 @@
+/*
 import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.Main;
 import com.coderman.codemaker.bean.TableBean;
@@ -10,12 +11,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import java.util.List;
 
+*/
 /**
  * description: DAOTest <br>
  * date: 2020/7/7 8:57 <br>
  * author: coderman <br>
  * version: 1.0 <br>
- */
+ *//*
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = Main.class)
 public class DAOTest {
@@ -1036,3 +1039,4 @@ public class DAOTest {
    }
 
 }
+*/

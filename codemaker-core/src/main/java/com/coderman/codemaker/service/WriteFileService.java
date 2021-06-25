@@ -21,8 +21,12 @@ import java.util.Map;
  * date: 2020/7/8 11:43 <br>
  * author: coderman <br>
  * version: 1.0 <br>
+ *
+ * 该文件写服务默认支持springboot项目的基本模块，由于需要支持多种框架应用的代码，
+ * 因此需要重构，整体api不变，新服务类参考WriteAppModuleService
  */
 @Service
+@Deprecated
 public class WriteFileService {
 
     @Autowired
