@@ -11,7 +11,7 @@
   </parent>
   <groupId>com.coderman.codemaker</groupId>
   <artifactId>codemaker-core</artifactId>
-  <version>1.0.2-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
 
   <name>codemaker-core</name>
   <!-- FIXME change it to the project's website -->
