@@ -2,3 +2,15 @@
 2.实现数据库表sql生成功能 1.0.0
 3.实现数据库表e-r图生成功能 1.0.1
 4.实现代码生成极速模式  1.0.2
+
+
+5. verison 1.0.3 变更
+ 1.重构代码生成逻辑核心服务,引入应用层，支持多应用类型代码生成架构
+ 2.支持一套api操作接口生成dubbo,springboot应用代码
+ 3.增加dubbo应用的代码模板，支持maven多模块
+ 4.引入bo,facade,facadeimpl,aop,dto等代码类生成模板
+ 5.dubbo项目支持facade层和service层双服务层业务架构
+ 6.application.properties增加application.type属性，值为springboot,dubbo,cola
+ 7.增加projecttemplate-dubbo.properties属性文件，支持dubbo项目代码生成
+ 8.原有配置文件projecttemplate.properties改名为projecttemplate-springboot.properties
+ 9.修复若干其他bug,
