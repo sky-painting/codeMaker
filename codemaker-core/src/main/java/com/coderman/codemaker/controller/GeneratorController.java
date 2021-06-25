@@ -2,6 +2,7 @@ package com.coderman.codemaker.controller;
 
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.*;
 import com.coderman.codemaker.utils.FreemarkerUtils;
@@ -43,8 +44,15 @@ public class GeneratorController {
     private TestVarRegistry testVarRegistry;
 
 
+    //@Autowired
+    //private WriteFileService writeFileService;
+
     @Autowired
-    private WriteFileService writeFileService;
+    private WriteAppModuleService writeFileService;
+
+
+    @Autowired
+    private FreemarkerService freemarkerService;
 
 
     /**
@@ -63,8 +71,31 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.ENTITY.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.ENTITY.getTempFileName(),varMap);
             writeFileService.writeEntity(templateContent,v.getHumpClassName());
+        });
+
+        return "success";
+    }
+
+    /**
+     * 生成模块的entity类
+     * @return
+     */
+    @GetMapping("/getproject/do")
+    public String getDataObjectTemplate(){
+        Map<String,Object> map = entityVarRegistry.getTemplateVar();
+
+        Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
+        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
+        tableBeanMap.forEach((k,v)->{
+            Map<String,Object> varMap = new HashMap<>();
+            varMap.put("table", v);
+            varMap.put("columns", columnBeanListMap.get(k));
+            varMap.put("package", map.get("package"));
+            varMap.put("author", map.get("author"));
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.DATA_OBJECT.getTempFileName(),varMap);
+            writeFileService.writeDO(templateContent,v.getHumpClassName());
         });
 
         return "success";
@@ -86,7 +117,7 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.VO.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.VO.getTempFileName(),varMap);
             writeFileService.writeVO(templateContent,v.getHumpClassName());
         });
 
@@ -108,7 +139,7 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.MAPPER.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.MAPPER.getTempFileName(),varMap);
             writeFileService.writeMapper(templateContent,v.getHumpClassName());
 
         });
@@ -132,7 +163,7 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.SERVICE.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.SERVICE.getTempFileName(),varMap);
             writeFileService.writeService(templateContent,v.getHumpClassName());
         });
 
@@ -155,7 +186,7 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.SERVICE_IMPL.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.SERVICE_IMPL.getTempFileName(),varMap);
             writeFileService.writeServiceImpl(templateContent,v.getHumpClassName());
         });
 
@@ -169,7 +200,7 @@ public class GeneratorController {
      */
     @GetMapping("/getproject/mapperxml")
     public String getMapperXMLTemplate(){
-        Map<String,Object> map = serviceImplVarRegistry.getTemplateVar();
+        Map<String,Object> map = mapperXmlVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
@@ -179,7 +210,7 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.MAPPER_XML.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.MAPPER_XML.getTempFileName(),varMap);
             writeFileService.writeMapperXml(templateContent,v.getHumpClassName());
         });
 
@@ -202,7 +233,7 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.CONTROLLER.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.CONTROLLER.getTempFileName(),varMap);
             writeFileService.writeController(templateContent,v.getHumpClassName());
         });
 
@@ -225,7 +256,7 @@ public class GeneratorController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl(TemplateFileEnum.TEST.getTempFileName(),varMap);
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.TEST.getTempFileName(),varMap);
             writeFileService.writeTest(templateContent,v.getHumpClassName());
         });
 
@@ -233,8 +264,105 @@ public class GeneratorController {
     }
 
 
+
+
     /**
-     * 生成模块的controller类
+     * 生成dubbo-api的接口服务
+     * @return
+     */
+    @GetMapping("/getproject/facade")
+    public String getFacadeTemplate(){
+        Map<String,Object> map = serviceVarRegistry.getTemplateVar();
+
+        Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
+        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
+        tableBeanMap.forEach((k,v)->{
+            Map<String,Object> varMap = new HashMap<>();
+            varMap.put("table", v);
+            varMap.put("columns", columnBeanListMap.get(k));
+            varMap.put("package", map.get("package"));
+            varMap.put("author", map.get("author"));
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.FACADE.getTempFileName(),varMap);
+            writeFileService.writeFacade(templateContent,v.getHumpClassName());
+        });
+
+        return "success";
+    }
+
+    /**
+     * 生成dubbo-api的接口服务
+     * @return
+     */
+    @GetMapping("/getproject/facadeimpl")
+    public String getFacadeImplTemplate(){
+        Map<String,Object> map = serviceVarRegistry.getTemplateVar();
+
+        Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
+        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
+        tableBeanMap.forEach((k,v)->{
+            Map<String,Object> varMap = new HashMap<>();
+            varMap.put("table", v);
+            varMap.put("columns", columnBeanListMap.get(k));
+            varMap.put("package", map.get("package"));
+            varMap.put("author", map.get("author"));
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.FACADE_IMPL.getTempFileName(),varMap);
+            writeFileService.writeFacadeImpl(templateContent,v.getHumpClassName());
+        });
+
+        return "success";
+    }
+
+
+    /**
+     * 生成模块的vo类
+     * @return
+     */
+    @GetMapping("/getproject/dto")
+    public String getDTOTemplate(){
+        Map<String,Object> map = entityVarRegistry.getTemplateVar();
+
+        Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
+        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
+        tableBeanMap.forEach((k,v)->{
+            Map<String,Object> varMap = new HashMap<>();
+            varMap.put("table", v);
+            varMap.put("columns", columnBeanListMap.get(k));
+            varMap.put("package", map.get("package"));
+            varMap.put("author", map.get("author"));
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.DTO.getTempFileName(),varMap);
+            writeFileService.writeDTO(templateContent,v.getHumpClassName());
+        });
+
+        return "success";
+    }
+
+    /**
+     * 生成模块的vo类
+     * @return
+     */
+    @GetMapping("/getproject/bo")
+    public String getBOTemplate(){
+        Map<String,Object> map = entityVarRegistry.getTemplateVar();
+
+        Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
+        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
+        tableBeanMap.forEach((k,v)->{
+            Map<String,Object> varMap = new HashMap<>();
+            varMap.put("table", v);
+            varMap.put("columns", columnBeanListMap.get(k));
+            varMap.put("package", map.get("package"));
+            varMap.put("author", map.get("author"));
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName(),varMap);
+            writeFileService.writeBO(templateContent,v.getHumpClassName());
+        });
+
+        return "success";
+    }
+
+
+
+    /**
+     * 生成项目e-r图
      * @return
      */
     @GetMapping("/getproject/erpicture")
@@ -246,9 +374,5 @@ public class GeneratorController {
         writeFileService.writeERPicture(tableBeanMap,columnBeanListMap);
         return "success";
     }
-
-
-
-
 
 }

@@ -1,14 +1,17 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.app.springboot;
 
+import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.config.ProjectTemplateConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
+import com.coderman.codemaker.service.DBErPictureService;
+import com.coderman.codemaker.service.IWriteFileService;
 import com.coderman.codemaker.utils.Constant;
 import com.coderman.codemaker.utils.FreemarkerUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,23 +20,124 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * description: WriteFileService <br>
- * date: 2020/7/8 11:43 <br>
- * author: coderman <br>
- * version: 1.0 <br>
+ * Description:
+ * date: 2021/6/22
  *
- * 该文件写服务默认支持springboot项目的基本模块，由于需要支持多种框架应用的代码，
- * 因此需要重构，整体api不变，新服务类参考WriteAppModuleService
+ * @author fanchunshuai
+ * @version 1.0.0
+ * @since JDK 1.8
  */
-@Service
-@Deprecated
-public class WriteFileService {
+@Component(value = "springBootWriteService")
+public class SpringBootWriteServiceImpl implements IWriteFileService {
 
     @Autowired
     private ProjectTemplateConfig projectTemplateConfig;
 
     @Autowired
     private DBErPictureService erPictureService;
+
+
+    @Override
+    public void writeContent(String templateName, String content, String humpClassName) {
+        //写entity class
+        if(templateName.equals(TemplateFileEnum.ENTITY.getTempFileName())){
+
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(content);
+            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setChildPackageName("entity");
+            classContentBean.setClassSuffix("Entity.java");
+            writeClassFile(classContentBean);
+        }
+        //写mapper class
+        if(templateName.equals(TemplateFileEnum.MAPPER.getTempFileName())){
+
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(content);
+            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setChildPackageName("mapper");
+            classContentBean.setClassSuffix("Mapper.java");
+            writeClassFile(classContentBean);
+        }
+
+        //写mapper.xml
+        if(templateName.equals(TemplateFileEnum.MAPPER_XML.getTempFileName())){
+            writeMapperXml(content, humpClassName);
+        }
+
+        //写vo
+        if(templateName.equals(TemplateFileEnum.VO.getTempFileName())){
+
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(content);
+            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setChildPackageName("vo");
+            classContentBean.setClassSuffix("VO.java");
+            writeClassFile(classContentBean);
+        }
+
+        //写service
+        if(templateName.equals(TemplateFileEnum.SERVICE.getTempFileName())){
+
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(content);
+            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setChildPackageName("service");
+            classContentBean.setClassSuffix("Service.java");
+            writeClassFile(classContentBean);
+        }
+
+        //写serviceImpl
+        if(templateName.equals(TemplateFileEnum.SERVICE_IMPL.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(content);
+            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setChildPackageName("service.impl");
+            classContentBean.setClassSuffix("ServiceImpl.java");
+            writeClassFile(classContentBean);
+        }
+
+        //写controller
+        if(templateName.equals(TemplateFileEnum.CONTROLLER.getTempFileName())){
+
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(content);
+            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setChildPackageName("controller");
+            classContentBean.setClassSuffix("Controller.java");
+            writeClassFile(classContentBean);
+        }
+
+        //写test
+        if(templateName.equals(TemplateFileEnum.TEST.getTempFileName())){
+            writeTest(content, humpClassName);
+        }
+
+        //指定服务类 or 工具类
+        if(templateName.equals(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())){
+            writeSpringApplicationContext(content);
+        }
+
+        //指定服务类 or 工具类
+        if(templateName.equals(TemplateFileEnum.BASE_CONTROLLER.getTempFileName())){
+            writeBaseController(content);
+        }
+
+        //指定服务类 or 工具类
+        if(templateName.equals(TemplateFileEnum.APPLICATION.getTempFileName())){
+            writeApplication(content);
+        }
+    }
+
+    @Override
+    public void writeAllContent(String humpClassName, Map<String, Object> varMap, String fast) {
+        writeAll(humpClassName, varMap, fast);
+    }
+
+    @Override
+    public void writeCommonContent(Map<String, Object> varMap, String fast) {
+        writeCommon(varMap, fast);
+    }
 
 
     /**
@@ -60,10 +164,10 @@ public class WriteFileService {
      */
     public void writeEntity(String content, String humpClassName) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/entity";
         String fileName = humpClassName + "Entity.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath() + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -80,10 +184,10 @@ public class WriteFileService {
      */
     public void writeVO(String content, String humpClassName) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/vo";
         String fileName = humpClassName + "VO.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath()  + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -100,10 +204,10 @@ public class WriteFileService {
      */
     public void writeMapper(String content, String humpClassName) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/mapper";
         String fileName = humpClassName + "Mapper.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath()  + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -119,10 +223,10 @@ public class WriteFileService {
      */
     public void writeService(String content, String humpClassName) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/service";
         String fileName = humpClassName + "Service.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath() + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -138,10 +242,10 @@ public class WriteFileService {
      */
     public void writeServiceImpl(String content, String humpClassName) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/service/impl";
         String fileName = humpClassName + "ServiceImpl.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath() + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -157,10 +261,10 @@ public class WriteFileService {
      */
     public void writeBaseController(String content) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/controller";
         String fileName = "BaseController.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath()  + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -175,10 +279,10 @@ public class WriteFileService {
      */
     public void writeSpringApplicationContext(String content) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/utils";
         String fileName = "SpringApplicationContext.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath()  + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -194,10 +298,10 @@ public class WriteFileService {
      */
     public void writeTest(String content, String humpClassName) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.TEST_JAVA + "/" + packagePath + "/service/test";
         String fileName = humpClassName + "ServiceTest.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath()  + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -212,10 +316,10 @@ public class WriteFileService {
      */
     public void writeApplication(String content) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "";
         String fileName = "Application.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath() + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -232,10 +336,10 @@ public class WriteFileService {
      */
     public void writeController(String content, String humpClassName) {
         String packageName = projectTemplateConfig.getPackageName();
-        String packagePath = packageName.replace(".", "\\");
+        String packagePath = packageName.replace(".", "/");
         String filePath = Constant.JAVA + "/" + packagePath + "/controller";
         String fileName = humpClassName + "Controller.java";
-        filePath = projectTemplateConfig.getOutPath() + "\\" + filePath + "\\" + fileName;
+        filePath = projectTemplateConfig.getOutPath()  + filePath + "/" + fileName;
         try {
             FileUtils.write(new File(filePath), content, "UTF-8");
         } catch (IOException e) {
@@ -250,7 +354,7 @@ public class WriteFileService {
      * @param varMap
      */
     public void writeAll(String humpClassName, Map<String, Object> varMap,String fast) {
-        String entityContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.ENTITY.getTempFileName(), varMap);
+        String entityContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.ENTITY.getTempFileName(), varMap);
         this.writeEntity(entityContent, humpClassName);
 
         String serviceContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.SERVICE.getTempFileName(), varMap);
@@ -326,4 +430,31 @@ public class WriteFileService {
         erPictureService.getErPicture(filePath, tableBeanList);
     }
 
+
+    /**
+     * 写class文件
+     * @param classContentBean
+     */
+    public void writeClassFile(ClassContentBean classContentBean) {
+        String filePath = getFilePath(classContentBean.getChildPackageName(), classContentBean.getHumpClassName(), classContentBean.getClassSuffix());
+        try {
+            FileUtils.write(new File(filePath), classContentBean.getClassContent(), "UTF-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param childPackageName 最后一级子包名称
+     * @param humpClassName 驼峰式类名
+     * @param classSuffix   文件后缀 egg：DTO.java
+     * @return
+     */
+    private String getFilePath(String childPackageName, String humpClassName, String classSuffix) {
+        String packageName = projectTemplateConfig.getPackageName();
+        String packagePath = packageName.replace(".", "/") ;
+        packagePath = Constant.JAVA + "/" + packagePath + "/" + childPackageName;
+        String fileName = humpClassName + classSuffix;
+        return projectTemplateConfig.getOutPath()  + packagePath + "/" + fileName;
+    }
 }

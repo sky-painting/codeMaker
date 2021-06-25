@@ -34,7 +34,7 @@ public class MapperXmlVarRegistry extends AbstractVarRegistry {
             entry.getValue().setColumnNameList(StringUtils.join(columnNameList,","));
             entry.getValue().setInsertColumnNameList(getInsertColumnNameList(columnNameList).replace("#{id},",""));
             entry.getValue().setUpdateColumnNameList(getUpdateColumnNameList(columnNameList).replace("id=#{id},",""));
-            entry.getValue().setInsertColumnNames(StringUtils.join(columnNameList,",").replace("id,",""));
+            entry.getValue().setInsertColumnNames(getInsertColumnNamesStr(columnNameList));
         }
         Map<String, Object> map = new HashMap<>();
         map.put("table",tableBeanMap);
@@ -68,5 +68,15 @@ public class MapperXmlVarRegistry extends AbstractVarRegistry {
         return StringUtils.join(list,",");
     }
 
+    private String getInsertColumnNamesStr(List<String> columnNameList){
+        List<String> tmpList = new ArrayList<>();
+        for (String columnName : columnNameList){
+            if(columnName.equals("id")){
+                continue;
+            }
+            tmpList.add(columnName);
+        }
+        return StringUtils.join(tmpList,",");
+    }
 
 }

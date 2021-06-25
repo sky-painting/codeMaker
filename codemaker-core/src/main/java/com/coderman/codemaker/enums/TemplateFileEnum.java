@@ -19,8 +19,14 @@ public enum  TemplateFileEnum {
     BASE_CONTROLLER("baseController"),
     SPRING_APPLICATION_CONTEXT("SpringApplicationContext"),
     TEST("test"),
-    APPLICATION("application")
-
+    APPLICATION("application"),
+    DTO("dto"),
+    FACADE("facade"),
+    DATA_OBJECT("do"),
+    FACADE_IMPL("facadeImpl"),
+    BUSINESS_OBJECT("bo"),
+    CONVERT("convert"),
+    FACADE_AOP("facadeaop"),
     ;
     private String tempFileName;
     TemplateFileEnum(String tempFileName){

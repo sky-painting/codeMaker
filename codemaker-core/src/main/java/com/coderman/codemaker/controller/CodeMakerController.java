@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.service.MapperXmlVarRegistry;
+import com.coderman.codemaker.service.WriteAppModuleService;
 import com.coderman.codemaker.service.WriteFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,11 @@ public class CodeMakerController {
 
     @Autowired
     private WriteFileService writeFileService;
+
+    @Autowired
+    private WriteAppModuleService writeFileServiceV2;
+
+
     /**
      * 生成所有表对应的项目代码--极简模式
      * @return
@@ -46,12 +52,12 @@ public class CodeMakerController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            writeFileService.writeAll(v.getHumpClassName(),varMap,"");
+            writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"");
         });
         //写公共服务类
-        writeFileService.writeCommon(varMap,"");
+        writeFileServiceV2.writeCommon(varMap,"");
         //渲染e-r图
-        writeFileService.writeERPicture(tableBeanMap,columnBeanListMap);
+        writeFileServiceV2.writeERPicture(tableBeanMap,columnBeanListMap);
 
         return "success";
     }
@@ -111,7 +117,7 @@ public class CodeMakerController {
                 varMap.put("columns", columnBeanListMap.get(k));
                 varMap.put("package", map.get("package"));
                 varMap.put("author", map.get("author"));
-                writeFileService.writeAll(v.getHumpClassName(),varMap,"");
+                writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"");
             }
         });
 
@@ -142,7 +148,7 @@ public class CodeMakerController {
                 varMap.put("columns", columnBeanListMap.get(k));
                 varMap.put("package", map.get("package"));
                 varMap.put("author", map.get("author"));
-                writeFileService.writeAll(v.getHumpClassName(),varMap,"/fast/");
+                writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"/fast/");
             }
         });
 
