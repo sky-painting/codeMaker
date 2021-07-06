@@ -3,9 +3,10 @@ package com.coderman.codemaker.controller;
 import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
-import com.coderman.codemaker.service.MapperXmlVarRegistry;
 import com.coderman.codemaker.service.WriteAppModuleService;
 import com.coderman.codemaker.service.WriteFileService;
+import com.coderman.codemaker.service.registry.DynamicDDDVarRegistry;
+import com.coderman.codemaker.service.registry.MapperXmlVarRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.*;
+
 
 /**
  * description: CodeMakerController <br>
@@ -26,13 +28,15 @@ public class CodeMakerController {
     @Resource(name = "mapperXmlVarRegistry")
     private MapperXmlVarRegistry mapperXmlVarRegistry;
 
+    @Resource(name = "dynamicDDDVarRegistry")
+    private DynamicDDDVarRegistry dynamicDDDVarRegistry;
+
 
     @Autowired
     private WriteFileService writeFileService;
 
     @Autowired
     private WriteAppModuleService writeFileServiceV2;
-
 
     /**
      * 生成所有表对应的项目代码--极简模式
@@ -155,6 +159,13 @@ public class CodeMakerController {
         return "success";
     }
 
+
+    @GetMapping("/makeddd")
+    public String makeDynamicDDD(){
+        Map<String, Object> dynamicDDDMap = dynamicDDDVarRegistry.getRegistVarMap();
+        writeFileServiceV2.writeDynamicDDD(dynamicDDDMap);
+        return "success";
+    }
 
 
 }

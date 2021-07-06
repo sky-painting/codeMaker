@@ -46,19 +46,19 @@ public class ProjectTemplateDubboConfig {
     /**
      * dubbo-common模块地址
      */
-    @Value(value = "${dubbo.code.outpath.dubbbo-common}")
+    @Value(value = "${dubbo.code.outpath.dubbo-common}")
     private String moduleCommonPath;
 
     /**
      * dubbo-api模块地址
      */
-    @Value(value = "${dubbo.code.outpath.dubbbo-api}")
+    @Value(value = "${dubbo.code.outpath.dubbo-api}")
     private String moduleApiPath;
 
     /**
      * dubbo-core模块地址
      */
-    @Value(value = "${dubbo.code.outpath.dubbbo-core}")
+    @Value(value = "${dubbo.code.outpath.dubbo-core}")
     private String moduleCorePath;
 
     public String getGlobalPackage() {

@@ -2,10 +2,10 @@ package com.coderman.codemaker.controller;
 
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
-import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
-import com.coderman.codemaker.service.*;
-import com.coderman.codemaker.utils.FreemarkerUtils;
+import com.coderman.codemaker.service.FreemarkerService;
+import com.coderman.codemaker.service.WriteAppModuleService;
+import com.coderman.codemaker.service.registry.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

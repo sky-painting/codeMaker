@@ -1,7 +1,7 @@
 package com.coderman.codemaker.app.dubbo;
 
 import com.coderman.codemaker.bean.ClassContentBean;
-import com.coderman.codemaker.config.ProjectTemplateConfig;
+import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.ProjectTemplateDubboConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.IWriteFileService;
@@ -31,19 +31,19 @@ public class DubboApiWriteServiceImpl implements IWriteFileService {
     private ProjectTemplateDubboConfig projectTemplateDubboConfig;
 
     @Override
-    public void writeContent(String templateName, String content, String humpClassName) {
-        if(templateName.equals(TemplateFileEnum.DTO.getTempFileName())){
+    public void writeContent(WriteContentBean writeContentBean) {
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DTO.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("dto");
             classContentBean.setClassSuffix("DTO.java");
             writeDTO(classContentBean);
         }
-        else  if(templateName.equals(TemplateFileEnum.FACADE.getTempFileName())){
+        else  if(writeContentBean.getTemplateName().equals(TemplateFileEnum.FACADE.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("facade");
             classContentBean.setClassSuffix("Facade.java");
             writeFacade(classContentBean);

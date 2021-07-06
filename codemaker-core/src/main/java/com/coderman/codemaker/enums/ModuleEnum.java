@@ -64,13 +64,63 @@ public enum  ModuleEnum {
     /**
      *
      */
-    COLA_ADAPTER("cola","cola-adapter", Sets.newHashSet()),
+    COLA_ADAPTER("cola","cola-adapter", Sets.newHashSet(
+            TemplateFileEnum.CONTROLLER.getTempFileName(),
+            TemplateFileEnum.BASE_CONTROLLER.getTempFileName(),
+            TemplateFileEnum.VO.getTempFileName()
+    )),
 
+    /**
+     *
+     */
+    COLA_DOMAIN("cola","cola-domain", Sets.newHashSet(
+            TemplateFileEnum.SERVICE.getTempFileName(),
+            TemplateFileEnum.BUSINESS_OBJECT.getTempFileName(),
+            TemplateFileEnum.SERVICE.getTempFileName(),
+            TemplateFileEnum.GATAWAY.getTempFileName(),
+            TemplateFileEnum.FACTORY.getTempFileName(),
+            TemplateFileEnum.REPOSITORY.getTempFileName(),
+            TemplateFileEnum.VALUE_OBJECT.getTempFileName(),
+            TemplateFileEnum.MESSAGE_BODY.getTempFileName(),
+            TemplateFileEnum.ENUM.getTempFileName()
+    )),
+    /**
+     *
+     */
+    COLA_CLIENT("cola","cola-client", Sets.newHashSet(
+            TemplateFileEnum.DTO.getTempFileName(),
+            TemplateFileEnum.FACADE.getTempFileName())),
+
+    /**
+     *
+     */
+    COLA_INFRAST("cola","cola-infrast", Sets.newHashSet(
+            TemplateFileEnum.SERVICE.getTempFileName(),
+            TemplateFileEnum.GATAWAY_IMPL.getTempFileName(),
+            TemplateFileEnum.REPOSITORY_IMPL.getTempFileName(),
+            TemplateFileEnum.MAPPER_XML.getTempFileName(),
+            TemplateFileEnum.CONVERT.getTempFileName(),
+            TemplateFileEnum.MAPPER.getTempFileName()
+            )),
+
+    /**
+     *
+     */
+    COLA_APP("cola","cola-app", Sets.newHashSet(
+            TemplateFileEnum.SERVICE.getTempFileName(),
+            TemplateFileEnum.FACADE_IMPL.getTempFileName(),
+            TemplateFileEnum.CMD.getTempFileName(),
+            TemplateFileEnum.CONVERT.getTempFileName(),
+            TemplateFileEnum.EXE_ABSTRACT.getTempFileName(),
+            TemplateFileEnum.EXE.getTempFileName(),
+            TemplateFileEnum.EXE_IMPL.getTempFileName(),
+            TemplateFileEnum.FACADE_AOP.getTempFileName()
+    )),
     ;
     private String appName;
     private String moduleName;
     private Set<String> templateFileSet;
-    ModuleEnum(String appName,String moduleName,Set<String> templateFileSet){
+    ModuleEnum(String appName, String moduleName, Set<String> templateFileSet){
         this.appName = appName;
         this.moduleName = moduleName;
         this.templateFileSet = templateFileSet;

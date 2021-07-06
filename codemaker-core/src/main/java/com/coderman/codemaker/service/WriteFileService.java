@@ -1,8 +1,8 @@
 package com.coderman.codemaker.service;
 
-import com.coderman.codemaker.bean.ColumnBean;
-import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.config.ProjectTemplateConfig;
+import com.coderman.codemaker.dbergenerate.bean.ColumnBean;
+import com.coderman.codemaker.dbergenerate.bean.TableBean;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.utils.Constant;
 import com.coderman.codemaker.utils.FreemarkerUtils;
@@ -249,7 +249,7 @@ public class WriteFileService {
      * @param humpClassName
      * @param varMap
      */
-    public void writeAll(String humpClassName, Map<String, Object> varMap,String fast) {
+    public void writeAll(String humpClassName, Map<String, Object> varMap, String fast) {
         String entityContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.ENTITY.getTempFileName(), varMap);
         this.writeEntity(entityContent, humpClassName);
 
@@ -283,7 +283,7 @@ public class WriteFileService {
      *
      * @param varMap
      */
-    public void writeCommon(Map<String, Object> varMap,String fast) {
+    public void writeCommon(Map<String, Object> varMap, String fast) {
         String baseControllerContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.BASE_CONTROLLER.getTempFileName(), varMap);
         this.writeBaseController(baseControllerContent);
 
@@ -295,20 +295,21 @@ public class WriteFileService {
 
     }
 
+
     /**
      * 整合e-r图生成工具
      *
      * @param tableBeanMap
      * @param columnBeanListMap
      */
-    public void writeERPicture(Map<String, TableBean> tableBeanMap, Map<String, List<ColumnBean>> columnBeanListMap) {
+    public void writeERPicture(Map<String, com.coderman.codemaker.bean.TableBean> tableBeanMap, Map<String, List<com.coderman.codemaker.bean.ColumnBean>> columnBeanListMap) {
         String filePath = projectTemplateConfig.getOutPath() + Constant.ER_PICTURE + "/" + projectTemplateConfig.getDbName() + ".puml";
         List<com.coderman.codemaker.dbergenerate.bean.TableBean> tableBeanList = new ArrayList<>();
         tableBeanMap.forEach((k, v) -> {
             com.coderman.codemaker.dbergenerate.bean.TableBean tableBean = new com.coderman.codemaker.dbergenerate.bean.TableBean();
             tableBean.setTableComment(v.getTableComment());
             tableBean.setTableName(v.getTableName());
-            List<ColumnBean> columnBeanList = columnBeanListMap.get(k);
+            List<com.coderman.codemaker.bean.ColumnBean> columnBeanList = columnBeanListMap.get(k);
             List<com.coderman.codemaker.dbergenerate.bean.ColumnBean> columnBeanList1 = new ArrayList<>();
             columnBeanList.forEach(columnBean -> {
                 com.coderman.codemaker.dbergenerate.bean.ColumnBean columnBean1 = new com.coderman.codemaker.dbergenerate.bean.ColumnBean();
@@ -325,5 +326,6 @@ public class WriteFileService {
         });
         erPictureService.getErPicture(filePath, tableBeanList);
     }
+
 
 }

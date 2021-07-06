@@ -1,5 +1,7 @@
 package com.coderman.codemaker.config;
 
+
+
 import com.coderman.codemaker.app.AppService;
 import com.coderman.codemaker.enums.ModuleEnum;
 import com.coderman.codemaker.exceptions.ConfigException;
@@ -32,6 +34,7 @@ public class AppServiceConfig {
     @Value("${application.type}")
     private String  applicationType;
 
+
     @Resource(name = "colaAppService")
     private AppService colaAppService;
 
@@ -40,6 +43,10 @@ public class AppServiceConfig {
 
     @Resource(name = "springBootAppService")
     private AppService springBootAppService;
+
+
+    @Resource(name = "dynamicDDDAppService")
+    private AppService dynamicDDDAppService;
 
     @Autowired
     private ProjectTemplateConfig projectTemplateConfig;
@@ -86,6 +93,14 @@ public class AppServiceConfig {
     }
 
     /**
+     * 获取dynamicddd代码写服务
+     * @return
+     */
+    public IWriteFileService getDynamicDDDWriteService(){
+        return dynamicDDDAppService.getModelAppService(null);
+    }
+
+    /**
      * 根据模版名称获取模块名称
      * @param templateName
      * @return
@@ -129,5 +144,6 @@ public class AppServiceConfig {
         }
         return "";
     }
+
 
 }

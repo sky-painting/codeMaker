@@ -1,6 +1,7 @@
 package com.coderman.codemaker.app.dubbo;
 
 import com.coderman.codemaker.bean.ClassContentBean;
+import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.ProjectTemplateDubboConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.IWriteFileService;
@@ -29,31 +30,31 @@ public class DubboCommonWriteServiceImpl implements IWriteFileService {
     private ProjectTemplateDubboConfig projectTemplateDubboConfig;
 
     @Override
-    public void writeContent(String templateName, String content, String humpClassName) {
+    public void writeContent(WriteContentBean writeContentBean) {
         //写do class
-        if(templateName.equals(TemplateFileEnum.DATA_OBJECT.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DATA_OBJECT.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("dataobject");
             classContentBean.setClassSuffix("DO.java");
             writeDO(classContentBean);
         }
         //写mapper class
-        if(templateName.equals(TemplateFileEnum.MAPPER.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mapper");
             classContentBean.setClassSuffix("Mapper.java");
             writeMapper(classContentBean);
         }
 
         //写mapper.xml
-        if(templateName.equals(TemplateFileEnum.MAPPER_XML.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_XML.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mapper");
             classContentBean.setClassSuffix("Mapper.xml");
             writeMapperXml(classContentBean);

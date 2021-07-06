@@ -13,4 +13,10 @@
   2.dubbo-common:dubbo应用的持久化层子模块
   3.dubbo-core:dubbo应用的provider实现层模块
 
-7.codemaker-cola:
+7.codemaker-dynamicddd:
+  基于plantUML类图+ddd思想生成的代码会放在这个子模块里
+  这里可以认为是模块级的代码生成服务，而springboot,cola,dubbo是应用框架和架构级的代码生成服务
+
+
+8.codemaker-cola:
+
