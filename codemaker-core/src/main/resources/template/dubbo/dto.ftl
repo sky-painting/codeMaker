@@ -4,6 +4,8 @@ import java.util.Date;
 import java.math.BigDecimal;
 import lombok.Data;
 import lombok.ToString;
+import java.io.Serializable;
+
 
 /**
 * @Description:${table.tableComment}DTO类
@@ -13,7 +15,7 @@ import lombok.ToString;
 */
 @Data
 @ToString
-public class ${table.humpClassName}DTO{
+public class ${table.humpClassName}DTO  implements Serializable {
 
 <#list columns as column>
 	/** ${column.columnComment} **/
