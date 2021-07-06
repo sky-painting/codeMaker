@@ -31,8 +31,8 @@ public class AppServiceConfig {
     /**
      * 应用类型
      */
-    //@Value("${application.typename}")
-    private String  applicationType="dubbo";
+    @Value("${application.type}")
+    private String  applicationType;
 
 
     @Resource(name = "colaAppService")
