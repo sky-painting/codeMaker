@@ -36,7 +36,7 @@ public class TemlateVarService {
 
     private Map<String, TableBean> tableBeanMap;
 
-    private Map<String,List<ColumnBean>> columnBeanMap;
+    private Map<String, List<ColumnBean>> columnBeanMap;
     private Pattern pattern = Pattern.compile("^[-\\+]?[\\d]*$");
 
     /**
@@ -54,9 +54,9 @@ public class TemlateVarService {
             e.setHumpClassName(humpClassName);
             String tableName ;
             if(e.getTableName().contains("_")){
-                String [] tableArr = e.getTableName().split("_");
+                String[] tableArr = e.getTableName().split("_");
                 if(isNum(tableArr[tableArr.length - 1])){
-                    String [] newArr = Arrays.copyOfRange(tableArr, 0, tableArr.length - 1);
+                    String[] newArr = Arrays.copyOfRange(tableArr, 0, tableArr.length - 1);
                     tableName = StringUtils.join(newArr,"_");
                 }else {
                     tableName = e.getTableName();
@@ -76,7 +76,7 @@ public class TemlateVarService {
      * 获取加工后的columnBean元数据
      * @return
      */
-    private Map<String,List<ColumnBean>> exeGetColumnBeanMap(){
+    private Map<String, List<ColumnBean>> exeGetColumnBeanMap(){
         String dbName = projectTemplateConfig.getDbName();
         List<ColumnBean> columnBeanList = sqlMapper.getColumnBeanList(dbName);
         columnBeanList.stream().forEach(e->{
@@ -89,9 +89,9 @@ public class TemlateVarService {
             e.setColumnUperName(columnUperName);
             String tableName;
             if(e.getTableName().contains("_")){
-                String [] tableArr = e.getTableName().split("_");
+                String[] tableArr = e.getTableName().split("_");
                 if(isNum(tableArr[tableArr.length - 1])){
-                    String [] newArr = Arrays.copyOfRange(tableArr, 0, tableArr.length - 1);
+                    String[] newArr = Arrays.copyOfRange(tableArr, 0, tableArr.length - 1);
                     tableName = StringUtils.join(newArr,"_");
                 }else {
                     tableName = e.getTableName();
@@ -112,7 +112,7 @@ public class TemlateVarService {
             }
         });
 
-        Map<String,List<ColumnBean>> stringListMap = columnBeanListNew.stream().collect(Collectors.groupingBy(ColumnBean::getTableName));
+        Map<String, List<ColumnBean>> stringListMap = columnBeanListNew.stream().collect(Collectors.groupingBy(ColumnBean::getTableName));
         System.out.println("stringListMap = "+JSON.toJSONString(stringListMap));
         return stringListMap;
     }
@@ -134,7 +134,7 @@ public class TemlateVarService {
         if(!tableName.contains("_")){
             resultName = tableName;
         }else {
-            String [] tableNameArr = tableName.split("_");
+            String[] tableNameArr = tableName.split("_");
             int length = tableNameArr.length;
             StringBuilder builder = new StringBuilder();
 

@@ -3,6 +3,7 @@ package com.coderman.codemaker.app.springboot;
 import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.ProjectTemplateConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.DBErPictureService;
@@ -38,94 +39,94 @@ public class SpringBootWriteServiceImpl implements IWriteFileService {
 
 
     @Override
-    public void writeContent(String templateName, String content, String humpClassName) {
+    public void writeContent(WriteContentBean writeContentBean) {
         //写entity class
-        if(templateName.equals(TemplateFileEnum.ENTITY.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ENTITY.getTempFileName())){
 
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("entity");
             classContentBean.setClassSuffix("Entity.java");
             writeClassFile(classContentBean);
         }
         //写mapper class
-        if(templateName.equals(TemplateFileEnum.MAPPER.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER.getTempFileName())){
 
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mapper");
             classContentBean.setClassSuffix("Mapper.java");
             writeClassFile(classContentBean);
         }
 
         //写mapper.xml
-        if(templateName.equals(TemplateFileEnum.MAPPER_XML.getTempFileName())){
-            writeMapperXml(content, humpClassName);
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_XML.getTempFileName())){
+            writeMapperXml(writeContentBean.getContent(), writeContentBean.getHumpClassName());
         }
 
         //写vo
-        if(templateName.equals(TemplateFileEnum.VO.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.VO.getTempFileName())){
 
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("vo");
             classContentBean.setClassSuffix("VO.java");
             writeClassFile(classContentBean);
         }
 
         //写service
-        if(templateName.equals(TemplateFileEnum.SERVICE.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE.getTempFileName())){
 
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("service");
             classContentBean.setClassSuffix("Service.java");
             writeClassFile(classContentBean);
         }
 
         //写serviceImpl
-        if(templateName.equals(TemplateFileEnum.SERVICE_IMPL.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE_IMPL.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("service.impl");
             classContentBean.setClassSuffix("ServiceImpl.java");
             writeClassFile(classContentBean);
         }
 
         //写controller
-        if(templateName.equals(TemplateFileEnum.CONTROLLER.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.CONTROLLER.getTempFileName())){
 
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("controller");
             classContentBean.setClassSuffix("Controller.java");
             writeClassFile(classContentBean);
         }
 
         //写test
-        if(templateName.equals(TemplateFileEnum.TEST.getTempFileName())){
-            writeTest(content, humpClassName);
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.TEST.getTempFileName())){
+            writeTest(writeContentBean.getContent(), writeContentBean.getHumpClassName());
         }
 
         //指定服务类 or 工具类
-        if(templateName.equals(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())){
-            writeSpringApplicationContext(content);
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())){
+            writeSpringApplicationContext(writeContentBean.getContent());
         }
 
         //指定服务类 or 工具类
-        if(templateName.equals(TemplateFileEnum.BASE_CONTROLLER.getTempFileName())){
-            writeBaseController(content);
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.BASE_CONTROLLER.getTempFileName())){
+            writeBaseController(writeContentBean.getContent());
         }
 
         //指定服务类 or 工具类
-        if(templateName.equals(TemplateFileEnum.APPLICATION.getTempFileName())){
-            writeApplication(content);
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.APPLICATION.getTempFileName())){
+            writeApplication(writeContentBean.getContent());
         }
     }
 
@@ -353,29 +354,29 @@ public class SpringBootWriteServiceImpl implements IWriteFileService {
      * @param humpClassName
      * @param varMap
      */
-    public void writeAll(String humpClassName, Map<String, Object> varMap,String fast) {
+    public void writeAll(String humpClassName, Map<String, Object> varMap, String fast) {
         String entityContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.ENTITY.getTempFileName(), varMap);
         this.writeEntity(entityContent, humpClassName);
 
-        String serviceContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.SERVICE.getTempFileName(), varMap);
+        String serviceContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.SERVICE.getTempFileName(), varMap);
         this.writeService(serviceContent, humpClassName);
 
-        String serviceImplContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.SERVICE_IMPL.getTempFileName(), varMap);
+        String serviceImplContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.SERVICE_IMPL.getTempFileName(), varMap);
         this.writeServiceImpl(serviceImplContent, humpClassName);
 
-        String mapperXmlContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.MAPPER_XML.getTempFileName(), varMap);
+        String mapperXmlContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.MAPPER_XML.getTempFileName(), varMap);
         this.writeMapperXml(mapperXmlContent, humpClassName);
 
-        String mapperContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.MAPPER.getTempFileName(), varMap);
+        String mapperContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.MAPPER.getTempFileName(), varMap);
         this.writeMapper(mapperContent, humpClassName);
 
-        String controllerContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.CONTROLLER.getTempFileName(), varMap);
+        String controllerContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.CONTROLLER.getTempFileName(), varMap);
         this.writeController(controllerContent, humpClassName);
 
-        String voContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.VO.getTempFileName(), varMap);
+        String voContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.VO.getTempFileName(), varMap);
         this.writeVO(voContent, humpClassName);
 
-        String testContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.TEST.getTempFileName(), varMap);
+        String testContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.TEST.getTempFileName(), varMap);
         this.writeTest(testContent, humpClassName);
     }
 
@@ -387,14 +388,14 @@ public class SpringBootWriteServiceImpl implements IWriteFileService {
      *
      * @param varMap
      */
-    public void writeCommon(Map<String, Object> varMap,String fast) {
-        String baseControllerContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.BASE_CONTROLLER.getTempFileName(), varMap);
+    public void writeCommon(Map<String, Object> varMap, String fast) {
+        String baseControllerContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.BASE_CONTROLLER.getTempFileName(), varMap);
         this.writeBaseController(baseControllerContent);
 
-        String SpringApplicationContextContent = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(), varMap);
+        String SpringApplicationContextContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(), varMap);
         this.writeSpringApplicationContext(SpringApplicationContextContent);
 
-        String application = FreemarkerUtils.parseTpl(fast+TemplateFileEnum.APPLICATION.getTempFileName(), varMap);
+        String application = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.APPLICATION.getTempFileName(), varMap);
         this.writeApplication(application);
 
     }

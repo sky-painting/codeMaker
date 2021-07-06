@@ -10,7 +10,7 @@ import com.lightsnail.snailapp.usercrm.app.exe.UserGroupCmdExe;
 /**
  * @Description:用户组cmd处理类接口实现类
  * @Author：fanchunshuai
- * @CreateTime：2021-07-06 17:11:46
+ * @CreateTime：2021-07-07 00:05:11
  * @version v1.0
  */
 @Service

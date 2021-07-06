@@ -1,4 +1,7 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.registry;
+
+
+import com.coderman.codemaker.service.AbstractVarRegistry;
 
 import java.util.Map;
 

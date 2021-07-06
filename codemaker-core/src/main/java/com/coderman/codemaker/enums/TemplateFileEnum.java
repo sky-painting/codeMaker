@@ -27,6 +27,23 @@ public enum  TemplateFileEnum {
     BUSINESS_OBJECT("bo"),
     CONVERT("convert"),
     FACADE_AOP("facadeaop"),
+    GATAWAY("gataway"),
+    REPOSITORY("repository"),
+    REPOSITORY_IMPL("repositoryimpl"),
+    FACTORY("factory"),
+    ENUM("enum"),
+    MESSAGE_BODY("msgbody"),
+    GATAWAY_IMPL("gatawayimpl"),
+    ACL("acl"),
+    ACL_IMPL("aclimpl"),
+    ACL_REQ("aclreq"),
+    ACL_RES("aclres"),
+    ACL_PARAM("aclparam"),
+    CMD("cmd"),
+    EXE("exe"),
+    EXE_IMPL("exeimpl"),
+    EXE_ABSTRACT("abstractexe"),
+    VALUE_OBJECT("valueobject"),
     ;
     private String tempFileName;
     TemplateFileEnum(String tempFileName){

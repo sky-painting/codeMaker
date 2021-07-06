@@ -26,6 +26,19 @@ public class ClassContentBean {
 
     private String humpClassName;
 
+    /**
+     * 类所在包名，包括子包
+     */
+    private String classPackageName;
+
+    public String getClassPackageName() {
+        return classPackageName;
+    }
+
+    public void setClassPackageName(String classPackageName) {
+        this.classPackageName = classPackageName;
+    }
+
     public String getChildPackageName() {
         return childPackageName;
     }

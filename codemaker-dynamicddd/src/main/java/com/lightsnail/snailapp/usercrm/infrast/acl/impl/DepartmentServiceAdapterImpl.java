@@ -12,7 +12,7 @@ import com.lightsnail.snailapp.usercrm.infrast.acl.DepartmentServiceAdapter;
 /**
  * @Description:部门查询服务适配器接口实现类
  * @Author：fanchunshuai
- * @CreateTime：2021-07-06 17:11:46
+ * @CreateTime：2021-07-07 00:05:11
  * @version v1.0
  */
 @Service

@@ -8,7 +8,7 @@ import com.lightsnail.snailapp.usercrm.infrast.acl.req.dto.DepartmentQueryDTO;
 /**
  * @Description:部门查询服务适配器接口
  * @Author:fanchunshuai
- * @CreateTime:2021-07-06 17:11:46
+ * @CreateTime:2021-07-07 00:05:11
  * @version v1.0
  */
 public interface DepartmentServiceAdapter{

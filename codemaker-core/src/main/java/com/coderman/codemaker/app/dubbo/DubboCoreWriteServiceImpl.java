@@ -1,6 +1,7 @@
 package com.coderman.codemaker.app.dubbo;
 
 import com.coderman.codemaker.bean.ClassContentBean;
+import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.ProjectTemplateDubboConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.IWriteFileService;
@@ -28,42 +29,42 @@ public class DubboCoreWriteServiceImpl implements IWriteFileService {
     private ProjectTemplateDubboConfig projectTemplateDubboConfig;
 
     @Override
-    public void writeContent(String templateName, String content, String humpClassName) {
+    public void writeContent(WriteContentBean writeContentBean) {
         //写FacadeImpl
-        if(templateName.equals(TemplateFileEnum.FACADE_IMPL.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.FACADE_IMPL.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("facade.impl");
             classContentBean.setClassSuffix("FacadeImpl.java");
             writeClassFile(classContentBean);
         }
 
         //写model.bo
-        if(templateName.equals(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("model.bo");
             classContentBean.setClassSuffix("BO.java");
             writeClassFile(classContentBean);
         }
 
         //写converter
-        if(templateName.equals(TemplateFileEnum.CONVERT.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.CONVERT.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("convert");
             classContentBean.setClassSuffix("Converter.java");
             writeClassFile(classContentBean);
         }
 
         //写service
-        if(templateName.equals(TemplateFileEnum.SERVICE.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("service");
             classContentBean.setClassSuffix("Service.java");
             writeClassFile(classContentBean);
@@ -71,50 +72,50 @@ public class DubboCoreWriteServiceImpl implements IWriteFileService {
 
 
         //写serviceimpl
-        if(templateName.equals(TemplateFileEnum.SERVICE_IMPL.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE_IMPL.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("service.impl");
             classContentBean.setClassSuffix("ServiceImpl.java");
             writeClassFile(classContentBean);
         }
 
         //写test
-        if(templateName.equals(TemplateFileEnum.TEST.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.TEST.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("test");
             classContentBean.setClassSuffix("FacadeTest.java");
             writeClassTestFile(classContentBean);
         }
 
         //写Application类
-        if(templateName.equals(TemplateFileEnum.APPLICATION.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.APPLICATION.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("");
             classContentBean.setClassSuffix("");
             writeClassFile(classContentBean);
         }
 
         //写Application类
-        if(templateName.equals(TemplateFileEnum.FACADE_AOP.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.FACADE_AOP.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("aop");
             classContentBean.setClassSuffix("");
             writeClassFile(classContentBean);
         }
 
         //写serviceimpl
-        if(templateName.equals(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(content);
-            classContentBean.setHumpClassName(humpClassName);
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("utils");
             classContentBean.setClassSuffix("");
             writeClassFile(classContentBean);

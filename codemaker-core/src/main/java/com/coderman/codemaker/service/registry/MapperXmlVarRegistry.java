@@ -1,7 +1,9 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.registry;
 
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.service.AbstractVarRegistry;
+import com.coderman.codemaker.service.TemlateVarService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

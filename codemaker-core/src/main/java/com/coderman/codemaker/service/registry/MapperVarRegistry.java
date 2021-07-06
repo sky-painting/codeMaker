@@ -1,7 +1,9 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.registry;
 
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.service.AbstractVarRegistry;
+import com.coderman.codemaker.service.TemlateVarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -10,14 +12,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * description: EntityVarRegistry <br>
- * date: 2020/7/7 10:04 <br>
+ * description: MapperVarRegistry <br>
+ * date: 2020/7/7 10:05 <br>
  * author: coderman <br>
  * version: 1.0 <br>
  */
-@Component(value = "entityVarRegistry")
-public class EntityVarRegistry extends AbstractVarRegistry {
-
+@Component(value = "mapperVarRegistry")
+public class MapperVarRegistry extends AbstractVarRegistry {
     @Autowired
     private TemlateVarService temlateVarService;
 

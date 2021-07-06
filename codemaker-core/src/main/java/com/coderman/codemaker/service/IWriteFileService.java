@@ -1,5 +1,7 @@
 package com.coderman.codemaker.service;
 
+import com.coderman.codemaker.bean.WriteContentBean;
+
 import java.util.Map;
 
 /**
@@ -15,11 +17,9 @@ public interface IWriteFileService {
 
     /**
      * 抽象写模块class文件
-     * @param templateName
-     * @param content
-     * @param humpClassName
+     * @param writeContentBean
      */
-    public void writeContent(String templateName, String content, String humpClassName);
+    public void writeContent(WriteContentBean writeContentBean);
 
     /**
      * 一次性生成单表需要的所有模块代码

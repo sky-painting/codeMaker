@@ -3,7 +3,8 @@ package com.coderman.codemaker.controller;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.enums.TemplateFileEnum;
-import com.coderman.codemaker.service.*;
+import com.coderman.codemaker.service.WriteFileService;
+import com.coderman.codemaker.service.registry.*;
 import com.coderman.codemaker.utils.FreemarkerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,17 +54,17 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/entity")
     public String getEntityTemplate(){
-        Map<String,Object> map = entityVarRegistry.getTemplateVar();
+        Map<String, Object> map = entityVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.ENTITY.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.ENTITY.getTempFileName(),varMap);
             writeFileService.writeEntity(templateContent,v.getHumpClassName());
         });
 
@@ -76,17 +77,17 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/vo")
     public String getVOTemplate(){
-        Map<String,Object> map = entityVarRegistry.getTemplateVar();
+        Map<String, Object> map = entityVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.VO.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.VO.getTempFileName(),varMap);
             writeFileService.writeVO(templateContent,v.getHumpClassName());
         });
 
@@ -99,16 +100,16 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/mapper")
     public String getMapperTemplate(){
-        Map<String,Object> map = mapperVarRegistry.getTemplateVar();
+        Map<String, Object> map = mapperVarRegistry.getTemplateVar();
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.MAPPER.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.MAPPER.getTempFileName(),varMap);
             writeFileService.writeMapper(templateContent,v.getHumpClassName());
 
         });
@@ -122,17 +123,17 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/service")
     public String getServiceTemplate(){
-        Map<String,Object> map = serviceVarRegistry.getTemplateVar();
+        Map<String, Object> map = serviceVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.SERVICE.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.SERVICE.getTempFileName(),varMap);
             writeFileService.writeService(templateContent,v.getHumpClassName());
         });
 
@@ -145,17 +146,17 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/serviceimpl")
     public String getServiceImplTemplate(){
-        Map<String,Object> map = mapperXmlVarRegistry.getTemplateVar();
+        Map<String, Object> map = mapperXmlVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.SERVICE_IMPL.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.SERVICE_IMPL.getTempFileName(),varMap);
             writeFileService.writeServiceImpl(templateContent,v.getHumpClassName());
         });
 
@@ -169,17 +170,17 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/mapperxml")
     public String getMapperXMLTemplate(){
-        Map<String,Object> map = serviceImplVarRegistry.getTemplateVar();
+        Map<String, Object> map = serviceImplVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.MAPPER_XML.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.MAPPER_XML.getTempFileName(),varMap);
             writeFileService.writeMapperXml(templateContent,v.getHumpClassName());
         });
 
@@ -192,17 +193,17 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/controller")
     public String getControllerTemplate(){
-        Map<String,Object> map = serviceImplVarRegistry.getTemplateVar();
+        Map<String, Object> map = serviceImplVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.CONTROLLER.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.CONTROLLER.getTempFileName(),varMap);
             writeFileService.writeController(templateContent,v.getHumpClassName());
         });
 
@@ -215,17 +216,17 @@ public class GeneratorFastController {
      */
     @GetMapping("/getproject/fast/test")
     public String getServiceTest(){
-        Map<String,Object> map = testVarRegistry.getTemplateVar();
+        Map<String, Object> map = testVarRegistry.getTemplateVar();
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
         tableBeanMap.forEach((k,v)->{
-            Map<String,Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
-            String templateContent = FreemarkerUtils.parseTpl("/fast/"+TemplateFileEnum.TEST.getTempFileName(),varMap);
+            String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.TEST.getTempFileName(),varMap);
             writeFileService.writeTest(templateContent,v.getHumpClassName());
         });
 

@@ -1,7 +1,6 @@
 package com.coderman.codemaker.service;
 
 import com.coderman.codemaker.config.AppServiceConfig;
-import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.utils.FreemarkerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +21,8 @@ public class FreemarkerService {
 
     @Autowired
     private AppServiceConfig appServiceConfig;
+
+    private static final String dynamicDDDPath = "/dynamicddd/";
 
     /**
      * 根据不同应用类型获取不同应用代码的模板生成代码类
@@ -51,6 +52,16 @@ public class FreemarkerService {
         }
         return FreemarkerUtils.parseTpl(realViewName, params);
     }
+    /**
+     * 根据不同应用类型获取不同应用代码的模板生成代码类
+     *
+     * @param viewName
+     * @param params
+     * @return
+     */
+    public String parseTplDynamicDDD(String viewName, Map<String, Object> params) {
 
+        return FreemarkerUtils.parseTpl(dynamicDDDPath+viewName, params);
+    }
 
 }

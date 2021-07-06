@@ -2,11 +2,12 @@ package com.coderman.codemaker.service;
 
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateConfig;
+
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.utils.Constant;
-import com.coderman.codemaker.utils.FreemarkerUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,6 +42,8 @@ public class WriteAppModuleService {
     @Autowired
     private FreemarkerService freemarkerService;
 
+    @Autowired
+    private WriteDynamicDDDModuleService writeDynamicDDDModuleService;
 
     /**
      * 写mapper xml文件
@@ -50,10 +53,15 @@ public class WriteAppModuleService {
      */
     public void writeMapperXml(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MAPPER_XML.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.MAPPER_XML.getTempFileName(),content,humpClassName);
+
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.MAPPER_XML.getTempFileName())
+                .humpClassName(humpClassName).build();
+
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -64,10 +72,14 @@ public class WriteAppModuleService {
      */
     public void writeEntity(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ENTITY.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.ENTITY.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.ENTITY.getTempFileName())
+                .humpClassName(humpClassName).build();
+
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -78,10 +90,14 @@ public class WriteAppModuleService {
      */
     public void writeDO(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.DATA_OBJECT.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.DATA_OBJECT.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.DATA_OBJECT.getTempFileName())
+                .humpClassName(humpClassName).build();
+
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -93,10 +109,14 @@ public class WriteAppModuleService {
      */
     public void writeVO(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.VO.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.VO.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.VO.getTempFileName())
+                .humpClassName(humpClassName).build();
+
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -107,10 +127,14 @@ public class WriteAppModuleService {
      */
     public void writeDTO(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.DTO.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.DTO.getTempFileName(),content,humpClassName);
+
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.DTO.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -121,10 +145,13 @@ public class WriteAppModuleService {
      */
     public void writeBO(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -136,10 +163,13 @@ public class WriteAppModuleService {
      */
     public void writeMapper(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MAPPER.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.MAPPER.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.MAPPER.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -150,10 +180,13 @@ public class WriteAppModuleService {
      */
     public void writeService(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.SERVICE.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.SERVICE.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.SERVICE.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -165,10 +198,13 @@ public class WriteAppModuleService {
      */
     public void writeFacade(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.FACADE.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.FACADE.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.FACADE.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -180,10 +216,13 @@ public class WriteAppModuleService {
      */
     public void writeFacadeImpl(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.FACADE_IMPL.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.FACADE_IMPL.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.FACADE_IMPL.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -195,10 +234,13 @@ public class WriteAppModuleService {
      */
     public void writeServiceImpl(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.SERVICE_IMPL.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.SERVICE_IMPL.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.SERVICE_IMPL.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -209,10 +251,13 @@ public class WriteAppModuleService {
      */
     public void writeBaseController(String content) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.SERVICE_IMPL.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.BASE_CONTROLLER.getTempFileName(),content,null);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.BASE_CONTROLLER.getTempFileName())
+                .humpClassName("").build();
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -222,10 +267,13 @@ public class WriteAppModuleService {
      */
     public void writeSpringApplicationContext(String content) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(),content,"SpringApplicationContext.java");
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())
+                .humpClassName("SpringApplicationContext.java").build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -236,10 +284,13 @@ public class WriteAppModuleService {
      */
     public void writeTest(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.TEST.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.TEST.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.TEST.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -249,10 +300,13 @@ public class WriteAppModuleService {
      */
     public void writeApplication(String content) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.APPLICATION.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.APPLICATION.getTempFileName(),content,"Application.java");
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.APPLICATION.getTempFileName())
+                .humpClassName("Application.java").build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -263,10 +317,13 @@ public class WriteAppModuleService {
      */
     public void writeFacadeAop(String content) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.APPLICATION.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.FACADE_AOP.getTempFileName(),content,"FacadeServiceAop.java");
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.FACADE_AOP.getTempFileName())
+                .humpClassName("FacadeServiceAop.java").build();
+        writeFileService.writeContent(writeContentBean);
     }
 
 
@@ -278,10 +335,13 @@ public class WriteAppModuleService {
      */
     public void writeController(String content, String humpClassName) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.CONTROLLER.getTempFileName());
-        if(writeFileService == null){
+        if (writeFileService == null) {
             return;
         }
-        writeFileService.writeContent(TemplateFileEnum.CONTROLLER.getTempFileName(),content,humpClassName);
+        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
+                .templateName(TemplateFileEnum.CONTROLLER.getTempFileName())
+                .humpClassName(humpClassName).build();
+        writeFileService.writeContent(writeContentBean);
     }
 
     /**
@@ -292,53 +352,51 @@ public class WriteAppModuleService {
      */
     public void writeAll(String humpClassName, Map<String, Object> varMap, String fast) {
         if (StringUtils.isEmpty(fast)) {
-            fast = "/"+appServiceConfig.getApplicationType()+"/";
+            fast = "/" + appServiceConfig.getApplicationType() + "/";
         }
-        String entityContent = freemarkerService.parseTpl(fast+TemplateFileEnum.ENTITY.getTempFileName(), varMap);
+        String entityContent = freemarkerService.parseTpl(fast + TemplateFileEnum.ENTITY.getTempFileName(), varMap);
         this.writeEntity(entityContent, humpClassName);
 
-        String serviceContent = freemarkerService.parseTpl(fast+TemplateFileEnum.SERVICE.getTempFileName(), varMap);
+        String serviceContent = freemarkerService.parseTpl(fast + TemplateFileEnum.SERVICE.getTempFileName(), varMap);
         this.writeService(serviceContent, humpClassName);
 
-        String serviceImplContent = freemarkerService.parseTpl(fast+TemplateFileEnum.SERVICE_IMPL.getTempFileName(), varMap);
+        String serviceImplContent = freemarkerService.parseTpl(fast + TemplateFileEnum.SERVICE_IMPL.getTempFileName(), varMap);
         this.writeServiceImpl(serviceImplContent, humpClassName);
 
-        String mapperXmlContent = freemarkerService.parseTpl(fast+TemplateFileEnum.MAPPER_XML.getTempFileName(), varMap);
+        String mapperXmlContent = freemarkerService.parseTpl(fast + TemplateFileEnum.MAPPER_XML.getTempFileName(), varMap);
         this.writeMapperXml(mapperXmlContent, humpClassName);
 
-        String mapperContent = freemarkerService.parseTpl(fast+TemplateFileEnum.MAPPER.getTempFileName(), varMap);
+        String mapperContent = freemarkerService.parseTpl(fast + TemplateFileEnum.MAPPER.getTempFileName(), varMap);
         this.writeMapper(mapperContent, humpClassName);
 
-        String controllerContent = freemarkerService.parseTpl(fast+TemplateFileEnum.CONTROLLER.getTempFileName(), varMap);
+        String controllerContent = freemarkerService.parseTpl(fast + TemplateFileEnum.CONTROLLER.getTempFileName(), varMap);
         this.writeController(controllerContent, humpClassName);
 
-        String voContent = freemarkerService.parseTpl(fast+TemplateFileEnum.VO.getTempFileName(), varMap);
+        String voContent = freemarkerService.parseTpl(fast + TemplateFileEnum.VO.getTempFileName(), varMap);
         this.writeVO(voContent, humpClassName);
 
-        String testContent = freemarkerService.parseTpl(fast+TemplateFileEnum.TEST.getTempFileName(), varMap);
+        String testContent = freemarkerService.parseTpl(fast + TemplateFileEnum.TEST.getTempFileName(), varMap);
         this.writeTest(testContent, humpClassName);
 
-        String boContent = freemarkerService.parseTpl(fast+TemplateFileEnum.BUSINESS_OBJECT.getTempFileName(), varMap);
+        String boContent = freemarkerService.parseTpl(fast + TemplateFileEnum.BUSINESS_OBJECT.getTempFileName(), varMap);
         this.writeBO(boContent, humpClassName);
 
-        String dtoContent = freemarkerService.parseTpl(fast+TemplateFileEnum.DTO.getTempFileName(), varMap);
+        String dtoContent = freemarkerService.parseTpl(fast + TemplateFileEnum.DTO.getTempFileName(), varMap);
         this.writeDTO(dtoContent, humpClassName);
 
 
-        String facadeContent = freemarkerService.parseTpl(fast+TemplateFileEnum.FACADE.getTempFileName(), varMap);
+        String facadeContent = freemarkerService.parseTpl(fast + TemplateFileEnum.FACADE.getTempFileName(), varMap);
         this.writeFacade(facadeContent, humpClassName);
 
 
-        String facadeImplContent = freemarkerService.parseTpl(fast+TemplateFileEnum.FACADE_IMPL.getTempFileName(), varMap);
+        String facadeImplContent = freemarkerService.parseTpl(fast + TemplateFileEnum.FACADE_IMPL.getTempFileName(), varMap);
         this.writeFacadeImpl(facadeImplContent, humpClassName);
 
-        String doContent = freemarkerService.parseTpl(fast+TemplateFileEnum.DATA_OBJECT.getTempFileName(), varMap);
+        String doContent = freemarkerService.parseTpl(fast + TemplateFileEnum.DATA_OBJECT.getTempFileName(), varMap);
         this.writeDO(doContent, humpClassName);
 
 
     }
-
-
 
 
     /**
@@ -346,19 +404,19 @@ public class WriteAppModuleService {
      *
      * @param varMap
      */
-    public void writeCommon(Map<String, Object> varMap,String fast) {
+    public void writeCommon(Map<String, Object> varMap, String fast) {
 
 
-        String baseControllerContent = freemarkerService.parseTpl(fast+ TemplateFileEnum.BASE_CONTROLLER.getTempFileName(), varMap);
+        String baseControllerContent = freemarkerService.parseTpl(fast + TemplateFileEnum.BASE_CONTROLLER.getTempFileName(), varMap);
         this.writeBaseController(baseControllerContent);
 
-        String SpringApplicationContextContent = freemarkerService.parseTpl(fast+TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(), varMap);
+        String SpringApplicationContextContent = freemarkerService.parseTpl(fast + TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(), varMap);
         this.writeSpringApplicationContext(SpringApplicationContextContent);
 
-        String application = freemarkerService.parseTpl(fast+TemplateFileEnum.APPLICATION.getTempFileName(), varMap);
+        String application = freemarkerService.parseTpl(fast + TemplateFileEnum.APPLICATION.getTempFileName(), varMap);
         this.writeApplication(application);
 
-        String facadeAop = freemarkerService.parseTpl(fast+TemplateFileEnum.FACADE_AOP.getTempFileName(), varMap);
+        String facadeAop = freemarkerService.parseTpl(fast + TemplateFileEnum.FACADE_AOP.getTempFileName(), varMap);
         this.writeFacadeAop(facadeAop);
     }
 
@@ -393,4 +451,17 @@ public class WriteAppModuleService {
         erPictureService.getErPicture(filePath, tableBeanList);
     }
 
+    /**
+     * 写dynamicddd模块代码生成
+     *
+     * @param dynamicDDDMap
+     */
+    public void writeDynamicDDD(Map<String, Object> dynamicDDDMap) {
+
+        IWriteFileService writeFileService = appServiceConfig.getDynamicDDDWriteService();
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeDynamicDDD(dynamicDDDMap, writeFileService);
+    }
 }
