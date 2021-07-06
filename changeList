@@ -2,3 +2,26 @@
 2.实现数据库表sql生成功能 1.0.0
 3.实现数据库表e-r图生成功能 1.0.1
 4.实现代码生成极速模式  1.0.2
+
+
+5. verison 1.0.3 变更
+ 1.重构代码生成逻辑核心服务,引入应用层，支持多应用类型代码生成架构
+ 2.支持一套api操作接口生成dubbo,springboot应用代码
+ 3.增加dubbo应用的代码模板，支持maven多模块
+ 4.引入bo,facade,facadeimpl,aop,dto等代码类生成模板
+ 5.dubbo项目支持facade层和service层双服务层业务架构
+ 6.application.properties增加application.type属性，值为springboot,dubbo,cola
+ 7.增加projecttemplate-dubbo.properties属性文件，支持dubbo项目代码生成
+ 8.原有配置文件projecttemplate.properties改名为projecttemplate-springboot.properties
+ 9.修复若干其他bug,
+
+
+6. verison 1.0.4 变更
+ 1.基于plantUML文档生成代码，基于ddd思想和模式生成模块级的代码内容
+ 2.增加makeddd接口，支持生成dynamicddd模块的代码
+ 3.引入支持ddd代码生成的配置(projecttemplate-dynamicddd.properties)和代码模板(template/dynamicddd)
+ 4.codemaker-core模块resources目录增加ddd-plantuml目录存放plantUML类图
+ 5.支持ddd的一些模式代码生成：实体模式,值对象模式,聚合根模式,工厂模式,仓库模式,防腐层模式,服务模式,模块模式,CQE模式,领域网关
+ 6.产出部分公共代码生成服务方法
+ 7.优化代码生成核心链路代码模型，针对ddd代码生成做了分层处理
+ 8.修复若干其他bug
