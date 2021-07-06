@@ -1,0 +1,147 @@
+@startuml
+
+
+package domain.bo {
+
+    class "用户组-UserGroupBO" as UserBO{
+        组名:String groupName
+    }
+
+    class "用户信息-UserBO" as UserBO{
+        用户名:String userName
+    }
+
+    class "角色-RoleBO" as RoleBO{
+        角色名称:String roleName
+    }
+
+
+    class "权限-AuthorityBO" as AuthorityBO{
+        权限类型:Integer authorityType
+    }
+
+    class "数据权限-DataAuthorityBO" as DataAuthorityBO {
+	    系统标示:String systemName
+	    表名:String tableName
+	    字段名:String columnName
+    }
+
+    class "系统菜单权限-SystemAuthorityBO" as SystemAuthorityBO{
+        系统标示:String systemName
+        功能:String funcName
+        菜单:String categoryName
+        按钮:String menuName
+    }
+
+    class "行政权限-AdminAuthorityBO" as AdminAuthorityBO {
+	    组织部门:Long departmentId
+        城市:Long cityId
+        职位:Long jobId
+    }
+    class "系统设置-SystemConfig" as SystemConfig{
+        变量名:String varName
+        变量描述:String varDesc
+        变量值:String value
+    }
+
+       AuthorityBO <|-- DataAuthorityBO
+       AdminAuthorityBO --|> AuthorityBO
+       SystemAuthorityBO --|> AuthorityBO
+
+}
+
+
+package domain.msgbody {
+
+}
+
+package domain.gataway {
+
+}
+
+
+package "领域工厂服务包-domain.factory" {
+
+}
+
+package "防腐层包-infrast.acl" as infrast.acl {
+    interface "部门查询服务适配器-DepartmentServiceAdapter" as DepartmentServiceAdapter{
+        查询所有有效的部门: List<DepartmentResponseDTO> queryAllDepartment(DepartmentQueryDTO queryDto)
+        查询子部门: List<DepartmentResponseDTO> queryDepartmentsList(Long pId)
+    }
+}
+
+
+package app.command {
+
+    class "抽象命令类-AbstractCmd" as AbstractCmd{
+        +操作时间: Date operateTime
+        +操作人ID: Long userId
+        +命令类: Class commandClass
+        +命令数据: String payLoad;
+
+    }
+
+    class "增加用户组命令-AddUserGroupCmd" as AddUserGroupCmd{
+        组名:String groupName
+        用户ID:Long userId
+    }
+
+    class "增加用户命令-AddUserCmd" as AddUserCmd{
+        用户名:String userName
+        用户ID:Long userId
+        所属组织:Long departmentId
+
+    }
+
+    class "增加用户权限-AddUserAuthCmd" as AddUserAuthCmd{
+        用户ID:Long userId
+        权限类型:int authorityType
+        权限数据内容:String json
+    }
+
+    class "更新用户权限-UpdateUserAuthCmd" as UpdateUserAuthCmd{
+        用户ID:Long userId
+        角色ID:Long roleId
+        权限数据内容:String json
+    }
+
+    AddUserRoleCmd --|> AbstractCmd
+    AddUserGroupCmd --|> AbstractCmd
+    AddUserCmd --|> AbstractCmd
+    AddUserAuthCmd --|> AbstractCmd
+    UpdateUserAuthCmd --|> AbstractCmd
+
+}
+
+
+package app.exe {
+
+    interface "命令执行接口-CmdExeService" as CmdExeService{
+        命令执行入口:String exe(AbstractCmd abstractCmd)
+    }
+
+    class "用户组cmd处理类-UserGroupCmdExe" as UserGroupCmdExe{
+
+    }
+
+    class "用户cmd处理类-UserCmdExe" as UserCmdExe{
+
+    }
+
+    class "用户权限cmd处理类-UserAuthCmdExe" as UserAuthCmdExe{
+        用户ID:Long userId
+        权限类型:int authorityType
+        权限数据内容:String json
+    }
+
+
+
+    UserGroupCmdExe ..|> CmdExeService
+    UserCmdExe ..|> CmdExeService
+    UserAuthCmdExe ..|> CmdExeService
+
+}
+
+
+@enduml

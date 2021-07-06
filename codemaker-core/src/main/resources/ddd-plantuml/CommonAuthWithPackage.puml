@@ -1,0 +1,69 @@
+@startuml
+
+
+package com.infosys.authplat.domain.bo {
+
+    class "用户组-UserGroupBO" as UserBO{
+        组名:String groupName
+    }
+
+    class "用户信息-UserBO" as UserBO{
+        用户名:String userName
+    }
+
+    class "角色-RoleBO" as RoleBO{
+        角色名称:String roleName
+    }
+
+
+    class "权限-AuthorityBO" as AuthorityBO{
+        权限类型:Integer authorityType
+    }
+
+    class "数据权限-DataAuthorityBO" as DataAuthorityBO {
+	    系统标示:String systemName
+	    表名:String tableName
+	    字段名:String columnName
+    }
+
+    class "系统菜单权限-SystemAuthorityBO" as SystemAuthorityBO{
+        系统标示:String systemName
+        功能:String funcName
+        菜单:String categoryName
+        按钮:String menuName
+    }
+
+    class "行政权限-AdminAuthorityBO" as AdminAuthorityBO {
+	    组织部门:Long departmentId
+        城市:Long cityId
+        职位:Long jobId
+    }
+
+       AuthorityBO <|-- DataAuthorityBO
+       AdminAuthorityBO --|> AuthorityBO
+       SystemAuthorityBO --|> AuthorityBO
+
+}
+
+
+package com.infosys.authplat.domain.msgbody {
+
+}
+
+package com.infosys.authplat.domain.gataway {
+
+}
+
+
+package "领域工厂服务包-com.infosys.authplat.domain.factory" {
+
+}
+
+package "防腐层包-com.infosys.authplat.infrast.acl" as com.infosys.authplat.infrast.acl {
+    interface "部门查询服务适配器-DepartmentServiceAdapter" as DepartmentServiceAdapter{
+        查询所有有效的部门: List<DepartmentResponseDTO> queryAllDepartment(DepartmentQueryDTO queryDto)
+        查询子部门: List<DepartmentResponseDTO> queryDepartmentsList(Long pId)
+    }
+}
+
+@enduml
