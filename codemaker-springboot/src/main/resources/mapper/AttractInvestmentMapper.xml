@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.lightsnail.app.user.crm.core.mapper.AttractInvestmentMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.lightsnail.app.user.crm.core.entity.AttractInvestmentEntity">
+        <result column="id" property="id" />
+        <result column="chinese_name" property="chineseName" />
+        <result column="handphone" property="handphone" />
+        <result column="investment_type" property="investmentType" />
+        <result column="company_address" property="companyAddress" />
+        <result column="start_time" property="startTime" />
+        <result column="end_time" property="endTime" />
+        <result column="is_openaccount" property="isOpenaccount" />
+        <result column="account_id" property="accountId" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,chinese_name,handphone,investment_type,company_address,start_time,end_time,is_openaccount,account_id,create_time
+    </sql>
+
+    <insert id="insert" parameterType="com.lightsnail.app.user.crm.core.entity.AttractInvestmentEntity">
+        insert into attract_investment(
+        chinese_name,handphone,investment_type,company_address,start_time,end_time,is_openaccount,account_create_time
+        )
+        values(
+        #{chinese_name},#{handphone},#{investment_type},#{company_address},#{start_time},#{end_time},#{is_openaccount},#{account_id},#{create_time}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.lightsnail.app.user.crm.core.entity.AttractInvestmentEntity">
+        update attract_investment
+        set
+        chinese_name=#{chinese_name},handphone=#{handphone},investment_type=#{investment_type},company_address=#{company_address},start_time=#{start_time},end_time=#{end_time},is_openaccount=#{is_openaccount},account_id=#{account_id},create_time=#{create_time}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultType="com.lightsnail.app.user.crm.core.entity.AttractInvestmentEntity">
+        select <include refid="Base_Column_List" />  from attract_investment
+    </select>
+
+    <select id="getById" parameterType="com.lightsnail.app.user.crm.core.entity.AttractInvestmentEntity"
+            resultType="com.lightsnail.app.user.crm.core.entity.AttractInvestmentEntity">
+        select <include refid="Base_Column_List" /> from attract_investment  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from attract_investment where id = #{id}
+    </delete>
+
+</mapper>
