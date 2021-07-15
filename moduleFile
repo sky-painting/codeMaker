@@ -19,4 +19,9 @@
 
 
 8.codemaker-cola:
+  cola-adapter:cola应用的adapter模块，主要负责vo,controller的代码管理
+  cola-app:cola应用的app模块，属于应用层，主要负责facadeimpl,cmd,exe的代码管理
+  cola-client:cola应用的client模块，属于sdk,主要负责rpc类的代码管理，facade,dto,目前只支持dubbo
+  cola-domain:cola应用的domain模块，属于领域层，主要负责bo,enum,factory,gataway等的代码管理
+  cola-infrast:cola应用的基础设施层模块，主要负责gatawayimpl,do,mapper等的代码管理
 
