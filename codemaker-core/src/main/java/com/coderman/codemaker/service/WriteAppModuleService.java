@@ -3,8 +3,10 @@ package com.coderman.codemaker.service;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.bean.WriteContentBean;
+import com.coderman.codemaker.bean.plantuml.ClassBean;
+import com.coderman.codemaker.bean.plantuml.EnumBean;
+import com.coderman.codemaker.bean.plantuml.InterfaceBean;
 import com.coderman.codemaker.config.AppServiceConfig;
-import com.coderman.codemaker.config.ProjectTemplateConfig;
 
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.utils.Constant;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +35,6 @@ public class WriteAppModuleService {
 
     @Autowired
     private AppServiceConfig appServiceConfig;
-
-    @Autowired
-    private ProjectTemplateConfig projectTemplateConfig;
 
     @Autowired
     private DBErPictureService erPictureService;
@@ -83,7 +83,7 @@ public class WriteAppModuleService {
     }
 
     /**
-     * 写entity文件
+     * 写do文件
      *
      * @param content
      * @param humpClassName
@@ -138,7 +138,7 @@ public class WriteAppModuleService {
     }
 
     /**
-     * 写DTO文件
+     * 写BO文件
      *
      * @param content
      * @param humpClassName
@@ -154,6 +154,257 @@ public class WriteAppModuleService {
         writeFileService.writeContent(writeContentBean);
     }
 
+    /**
+     * 写BO文件
+     * @param writeContentBean
+     */
+    public void writeBO(WriteContentBean writeContentBean) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeFileService.writeContent(writeContentBean);
+    }
+
+    /**
+     * 写BO文件
+     * @param classBeanList
+     */
+    public void writeBO(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeBO(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写msgbody文件
+     * @param classBeanList
+     */
+    public void writeMsgBody(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MESSAGE_BODY.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeMsgBody(classBeanList,writeFileService,null);
+    }
+    /**
+     * 写domaingataway文件
+     * @param classBeanList
+     */
+    public void writeDomainGataway(List<InterfaceBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.GATAWAY.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeGataWay(classBeanList,writeFileService,null);
+    }
+    /**
+     * 写domaingatawayimpl文件
+     * @param interfaceBeanList
+     */
+    public void writeGatawayImpl(List<InterfaceBean> interfaceBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.GATAWAY_IMPL.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeGatawayImpl(interfaceBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写command文件
+     * @param classBeanList
+     */
+    public void writeCommand(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.CMD.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeAppCommand(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写factory文件
+     * @param classBeanList
+     */
+    public void writeFactory(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.FACTORY.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeFactory(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写AppExeImpl文件
+     * @param classBeanList
+     */
+    public void writeAppExeImpl(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.CMD.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeAppExeImpl(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写AppExeInterface文件
+     * @param interfaceBeanList
+     */
+    public void writeAppExeInterface(List<InterfaceBean> interfaceBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.EXE.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeAppExeInterface(interfaceBeanList,writeFileService,null);
+    }
+
+
+    /**
+     * 写dtoboconvert文件
+     * @param dtoboConvertBeanList
+     */
+    public void writeDTOBOConvert(List<InterfaceBean> dtoboConvertBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.DTOBO_CONVERT.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeDtoBOConvert(dtoboConvertBeanList,writeFileService);
+    }
+
+    /**
+     * 写voboconvert文件
+     * @param dtoboConvertBeanList
+     */
+    public void writeVOBOConvert(List<InterfaceBean> dtoboConvertBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.VOBO_CONVERT.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeVoBOConvert(dtoboConvertBeanList,writeFileService);
+    }
+
+    /**
+     * 写doboconvert文件
+     * @param doboConvertBeanList
+     */
+    public void writeDOBOConvert(List<InterfaceBean> doboConvertBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.DOBO_CONVERT.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeDoBOConvert(doboConvertBeanList,writeFileService);
+    }
+
+
+    /**
+     * 写acl.param文件
+     * @param classBeanList
+     */
+    public void writeAclInterfaceParam(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ACL_PARAM.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeACLParam(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写AppExeInterface文件
+     * @param interfaceBeanList
+     */
+    public void writeAclInterfaceAndImpl(List<InterfaceBean> interfaceBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ACL.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeAclInterfaceAndImpl(interfaceBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写valueobject文件
+     * @param classBeanList
+     */
+    public void writeValueObject(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.VALUE_OBJECT.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeValueObject(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写enum文件
+     * @param classBeanList
+     */
+    public void writeEnum(List<EnumBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ENUM.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeEnum(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写DTO文件
+     * @param classBeanList
+     */
+    public void writeDTO(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.DTO.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeDTO(classBeanList,writeFileService);
+    }
+
+    /**
+     * 写VO文件
+     * @param classBeanList
+     */
+    public void writeVO(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.VO.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeVO(classBeanList,writeFileService);
+    }
+
+    /**
+     * 写controller文件
+     * @param classBeanList
+     */
+    public void writeController(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.CONTROLLER.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeController(classBeanList,writeFileService);
+    }
+
+    /**
+     * 写facade文件
+     * @param classBeanList
+     */
+    public void writeFacade(List<InterfaceBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.FACADE_DDD.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeFacade(classBeanList,writeFileService);
+    }
+
+    /**
+     * 写facadeimpl文件
+     * @param classBeanList
+     */
+    public void writeFacadeImpl(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.FACADE_IMPL_DDD.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeFacadeImpl(classBeanList,writeFileService);
+    }
 
     /**
      * 写mapper class文件
@@ -250,7 +501,7 @@ public class WriteAppModuleService {
      * @param content
      */
     public void writeBaseController(String content) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.SERVICE_IMPL.getTempFileName());
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BASE_CONTROLLER.getTempFileName());
         if (writeFileService == null) {
             return;
         }
@@ -398,6 +649,100 @@ public class WriteAppModuleService {
 
     }
 
+    /**
+     * 一次性生成所有表的模块代码，同时解析plantUML的类图结合起来
+     * @param allMetaDataMap
+     */
+    public void writeAllWithDDD(Map<String,Object> allMetaDataMap){
+        List<ClassBean> boClassBeanList = (List<ClassBean>)allMetaDataMap.get("domainbo");
+        this.writeBO(boClassBeanList);
+
+        List<ClassBean> valueObjectBeanList = (List<ClassBean>)allMetaDataMap.get("domainvalueobject");
+        List<EnumBean> enumBeanList = (List<EnumBean>)allMetaDataMap.get("valueobjectenum");
+        this.writeValueObject(valueObjectBeanList);
+        this.writeEnum(enumBeanList);
+
+        List<ClassBean> msgClassBeanList = (List<ClassBean>)allMetaDataMap.get("domainmsg");
+        this.writeMsgBody(msgClassBeanList);
+
+        List<InterfaceBean> gatawayBeanList = (List<InterfaceBean>)allMetaDataMap.get("gataway");
+        List<InterfaceBean> repositoryBeanList = (List<InterfaceBean>)allMetaDataMap.get("repository");
+        gatawayBeanList.addAll(repositoryBeanList);
+        this.writeDomainGataway(gatawayBeanList);
+        this.writeGatawayImpl(gatawayBeanList);
+
+        List<InterfaceBean> aclBeanList = (List<InterfaceBean>)allMetaDataMap.get("infrastacl");
+        List<ClassBean> aclParamBeanList = (List<ClassBean>)allMetaDataMap.get("infrastaclparam");
+        this.writeAclInterfaceAndImpl(aclBeanList);
+        this.writeAclInterfaceParam(aclParamBeanList);
+
+
+        List<ClassBean> commandBeanList = (List<ClassBean>)allMetaDataMap.get("cmd");
+        this.writeCommand(commandBeanList);
+
+        List<ClassBean> exeBeanList = (List<ClassBean>)allMetaDataMap.get("exeClass");
+        List<InterfaceBean> exeInterfaceBeanList = (List<InterfaceBean>)allMetaDataMap.get("exeInterface");
+        this.writeAppExeImpl(exeBeanList);
+        this.writeAppExeInterface(exeInterfaceBeanList);
+
+
+        List<ClassBean> factoryBeanList = (List<ClassBean>)allMetaDataMap.get("domainfactory");
+        this.writeFactory(factoryBeanList);
+
+        List<ClassBean> voClassBeanList = (List<ClassBean>)allMetaDataMap.get("adaptervo");
+        this.writeVO(voClassBeanList);
+
+        List<ClassBean> classBeanList = (List<ClassBean>)allMetaDataMap.get("controller");
+        this.writeController(classBeanList);
+
+
+        List<InterfaceBean> derivefacadeInterfaceBeanList = (List<InterfaceBean>)allMetaDataMap.get("derivefacade");
+        this.writeFacade(derivefacadeInterfaceBeanList);
+
+        List<ClassBean> derivefacadeimplclassBeanList = (List<ClassBean>)allMetaDataMap.get("derivefacadeimpl");
+        this.writeFacadeImpl(derivefacadeimplclassBeanList);
+
+        List<ClassBean> dtoClassBeanList = (List<ClassBean>)allMetaDataMap.get("derivedto");
+        this.writeDTO(dtoClassBeanList);
+
+
+
+        List<InterfaceBean> dtoboconvertBeanList = (List<InterfaceBean>)allMetaDataMap.get("dtoboconvert");
+        this.writeDTOBOConvert(dtoboconvertBeanList);
+
+        List<InterfaceBean> voboconvertBeanList = (List<InterfaceBean>)allMetaDataMap.get("voboconvert");
+        this.writeVOBOConvert(voboconvertBeanList);
+
+        List<InterfaceBean> doboconvertBeanList = (List<InterfaceBean>)allMetaDataMap.get("doboconvert");
+        this.writeDOBOConvert(doboconvertBeanList);
+
+        Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)allMetaDataMap.get("table");
+        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)allMetaDataMap.get("columns");
+        Map<String,Object> varMap = new HashMap<>();
+
+        tableBeanMap.forEach((k,v)->{
+            varMap.put("table", v);
+            varMap.put("columns", columnBeanListMap.get(k));
+            varMap.put("package", allMetaDataMap.get("package"));
+            varMap.put("author", allMetaDataMap.get("author"));
+            String templateContent = freemarkerService.parseTpl(TemplateFileEnum.DATA_OBJECT.getTempFileName(),varMap);
+            this.writeDO(templateContent,v.getHumpClassName());
+
+            templateContent = freemarkerService.parseTpl(TemplateFileEnum.MAPPER.getTempFileName(),varMap);
+            this.writeMapper(templateContent,v.getHumpClassName());
+
+            templateContent = freemarkerService.parseTpl(TemplateFileEnum.MAPPER_XML.getTempFileName(),varMap);
+            this.writeMapperXml(templateContent,v.getHumpClassName());
+
+            templateContent = freemarkerService.parseTpl(TemplateFileEnum.TEST.getTempFileName(),varMap);
+            this.writeTest(templateContent,v.getHumpClassName());
+        });
+        //写公共服务类
+        this.writeCommon(varMap,"");
+        //渲染e-r图
+        this.writeERPicture(tableBeanMap,columnBeanListMap);
+
+    }
 
     /**
      * 写公共基础服务类
@@ -427,7 +772,7 @@ public class WriteAppModuleService {
      * @param columnBeanListMap
      */
     public void writeERPicture(Map<String, TableBean> tableBeanMap, Map<String, List<ColumnBean>> columnBeanListMap) {
-        String filePath = projectTemplateConfig.getOutPath() + Constant.ER_PICTURE + "/" + projectTemplateConfig.getDbName() + ".puml";
+        String filePath = appServiceConfig.getErPictureOutPath() + Constant.ER_PICTURE + "/" + appServiceConfig.getDbName() + ".puml";
         List<com.coderman.codemaker.dbergenerate.bean.TableBean> tableBeanList = new ArrayList<>();
         tableBeanMap.forEach((k, v) -> {
             com.coderman.codemaker.dbergenerate.bean.TableBean tableBean = new com.coderman.codemaker.dbergenerate.bean.TableBean();

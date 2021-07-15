@@ -20,6 +20,9 @@ public class WriteContentBean {
     private String humpClassName;
     private String classPackageName;
 
+
+
+
     private AbstractClassBean abstractClassBean;
 
     public AbstractClassBean getAbstractClassBean() {

@@ -1,10 +1,12 @@
 package com.coderman.codemaker.service;
 
 import com.coderman.codemaker.bean.plantuml.*;
+import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateDynamicDDDConfig;
 import com.coderman.codemaker.enums.ClassEnum;
 import com.coderman.codemaker.enums.ClassRelationEnum;
 import com.coderman.codemaker.enums.VisibilityEnum;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,18 +32,23 @@ import java.util.Map;
  *
  */
 @Service
+@Slf4j
 public class ReadPlantUMLFileServiceV2 {
 
     @Autowired
-    private ProjectTemplateDynamicDDDConfig projectTemplateDynamicDDDConfig;
-
+    private AppServiceConfig appServiceConfig;
     /**
      * 读取plantUMl文件
+     * @param plantUMLFileName
      * @return
      */
-    private List<String> readPlantUMLContent(){
+    private List<String> readPlantUMLContent(String plantUMLFileName){
+        if(StringUtils.isEmpty(plantUMLFileName)){
+            log.error("plantUMLFileName is empty,can't read content----------------!!!!!!!!!!");
+            return null;
+        }
         try {
-            File file = ResourceUtils.getFile("classpath:ddd-plantuml/"+projectTemplateDynamicDDDConfig.getPlantumlFileName());
+            File file = ResourceUtils.getFile("classpath:ddd-plantuml/"+plantUMLFileName);
             return FileUtils.readLines(file,"UTF-8");
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,10 +59,14 @@ public class ReadPlantUMLFileServiceV2 {
 
     /**
      * 解析plantUML文件内容
+     * @param plantUMLFileName
      * @return
      */
-    public PlantUmlContextBean getPlantUmlContextBean(){
-        List<String> contentList = readPlantUMLContent();
+    public PlantUmlContextBean getPlantUmlContextBean(String plantUMLFileName){
+        List<String> contentList = readPlantUMLContent(plantUMLFileName);
+        if(CollectionUtils.isEmpty(contentList)){
+            return null;
+        }
         List<String> elementList = new ArrayList<>();
         PlantUmlContextBean plantUmlContextBean = new PlantUmlContextBean();
 
@@ -160,7 +171,7 @@ public class ReadPlantUMLFileServiceV2 {
         ClassBean classBean = new ClassBean();
         classBean.setFieldBeanList(fieldBeanList);
         classBean.setMethodBeanList(methodBeanList);
-        classBean.setAuthor(projectTemplateDynamicDDDConfig.getAuthor());
+        classBean.setAuthor(appServiceConfig.getAuthor());
         classBean.setClassName(classMetaInfoArr.split("-")[1].replace("\"",""));
         classBean.setClassDesc(classMetaInfoArr.split("-")[0].replace("\"",""));
         return classBean;
@@ -179,7 +190,7 @@ public class ReadPlantUMLFileServiceV2 {
         List<MethodBean> methodBeanList = getMethodBeanList(elementList.subList(1,elementList.size()));
         InterfaceBean interfaceBean = new InterfaceBean();
         interfaceBean.setMethodBeanList(methodBeanList);
-        interfaceBean.setAuthor(projectTemplateDynamicDDDConfig.getAuthor());
+        interfaceBean.setAuthor(appServiceConfig.getAuthor());
 
         interfaceBean.setClassName(classMetaInfoArr.split("-")[1].replace("\"",""));
         interfaceBean.setClassDesc(classMetaInfoArr.split("-")[0].replace("\"",""));
@@ -199,7 +210,7 @@ public class ReadPlantUMLFileServiceV2 {
         List<FieldBean> fieldBeanList = getFieldBeanList(elementList.subList(1,elementList.size()));
         EnumBean enumBean = new EnumBean();
         enumBean.setFieldBeanList(fieldBeanList);
-        enumBean.setAuthor(projectTemplateDynamicDDDConfig.getAuthor());
+        enumBean.setAuthor(appServiceConfig.getAuthor());
         enumBean.setClassName(classMetaInfoArr.split("-")[1].replace("\"",""));
         enumBean.setClassDesc(classMetaInfoArr.split("-")[0].replace("\"",""));
         dealEnumMethodBeanList(elementList,enumBean);
@@ -258,7 +269,7 @@ public class ReadPlantUMLFileServiceV2 {
                     methodBean.setMethodName(arr[1]);
                 }else{
                     methodBean.setReturnClass(arr[0]);
-                    methodBean.setMethodName(fieldArr[1].trim().replace(arr[0],""));
+                    methodBean.setMethodName(fieldArr[1].trim().replaceFirst(arr[0],"").trim());
                 }
             }else {
                 String[] fieldArr = fieldStr.trim().split(" ");

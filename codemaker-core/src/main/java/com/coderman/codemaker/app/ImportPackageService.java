@@ -3,13 +3,14 @@ package com.coderman.codemaker.app;
 import com.coderman.codemaker.bean.plantuml.AbstractClassBean;
 import com.coderman.codemaker.bean.plantuml.FieldBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
+import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.DefaultPackageConfig;
-import com.coderman.codemaker.config.ProjectTemplateDynamicDDDConfig;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ImportPackageService {
     private DefaultPackageConfig defaultPackageConfig;
 
     @Autowired
-    private ProjectTemplateDynamicDDDConfig projectTemplateDynamicDDDConfig;
+    private AppServiceConfig appServiceConfig;
     /**
      * 处理需要导入的包
      * @param abstractClassBean
@@ -37,13 +38,31 @@ public class ImportPackageService {
      */
     public void dealImportClass(AbstractClassBean abstractClassBean, PlantUmlContextBean plantUmlContextBean){
         Set<String> importClassSet = new HashSet<>();
+        if(CollectionUtils.isNotEmpty(abstractClassBean.getImportClassList())){
+            importClassSet.addAll(abstractClassBean.getImportClassList());
+        }
 
+        //对方法进行探测
         abstractClassBean.getMethodBeanList().forEach(methodBean -> {
             String returnClassName = methodBean.getReturnClass();
 
             String defaultPackageName = defaultPackageConfig.getPackage(returnClassName);
             if(!StringUtils.isEmpty(defaultPackageName)){
                 importClassSet.add(defaultPackageName);
+            }
+
+            String methodName = methodBean.getMethodName();
+
+            //对方法参数进行探测
+            String params = methodName.substring(methodName.indexOf("(")).replace("(","").replace(")","").trim();
+            if(StringUtils.isNotEmpty(params) && params.length() > 3){
+                String [] arr = params.split(",");
+                for (String param : arr){
+                    String importPackage = defaultPackageConfig.getPackage(param.trim());
+                    if(!StringUtils.isEmpty(importPackage)){
+                        importClassSet.add(importPackage);
+                    }
+                }
             }
 
             plantUmlContextBean.getClassBeanMap().forEach((k,v)->{
@@ -73,7 +92,7 @@ public class ImportPackageService {
             });
         });
 
-
+        //对属性进行探测
         if (CollectionUtils.isNotEmpty(abstractClassBean.getFieldBeanList())) {
             abstractClassBean.getFieldBeanList().forEach(fieldBean -> {
                 String fieldClass = fieldBean.getFieldName().trim().toLowerCase();
@@ -101,6 +120,112 @@ public class ImportPackageService {
             });
         }
 
+
+        if(abstractClassBean.isDerived()){
+            //对方法进行探测
+            abstractClassBean.getMethodBeanList().forEach(methodBean -> {
+                String returnClassName = methodBean.getReturnClass();
+
+                String defaultPackageName = defaultPackageConfig.getPackage(returnClassName);
+                if(!StringUtils.isEmpty(defaultPackageName)){
+                    importClassSet.add(defaultPackageName);
+                }
+
+                String methodName = methodBean.getMethodName();
+
+                //对方法参数进行探测
+                String params = methodName.substring(methodName.indexOf("(")).replace("(","").replace(")","").trim();
+                if(StringUtils.isNotEmpty(params) && params.length() > 3){
+                    String [] arr = params.split(",");
+                    for (String param : arr){
+                        String importPackage = defaultPackageConfig.getPackage(param.trim());
+                        if(!StringUtils.isEmpty(importPackage)){
+                            importClassSet.add(importPackage);
+                        }
+                    }
+                }
+
+
+                if (plantUmlContextBean.getDerivedPlantUmlContextBean() != null){
+                    plantUmlContextBean.getDerivedPlantUmlContextBean().getClassBeanMap().forEach((k,v)->{
+
+                        if(!abstractClassBean.getPackageName().equals(v.getPackageName())){
+                            //返回参数匹配
+                            if(returnClassName.toLowerCase().contains(k.toLowerCase())){
+                                importClassSet.add(v.getPackageName()+"."+v.getClassName());
+                            }
+                            /**
+                             * 方法参数匹配
+                             */
+                            if(methodBean.getMethodName().toLowerCase().contains(k.toLowerCase())){
+                                importClassSet.add(v.getPackageName()+"."+v.getClassName());
+                            }
+                        }
+
+                    });
+
+                    plantUmlContextBean.getDerivedPlantUmlContextBean().getEnumBeanMap().forEach((k,v)->{
+                        if(k.toLowerCase().equals(returnClassName.toLowerCase())){
+                            importClassSet.add(v.getPackageName()+"."+v.getClassName());
+                        }
+                        if(methodBean.getMethodName().toLowerCase().contains(k.toLowerCase())){
+                            importClassSet.add(v.getPackageName()+"."+v.getClassName());
+                        }
+                    });
+                }
+            });
+
+            //对属性进行探测
+            if (CollectionUtils.isNotEmpty(abstractClassBean.getFieldBeanList())) {
+
+                abstractClassBean.getFieldBeanList().forEach(fieldBean -> {
+                    String fieldClass = fieldBean.getFieldName().trim().toLowerCase();
+
+                    String defaultPackageName = defaultPackageConfig.getPackage(fieldClass);
+                    if(!StringUtils.isEmpty(defaultPackageName)){
+                        importClassSet.add(defaultPackageName);
+                    }
+
+                    if (plantUmlContextBean.getDerivedPlantUmlContextBean() != null) {
+                        plantUmlContextBean.getDerivedPlantUmlContextBean().getClassBeanMap().forEach((k,v)->{
+
+                            if(!abstractClassBean.getPackageName().equals(v.getPackageName())){
+                                //属性类型匹配
+                                if(fieldClass.contains(k.toLowerCase())){
+                                    importClassSet.add(v.getPackageName()+"."+v.getClassName());
+                                }
+                            }
+                        });
+
+                        plantUmlContextBean.getDerivedPlantUmlContextBean().getEnumBeanMap().forEach((k,v)->{
+                            if(fieldClass.contains(k.toLowerCase())){
+                                importClassSet.add(v.getPackageName()+"."+v.getClassName());
+                            }
+                        });
+                    }
+
+                });
+            }
+        }
+
+        //对继承和实现进行探测
+        if(!StringUtils.isEmpty(abstractClassBean.getRelationClassStr())){
+            if(abstractClassBean.getRelationClassStr().contains("implements") && plantUmlContextBean.getDerivedPlantUmlContextBean() != null){
+                String implClass = abstractClassBean.getRelationClassStr().replace("implements","").trim();
+                plantUmlContextBean.getDerivedPlantUmlContextBean().getInterfaceBeanMap().forEach((k,v)->{
+                    if(!abstractClassBean.getPackageName().equals(v.getPackageName())){
+                        //返回参数匹配
+                        if(implClass.toLowerCase().contains(k.toLowerCase())){
+                            importClassSet.add(v.getPackageName()+"."+v.getClassName());
+                        }
+                    }
+                });
+            }
+        }
+
+
+
+
         if(importClassSet.isEmpty()){
             abstractClassBean.setImportClassList(Lists.newArrayList());
         }else {
@@ -117,28 +242,28 @@ public class ImportPackageService {
      */
     public void setPackageName(AbstractClassBean abstractClassBean, String defaultChildPackage){
         if(org.apache.commons.lang3.StringUtils.isEmpty(abstractClassBean.getPlantUMLPackage())){
-            String packageName = projectTemplateDynamicDDDConfig.getGlobalPackage()+"."+defaultChildPackage;
+            String packageName = appServiceConfig.getPackage()+"."+defaultChildPackage;
             abstractClassBean.setPackageName(packageName);
             return;
         }else {
-            if(!abstractClassBean.getPlantUMLPackage().contains(projectTemplateDynamicDDDConfig.getGlobalPackage())
+            if(!abstractClassBean.getPlantUMLPackage().contains(appServiceConfig.getPackage())
                     && abstractClassBean.getPlantUMLPackage().split("\\.").length > 2
                     && !abstractClassBean.getPlantUMLPackage().contains(" as ")){
                 abstractClassBean.setPackageName(abstractClassBean.getPlantUMLPackage());
                 return;
             }
-            if(abstractClassBean.getPlantUMLPackage().contains(projectTemplateDynamicDDDConfig.getGlobalPackage())){
+            if(abstractClassBean.getPlantUMLPackage().contains(appServiceConfig.getPackage())){
                 abstractClassBean.setPackageName(abstractClassBean.getPlantUMLPackage());
                 return;
             }
             else if(!abstractClassBean.getPlantUMLPackage().contains("-") && abstractClassBean.getPlantUMLPackage().split("\\.").length == 2){
-                String packageName = projectTemplateDynamicDDDConfig.getGlobalPackage() +"."+ abstractClassBean.getPlantUMLPackage();
+                String packageName = appServiceConfig.getPackage() +"."+ abstractClassBean.getPlantUMLPackage();
                 abstractClassBean.setPackageName(packageName);
                 return;
             }
             else if(abstractClassBean.getPlantUMLPackage().contains("-") && !abstractClassBean.getPlantUMLPackage().contains(" as ")){
                 String childPackage = abstractClassBean.getPlantUMLPackage().replace("\"","").split("-")[1];
-                String packageName = projectTemplateDynamicDDDConfig.getGlobalPackage() +"."+ childPackage;
+                String packageName = appServiceConfig.getPackage() +"."+ childPackage;
                 abstractClassBean.setPackageName(packageName);
                 return;
             }else {
@@ -150,7 +275,7 @@ public class ImportPackageService {
                     }
                 }
                 if(packageName.split("\\.").length == 2){
-                    packageName = projectTemplateDynamicDDDConfig.getGlobalPackage() +"."+ packageName;
+                    packageName = appServiceConfig.getPackage() +"."+ packageName;
                     abstractClassBean.setPackageName(packageName);
                     return;
                 }else {
@@ -165,45 +290,6 @@ public class ImportPackageService {
         }
     }
 
-
-
-
-    /**
-     *
-     * @param fieldBeanList
-     * @param packageName
-     * @param plantUmlContextBean
-     */
-    public List<String> dealImportClassFromField(List<FieldBean> fieldBeanList, String packageName, PlantUmlContextBean plantUmlContextBean){
-        Set<String> importClassSet = new HashSet<>();
-
-        fieldBeanList.forEach(fieldBean -> {
-            String fieldClass = fieldBean.getFieldName().trim().toLowerCase();
-
-            String defaultPackageName = defaultPackageConfig.getPackage(fieldClass);
-            if(!StringUtils.isEmpty(defaultPackageName)){
-                importClassSet.add(defaultPackageName);
-            }
-
-            plantUmlContextBean.getClassBeanMap().forEach((k,v)->{
-
-                if(!packageName.equals(v.getPackageName())){
-                    //属性类型匹配
-                    if(fieldClass.contains(k.toLowerCase())){
-                        importClassSet.add(v.getPackageName()+"."+v.getClassName());
-                    }
-                }
-            });
-
-            plantUmlContextBean.getEnumBeanMap().forEach((k,v)->{
-                if(fieldClass.contains(k.toLowerCase())){
-                    importClassSet.add(v.getPackageName()+"."+v.getClassName());
-                }
-            });
-        });
-
-        return Lists.newArrayList(importClassSet);
-    }
 
 
 

@@ -26,6 +26,8 @@ public enum  TemplateFileEnum {
     FACADE_IMPL("facadeImpl"),
     BUSINESS_OBJECT("bo"),
     CONVERT("convert"),
+    DTOBO_CONVERT("dtoboconvert"),
+    DOBO_CONVERT("doboconvert"),
     FACADE_AOP("facadeaop"),
     GATAWAY("gataway"),
     REPOSITORY("repository"),
@@ -44,6 +46,13 @@ public enum  TemplateFileEnum {
     EXE_IMPL("exeimpl"),
     EXE_ABSTRACT("abstractexe"),
     VALUE_OBJECT("valueobject"),
+    BUSINESS_OBJECT_DDD("boddd"),
+    FACADE_DDD("facadeddd"),
+    FACADE_IMPL_DDD("facadeimplddd"),
+    CONTROLLER_DDD("controllerddd"),
+    VO_DDD("voddd"),
+    VOBO_CONVERT("voboconvert"),
+    DTO_DDD("dtoddd"),
     ;
     private String tempFileName;
     TemplateFileEnum(String tempFileName){

@@ -1,0 +1,176 @@
+@startuml
+
+
+package domain.bo {
+
+    class "学生基本信息-StudentBO" as StudentBO{
+        学生姓名:String studentName
+        学号:String studentNumber
+        家庭地址:String address
+        家人信息:StudentFamilyBO studentFamilyBO
+        .. extend info ..
+        tableKey:String student
+        facadeKey:String StudentFacade
+        controllerKey:String StudentController
+        dtoKeyList:String UpdateStudentRequestDTO,StudentResponseDTO
+        voKeyList:String StudentPageVO
+        获取学生信息: ResultDataDto<StudentResponseDTO> getByNumber(String number)
+        分页获取学生信息/student/pagelist: ResultDataDto<StudentPageVO> getPageList()
+    }
+
+    class "学生报名信息-StudentSignUpRecordBO" as StudentSignUpRecordBO{
+        学生基本信息:StudentBO studentBO
+        家人信息:StudentFamilyBO studentFamilyBO
+        报名时间:Date signUpDate
+        入学年级:String grant
+        .. extend info ..
+        dtoKeyList:String StudentSignUpResponseDTO,StudentSignUpRequestDTO
+        facadeKey:String StudentFacade
+        controllerKey:String StudentController
+        voKeyList:String StudentSignUpRecordVO,StudentSignUpRecordDetailVO
+        录入报名表信息:ResultDto createStudentSignUpRecord(StudentSignUpRequestDTO studentSignUpRequestDTO)
+        查询报名表信息:ResultDataDto<StudentSignUpResponseDTO> createStudentSignUpRecord(String chineseName,String parentPhone)
+        分页获取学生报名信息/student/signup/pagelist: ResultDataDto<StudentSignUpRecordVO> getSignUpPageList()
+        获取学生报名详情/student/singup/detail: ResultDataDto<StudentSignUpRecordDetailVO> getById(Long id)
+
+    }
+
+    class "班级信息-ClassBO" as ClassBO{
+        班级编号:int number
+        班级所在年级:int grant
+        班级人数:int count
+        班主任信息:TeacherBO teacherBO
+        tableKey:String class
+        dtoKeyList:String ClassResponseDTO,CreateClassRequestDTO
+        facadeKey:String ClassFacade
+        批量创建班级请求:ResultDto createBatchClassList(List<CreateClassRequestDTO> list)
+    }
+
+    class "学生家人联系信息-StudentFamilyBO" as RoleBO{
+        父亲姓名:String fatherName
+        母亲姓名:String motherName
+        父亲联系电话:String fatherPhone
+        母亲联系电话:String motherPhone
+
+    }
+
+    class "教师信息-TeacherBO" as TeacherBO{
+        教师姓名:String teacherName
+        教师学科:String tec
+        代课列表:List<ClassBO> classBOList
+        tableKey:String teacher
+    }
+
+    class "班级人数配置-ClassCountConfig"{
+        年级:String grant
+        班级数:int classCount
+        班级最高人数:int maxStudentCount
+    }
+
+}
+
+
+package domain.enums{
+
+    enum "课程枚举-CourseEnum" as CourseEnum{
+        ENGLISH("english","英语"),
+        CHINESE("chinese","语文"),
+        MATH("math","数学"),
+        MUSIC("music","音乐"),
+        SPORTS("sports","体育");
+        课程标示:String code
+        课程名称:String name
+        static CourseEnum getByCode(String code)
+    }
+}
+
+
+
+
+package domain.msgbody {
+    class "学生报名结果消息-StudentSiguUpResultMsgBody" as StudentSiguUpResultMsgBody{
+        学生学号:String code
+        报名结果标示:String result
+    }
+}
+
+package domain.gataway {
+    interface "学生仓库-StudentRepository" as StudentRepository{
+        保存报名记录:StudentSignUpRecordBO saveSignUp(StudentSignUpRecordBO studentSignInfo)
+        完善学生信息:StudentBO completeStudent(StudentBO studentBO)
+        获取学生信息:StudentBO getByCondition(String code,String chineseName)
+    }
+    interface "教师网关-TeacherGataway" as TeacherGataway{
+        注册教师: Long registTeacher(TeacherBO teacherBO)
+        获取教师信息: TeacherBO getById(Long id)
+    }
+}
+
+
+package "领域工厂服务包-domain.factory" {
+    class "学生工厂服务-StudentFactory" as StudentFactory{
+        获取学生信息:StudentBO buildStudent(Long id)
+        获取学生信息:List<StudentBO> getByClassId(Long classId)
+    }
+    class "班级工厂服务-ClassFactory" as ClassFactory{
+        获取班级信息:ClassBO buildClass(Long id)
+    }
+}
+
+package "防腐层包-infrast.acl" as infrast.acl {
+    interface "部门查询服务适配器-DepartmentServiceAdapter" as DepartmentServiceAdapter{
+        查询所有有效的部门: List<DepartmentResponseDTO> queryAllDepartment(DepartmentQueryDTO queryDto)
+        查询子部门: List<DepartmentResponseDTO> queryDepartmentsList(Long pId)
+    }
+}
+
+
+
+package app.command {
+
+    class "抽象命令类-AbstractCmd" as AbstractCmd{
+        +操作时间: Date operateTime
+        +操作人ID: Long userId
+        +命令类: Class commandClass
+        +命令数据: String payLoad;
+
+    }
+
+    class "学生报名命令-StudentSignUpCmd" as StudentSignUpCmd{
+         学生基本信息:StudentBO studentBO
+         报名时间:Date signUpDate
+         入学年级:String grant
+    }
+
+    class "注册教师命令-RegistTeacherCmd" as RegistTeacherCmd{
+        教师姓名:String teacherName
+    }
+
+
+    StudentSignUpCmd --|> AbstractCmd
+    RegistTeacherCmd --|> AbstractCmd
+
+}
+
+
+package app.exe {
+
+    interface "命令执行接口-CmdExeService" as CmdExeService{
+        命令执行入口:String exe(AbstractCmd abstractCmd)
+    }
+
+    class "学生报名cmd处理类-StudentSignUpExe" as StudentSignUpExe{
+
+    }
+
+    class "教师注册cmd处理类-RegistTeacherCmdExe" as RegistTeacherCmdExe{
+
+    }
+
+
+    StudentSignUpExe ..|> CmdExeService
+    RegistTeacherCmdExe ..|> CmdExeService
+
+}
+
+@enduml

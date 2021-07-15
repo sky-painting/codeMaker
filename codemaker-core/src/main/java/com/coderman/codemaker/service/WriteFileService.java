@@ -1,8 +1,7 @@
 package com.coderman.codemaker.service;
 
-import com.coderman.codemaker.config.ProjectTemplateConfig;
-import com.coderman.codemaker.dbergenerate.bean.ColumnBean;
-import com.coderman.codemaker.dbergenerate.bean.TableBean;
+import com.coderman.codemaker.config.AppServiceConfig;
+import com.coderman.codemaker.config.ProjectTemplateSpringbootConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.utils.Constant;
 import com.coderman.codemaker.utils.FreemarkerUtils;
@@ -26,15 +25,15 @@ import java.util.Map;
  * 因此需要重构，整体api不变，新服务类参考WriteAppModuleService
  */
 @Service
-@Deprecated
 public class WriteFileService {
 
     @Autowired
-    private ProjectTemplateConfig projectTemplateConfig;
+    private ProjectTemplateSpringbootConfig projectTemplateConfig;
 
     @Autowired
     private DBErPictureService erPictureService;
-
+    @Autowired
+    private AppServiceConfig appServiceConfig;
 
     /**
      * 写mapper xml文件
@@ -59,7 +58,7 @@ public class WriteFileService {
      * @param humpClassName
      */
     public void writeEntity(String content, String humpClassName) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/entity";
         String fileName = humpClassName + "Entity.java";
@@ -79,7 +78,7 @@ public class WriteFileService {
      * @param humpClassName
      */
     public void writeVO(String content, String humpClassName) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/vo";
         String fileName = humpClassName + "VO.java";
@@ -99,7 +98,7 @@ public class WriteFileService {
      * @param humpClassName
      */
     public void writeMapper(String content, String humpClassName) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/mapper";
         String fileName = humpClassName + "Mapper.java";
@@ -118,7 +117,7 @@ public class WriteFileService {
      * @param humpClassName
      */
     public void writeService(String content, String humpClassName) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/service";
         String fileName = humpClassName + "Service.java";
@@ -137,7 +136,7 @@ public class WriteFileService {
      * @param humpClassName
      */
     public void writeServiceImpl(String content, String humpClassName) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/service/impl";
         String fileName = humpClassName + "ServiceImpl.java";
@@ -156,7 +155,7 @@ public class WriteFileService {
      * @param content
      */
     public void writeBaseController(String content) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/controller";
         String fileName = "BaseController.java";
@@ -174,7 +173,7 @@ public class WriteFileService {
      * @param content
      */
     public void writeSpringApplicationContext(String content) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/utils";
         String fileName = "SpringApplicationContext.java";
@@ -193,7 +192,7 @@ public class WriteFileService {
      * @param content
      */
     public void writeTest(String content, String humpClassName) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.TEST_JAVA + "/" + packagePath + "/service/test";
         String fileName = humpClassName + "ServiceTest.java";
@@ -211,7 +210,7 @@ public class WriteFileService {
      * @param content
      */
     public void writeApplication(String content) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "";
         String fileName = "Application.java";
@@ -231,7 +230,7 @@ public class WriteFileService {
      * @param humpClassName
      */
     public void writeController(String content, String humpClassName) {
-        String packageName = projectTemplateConfig.getPackageName();
+        String packageName = appServiceConfig.getPackage();
         String packagePath = packageName.replace(".", "\\");
         String filePath = Constant.JAVA + "/" + packagePath + "/controller";
         String fileName = humpClassName + "Controller.java";

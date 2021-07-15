@@ -20,18 +20,6 @@ import org.springframework.stereotype.Component;
 public class ProjectTemplateDubboConfig {
 
     /**
-     * 全局包名
-     */
-    @Value(value = "${dubbo.global.package}")
-    private String globalPackage;
-
-    /**
-     * 项目作者
-     */
-    @Value(value = "${dubbo.global.author}")
-    private String author;
-
-    /**
      * 项目数据库名称
      */
     @Value(value = "${dubbo.global.dbName}")
@@ -61,20 +49,19 @@ public class ProjectTemplateDubboConfig {
     @Value(value = "${dubbo.code.outpath.dubbo-core}")
     private String moduleCorePath;
 
-    public String getGlobalPackage() {
-        return globalPackage;
+    /**
+     * 应用服务的plantUML类图文件,不配置则走基于数据表的方式生成代码
+     */
+    @Value("${dubbo.domain.plantuml}")
+    private String plantumlName;
+
+
+    public String getPlantumlName() {
+        return plantumlName;
     }
 
-    public void setGlobalPackage(String globalPackage) {
-        this.globalPackage = globalPackage;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setPlantumlName(String plantumlName) {
+        this.plantumlName = plantumlName;
     }
 
     public String getDbName() {

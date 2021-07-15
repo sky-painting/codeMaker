@@ -19,17 +19,6 @@ import org.springframework.stereotype.Component;
 @PropertySource( "classpath:projecttemplate-dynamicddd.properties")
 public class ProjectTemplateDynamicDDDConfig {
 
-    /**
-     * 全局包名
-     */
-    @Value(value = "${dynamicddd.global.package}")
-    private String globalPackage;
-
-    /**
-     * 项目作者
-     */
-    @Value(value = "${dynamicddd.global.author}")
-    private String author;
 
     @Value(value = "${dynamicddd.code.outpath}")
     private String outPath;
@@ -44,22 +33,6 @@ public class ProjectTemplateDynamicDDDConfig {
 
     public void setPlantumlFileName(String plantumlFileName) {
         this.plantumlFileName = plantumlFileName;
-    }
-
-    public String getGlobalPackage() {
-        return globalPackage;
-    }
-
-    public void setGlobalPackage(String globalPackage) {
-        this.globalPackage = globalPackage;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getOutPath() {

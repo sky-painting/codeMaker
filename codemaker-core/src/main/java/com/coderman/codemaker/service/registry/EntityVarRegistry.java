@@ -23,6 +23,8 @@ public class EntityVarRegistry extends AbstractVarRegistry {
     @Autowired
     private TemlateVarService temlateVarService;
 
+
+
     @Override
     public Map<String, Object> getRegistVarMap() {
         Map<String, TableBean> tableBeanMap = temlateVarService.getTableBeanMap();

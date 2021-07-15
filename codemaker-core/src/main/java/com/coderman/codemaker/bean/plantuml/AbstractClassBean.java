@@ -67,6 +67,18 @@ public abstract class AbstractClassBean {
      */
     private String plantUMLPackage;
 
+    /**
+     * 是否是派生类
+     */
+    private boolean isDerived;
+
+    public boolean isDerived() {
+        return isDerived;
+    }
+
+    public void setDerived(boolean derived) {
+        isDerived = derived;
+    }
 
     public String getAuthor() {
         return author;

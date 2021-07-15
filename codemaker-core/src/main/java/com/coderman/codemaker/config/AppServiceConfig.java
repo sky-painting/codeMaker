@@ -33,7 +33,11 @@ public class AppServiceConfig {
      */
     @Value("${application.type}")
     private String  applicationType;
+    @Value(value = "${application.global.package}")
+    private String packageName;
 
+    @Value(value = "${application.global.author}")
+    private String author;
 
     @Resource(name = "colaAppService")
     private AppService colaAppService;
@@ -49,10 +53,13 @@ public class AppServiceConfig {
     private AppService dynamicDDDAppService;
 
     @Autowired
-    private ProjectTemplateConfig projectTemplateConfig;
+    private ProjectTemplateSpringbootConfig projectTemplateSpringbootConfig;
 
     @Autowired
     private ProjectTemplateDubboConfig projectTemplateDubboConfig;
+
+    @Autowired
+    private ProjectTemplateColaConfig projectTemplateColaConfig;
 
     /**
      * 从应用框架的视角获取应用服务
@@ -120,7 +127,19 @@ public class AppServiceConfig {
             }
         }
         else if(applicationType.equals(ModuleEnum.COLA_ADAPTER.getAppName())){
-
+            moduleName = ModuleEnum.COLA_ADAPTER.getTemplateFileSet().contains(templateName) ? ModuleEnum.COLA_ADAPTER.getModuleName() : null;
+            if(StringUtils.isEmpty(moduleName)){
+                moduleName = ModuleEnum.COLA_APP.getTemplateFileSet().contains(templateName) ? ModuleEnum.COLA_APP.getModuleName() : null;
+            }
+            if(StringUtils.isEmpty(moduleName)){
+                moduleName = ModuleEnum.COLA_DOMAIN.getTemplateFileSet().contains(templateName) ? ModuleEnum.COLA_DOMAIN.getModuleName() : null;
+            }
+            if(StringUtils.isEmpty(moduleName)){
+                moduleName = ModuleEnum.COLA_CLIENT.getTemplateFileSet().contains(templateName) ? ModuleEnum.COLA_CLIENT.getModuleName() : null;
+            }
+            if(StringUtils.isEmpty(moduleName)){
+                moduleName = ModuleEnum.COLA_INFRAST.getTemplateFileSet().contains(templateName) ? ModuleEnum.COLA_INFRAST.getModuleName() : null;
+            }
         }
         if(StringUtils.isEmpty(moduleName)){
             logger.error("templatefile:"+templateName+" not in the application:"+applicationType);
@@ -136,14 +155,50 @@ public class AppServiceConfig {
 
     public String getDbName() {
         if (applicationType.equals(ModuleEnum.SPRING_BOOT_WEB.getAppName())) {
-            return projectTemplateConfig.getDbName();
+            return projectTemplateSpringbootConfig.getDbName();
         } else if (applicationType.equals(ModuleEnum.DUBBO_API.getAppName())) {
             return projectTemplateDubboConfig.getDbName();
         } else if (applicationType.equals(ModuleEnum.COLA_ADAPTER.getAppName())) {
-            return projectTemplateConfig.getDbName();
+            return projectTemplateColaConfig.getDbName();
         }
         return "";
     }
 
+    public String getAuthor() {
+        return this.author;
+    }
 
+    public String getPackage() {
+        return this.packageName;
+    }
+
+    /**
+     * 获取配置中的plantUML类图文件名
+     * @return
+     */
+    public String getPlantUMLFileName() {
+        if (applicationType.equals(ModuleEnum.SPRING_BOOT_WEB.getAppName())) {
+            return projectTemplateSpringbootConfig.getPlantumlName();
+        } else if (applicationType.equals(ModuleEnum.DUBBO_API.getAppName())) {
+            return projectTemplateDubboConfig.getPlantumlName();
+        } else if (applicationType.equals(ModuleEnum.COLA_ADAPTER.getAppName())) {
+            return projectTemplateColaConfig.getPlantumlName();
+        }
+        return "";
+    }
+
+    /**
+     * 获取不同项目的核心模块，db-er图生成之后会在此模块存放
+     * @return
+     */
+    public String getErPictureOutPath(){
+        if (applicationType.equals(ModuleEnum.SPRING_BOOT_WEB.getAppName())) {
+            return projectTemplateSpringbootConfig.getOutPath();
+        } else if (applicationType.equals(ModuleEnum.DUBBO_API.getAppName())) {
+            return projectTemplateDubboConfig.getModuleCommonPath();
+        } else if (applicationType.equals(ModuleEnum.COLA_ADAPTER.getAppName())) {
+            return projectTemplateColaConfig.getModuleInfrastPath();
+        }
+        return null;
+    }
 }

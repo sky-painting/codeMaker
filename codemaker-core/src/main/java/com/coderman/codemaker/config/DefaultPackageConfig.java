@@ -22,7 +22,6 @@ public class DefaultPackageConfig {
      */
     static {
         defaultPackageMap.put("List","java.util.List");
-        defaultPackageMap.put("List","java.util.List");
         defaultPackageMap.put("Map","java.util.Map");
         defaultPackageMap.put("HashMap","java.util.HashMap");
         defaultPackageMap.put("BigDecimal","java.math.BigDecimal");
@@ -30,6 +29,9 @@ public class DefaultPackageConfig {
         defaultPackageMap.put("ArrayList","java.util.ArrayList");
         defaultPackageMap.put("Set","java.util.Set");
         defaultPackageMap.put("HashSet","java.util.HashSet");
+        defaultPackageMap.put("ResultDto","com.coderman.utils.response.ResultDto");
+        defaultPackageMap.put("ResultDataDto","com.coderman.utils.response.ResultDataDto");
+
     }
 
     /**
@@ -39,7 +41,7 @@ public class DefaultPackageConfig {
      */
     public String getPackage(String className){
         for (Map.Entry<String,String> entry : defaultPackageMap.entrySet()){
-            if(className.toLowerCase().startsWith(entry.getKey().toLowerCase())){
+            if(className.toLowerCase().startsWith(entry.getKey().toLowerCase()) || className.toLowerCase().endsWith(entry.getKey().toLowerCase())){
                 return entry.getValue();
             }
         }

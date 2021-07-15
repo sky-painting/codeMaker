@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
-import ${package}.common.mapper.${table.humpClassName}Mapper;
+import ${package}.dao.mapper.${table.humpClassName}Mapper;
 import ${package}.core.service.${table.humpClassName}Service;
 import ${package}.core.model.bo.${table.humpClassName}BO;
 
