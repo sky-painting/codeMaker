@@ -1,4 +1,4 @@
-package com.lightsnail.schoolmanager.core.aop;
+package ${package}.core.aop;
 
 
 import com.alibaba.fastjson.JSON;
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 @Aspect
 @Slf4j
 public class FacadeServiceAop {
-    @Around(value = "execution( public * com.lightsnail.schoolmanager.core.facade.impl..*(..))")
+    @Around(value = "execution( public * ${package}.core.facade.impl..*(..))")
     public Object transferException(ProceedingJoinPoint joinPoint) throws Exception {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

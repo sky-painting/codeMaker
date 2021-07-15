@@ -39,9 +39,9 @@ public enum ${class.className}{
      * @Description:${method.desc}
      * @return ${method.returnClass}
      */
-     public static ${method.returnClass} ${method.methodName}{
+    public static ${method.returnClass} ${method.methodName}{
         ${method.returnBody}
-     }
+    }
     </#list>
 
 }

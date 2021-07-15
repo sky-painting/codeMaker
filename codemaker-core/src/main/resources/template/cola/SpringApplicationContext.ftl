@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
- package com.lightsnail.schoolmanager.context;
+ package ${package}.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;

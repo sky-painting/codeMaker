@@ -44,9 +44,10 @@ package domain.bo {
         变量值:String value
     }
 
-       AuthorityBO <|-- DataAuthorityBO
-       AdminAuthorityBO --|> AuthorityBO
-       SystemAuthorityBO --|> AuthorityBO
+
+    AuthorityBO <|-- DataAuthorityBO
+    AdminAuthorityBO --|> AuthorityBO
+    SystemAuthorityBO --|> AuthorityBO
 
 }
 

@@ -1,7 +1,7 @@
-package ${package}.mapper;
+package ${package}.dao.mapper;
 
 import java.util.List;
-import ${package}.entity.${table.humpClassName}Entity;
+import ${package}.dao.dataobject.${table.humpClassName}DO;
 
 
 /**
@@ -17,11 +17,11 @@ public interface ${table.humpClassName}Mapper{
 	 * @Title: save 
 	 * @Description:新增或修改 
 	 * @author: 
-	 * @param @param ${table.humpTableName}Entity
+	 * @param @param ${table.humpTableName}DO
 	 * @return int
 	 * @throws
 	 */
-	public int insert(${table.humpClassName}Entity ${table.humpTableName}Entity);
+	public int insert(${table.humpClassName}DO ${table.humpTableName}DO);
 
 	/**
 	 * 
@@ -40,30 +40,30 @@ public interface ${table.humpClassName}Mapper{
 	 * @Description: 通过id查询
 	 * @author: 
 	 * @param @param id
-	 * @return ResultDataDto<${table.humpClassName}Entity>    返回类型
+	 * @return ResultDataDto<${table.humpClassName}DO>    返回类型
 	 * @throws
 	 */
-	public ${table.humpClassName}Entity getById(Long id);
+	public ${table.humpClassName}DO getById(Long id);
 
 	/**
 	 * 
 	 * @Title: getAll 
 	 * @Description:查询所有数据 
 	 * @author: 
-	 * @return List<${table.humpClassName}Entity    返回类型
+	 * @return List<${table.humpClassName}DO    返回类型
 	 * @throws
 	 */
-	public List<${table.humpClassName}Entity>  getAll();
+	public List<${table.humpClassName}DO>  getAll();
 
 	/**
 	*
 	* @Title: update
 	* @Description:新增或修改
 	* @author:
-	* @param @param ${table.humpTableName}Entity
+	* @param @param ${table.humpTableName}DO
 	* @return int
 	* @throws
 	*/
-	public int update(${table.humpClassName}Entity ${table.humpTableName}Entity);
+	public int update(${table.humpClassName}DO ${table.humpTableName}DO);
 	
 }

@@ -1,18 +1,17 @@
 package ${class.packageName};
 
+<#list imports as importClass>
+import ${importClass};
+</#list>
 
-import lombok.Data;
-import lombok.ToString;
 
  /**
- * @Description:${class.classDesc}类
+ * @Description:${class.className}类
  * @Author:${class.author}
  * @CreateTime:${.now?string('yyyy-MM-dd HH:mm:ss')}
  * @version v1.0
  */
-@Data
-@ToString
-public class ${class.className}{
+public abstract class ${class.className}{
 
 	<#list fields as field>
 	/** ${field.desc} **/
@@ -25,9 +24,7 @@ public class ${class.className}{
      * @Description:${method.desc}
      * @return ${method.returnClass}
      */
-    ${method.visibility} ${method.returnClass} ${method.methodName}{
-        ${method.returnBody}
-    }
+    public abstract ${method.returnClass} ${method.methodName};
     </#list>
 
 }

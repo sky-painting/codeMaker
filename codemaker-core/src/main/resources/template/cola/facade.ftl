@@ -1,18 +1,18 @@
-package com.lightsnail.schoolmanager.api.facade;
+package ${package}.api.facade;
 
 import java.util.List;
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
 
-import com.lightsnail.schoolmanager.api.dto.ClassDTO;
+import ${package}.api.dto.${table.humpClassName}DTO;
 
 /**
- * @Description:Facade接口
- * @Author:fanchunshuai
- * @CreateTime:2021-06-25 16:19:52
+ * @Description:${table.tableComment}Facade接口
+ * @Author:${author}
+ * @CreateTime:${.now?string('yyyy-MM-dd HH:mm:ss')}
  * @version v1.0
  */
-public interface ClassFacade{
+public interface ${table.humpClassName}Facade{
 
 	/**
 	 *
@@ -24,7 +24,7 @@ public interface ClassFacade{
 	 * @return ResultDto    返回类型
 	 * @throws
 	 */
-	public ResultDto save(ClassDTO dto) throws Exception;
+	public ResultDto save(${table.humpClassName}DTO dto) throws Exception;
 
 	/**
 	 * 
@@ -43,30 +43,30 @@ public interface ClassFacade{
 	 * @Description: 通过id查询
 	 * @author: 
 	 * @param @param id
-	 * @return ResultDataDto<ClassDTO>
+	 * @return ResultDataDto<${table.humpClassName}DTO>
 	 * @throws
 	 */
-	public ResultDataDto<ClassDTO> getById(Long id) throws Exception;
+	public ResultDataDto<${table.humpClassName}DTO> getById(Long id) throws Exception;
 
 	/**
 	 * 
 	 * @Title: getAll 
 	 * @Description:查询所有数据 
 	 * @author: 
-	 * @return ResultDataDto<List<ClassDTO>>
+	 * @return ResultDataDto<List<${table.humpClassName}DTO>>
 	 * @throws
 	 */
-	public ResultDataDto<List<ClassDTO>> getAll() throws Exception;
+	public ResultDataDto<List<${table.humpClassName}DTO>> getAll() throws Exception;
 
 	/**
 	*
 	* @Title: update
 	* @Description:修改
 	* @author:
-	* @param @param classDTO
+	* @param @param ${table.humpTableName}DTO
 	* @return int
 	* @throws
 	*/
-	public ResultDto update(ClassDTO classDTO) throws Exception;
+	public ResultDto update(${table.humpClassName}DTO ${table.humpTableName}DTO) throws Exception;
 
 }

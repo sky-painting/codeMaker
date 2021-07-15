@@ -1,12 +1,12 @@
-package com.lightsnail.schoolmanager.controller;
+package ${package}.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
 * @Description:控制层基础父类
-* @Author:fanchunshuai
-* @CreateTime:2021-06-25 16:08:54
+* @Author:${author}
+* @CreateTime:${.now?string('yyyy-MM-dd HH:mm:ss')}
 * @version v1.0
 */
 public class BaseController{
