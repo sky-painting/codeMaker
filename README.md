@@ -186,11 +186,19 @@ cola.domain.plantuml=
 4.  打开浏览器访问http://localhost:8099/makeall生成极简模式代码，生成的代码会放在codemaker-web下面的对应目录下
 5.  打开浏览器访问http://localhost:8099/makeallfast生成极速模式代码，生成的代码会放在codemaker-web下面的对应目录下
 6.  如有特殊需求进行定制则可通过codemaker-core工程中的resources/template模板进行调整
+
+
 ##### 2.dynamicddd模块级代码生成
 1. 将项目的plantUML类图放到codemaker-core的resources下的ddd-plantuml文件夹
 2. 配置projecttemplate-dynamicddd.properties
 3. 启动服务,浏览器打开输入http://localhost:8099/makeddd
 4. 执行完毕查看codemaker-dynamicddd工程模块下的代码是否已经生成
+
+##### 3.接口文档
+[API.md](API.md)
+
+
+
 #### 参与贡献
 
 1.  Fork 本仓库
