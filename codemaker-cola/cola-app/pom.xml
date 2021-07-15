@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+
+  <parent>
+    <artifactId>codemaker-cola</artifactId>
+    <groupId>com.codemaker.cola</groupId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+
+  <groupId>com.codemaker.cola</groupId>
+  <artifactId>cola-app</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+  <name>cola-app</name>
+  <!-- FIXME change it to the project's website -->
+  <url>http://www.example.com</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.coderman.utils</groupId>
+      <artifactId>coderman-utils</artifactId>
+      <version>1.0.2-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.codemaker.dubbo</groupId>
+      <artifactId>dubbo-api</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+
+
+
+    <dependency>
+      <groupId>com.codemaker.dubbo</groupId>
+      <artifactId>dubbo-common</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <!-- Dubbo -->
+    <dependency>
+      <groupId>org.apache.dubbo</groupId>
+      <artifactId>dubbo-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.dubbo</groupId>
+      <artifactId>dubbo</artifactId>
+    </dependency>
+
+
+    <!-- Dubbo Registry Nacos -->
+    <dependency>
+      <groupId>org.apache.dubbo</groupId>
+      <artifactId>dubbo-registry-nacos</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba.nacos</groupId>
+      <artifactId>nacos-client</artifactId>
+    </dependency>
+
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-ext</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-processor</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct-jdk8</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.codemaker.cola</groupId>
+      <artifactId>cola-client</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.codemaker.cola</groupId>
+      <artifactId>cola-domain</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+
+
+  </dependencies>
+
+  <build>
+  </build>
+</project>
