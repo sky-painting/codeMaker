@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelement.*;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
+import com.coderman.codemaker.config.ProjectTemplateDynamicDDDConfig;
 import com.coderman.codemaker.service.AbstractVarRegistry;
 import com.coderman.codemaker.service.ReadPlantUMLFileServiceV2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +58,12 @@ public class DynamicDDDVarRegistry extends AbstractVarRegistry {
     @Resource(name = "appExeElementHandler")
     private DomainElementHandler appExeElementHandler;
 
+    @Autowired
+    private ProjectTemplateDynamicDDDConfig projectTemplateDynamicDDDConfig;
+
     @Override
     public Map<String, Object> getRegistVarMap() {
-        PlantUmlContextBean plantUmlContextBean = readFileService.getPlantUmlContextBean();
+        PlantUmlContextBean plantUmlContextBean = readFileService.getPlantUmlContextBean(projectTemplateDynamicDDDConfig.getPlantumlFileName());
         System.out.println(JSON.toJSONString(plantUmlContextBean));
         DomainBoElementBean domainBoElementBean = (DomainBoElementBean)domainElementHandler.getElementBeanList(plantUmlContextBean);
         ValueObjectElementBean valueObjectElementBean = (ValueObjectElementBean)valueObjectElementHandler.getElementBeanList(plantUmlContextBean);
@@ -85,6 +89,9 @@ public class DynamicDDDVarRegistry extends AbstractVarRegistry {
         map.put("cmd",commandElementBean.getClassBeanList());
         map.put("exeClass",executorElementBean.getClassBeanList());
         map.put("exeInterface",executorElementBean.getInterfaceBeanList());
+
+        //由领域实体派生的类dto
+        //map.put("domainbo_dto",domainBoElementBean.getDerivedElementBean().getClassBeanList());
 
         return map;
     }

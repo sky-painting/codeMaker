@@ -3,6 +3,8 @@ package com.coderman.codemaker.controller;
 import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.bean.plantuml.ClassBean;
+import com.coderman.codemaker.bean.plantuml.InterfaceBean;
 import com.coderman.codemaker.service.WriteAppModuleService;
 import com.coderman.codemaker.service.WriteFileService;
 import com.coderman.codemaker.service.registry.DynamicDDDVarRegistry;
@@ -46,22 +48,26 @@ public class CodeMakerController {
     public String makeAllProjectCode(){
         Map<String,Object> map = mapperXmlVarRegistry.getTemplateVar();
 
-        Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
-        System.out.println("tableBeanMap====="+ JSON.toJSONString(tableBeanMap));
-        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
-        Map<String,Object> varMap = new HashMap<>();
-        //循环写每个表对应的类
-        tableBeanMap.forEach((k,v)->{
-            varMap.put("table", v);
-            varMap.put("columns", columnBeanListMap.get(k));
-            varMap.put("package", map.get("package"));
-            varMap.put("author", map.get("author"));
-            writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"");
-        });
-        //写公共服务类
-        writeFileServiceV2.writeCommon(varMap,"");
-        //渲染e-r图
-        writeFileServiceV2.writeERPicture(tableBeanMap,columnBeanListMap);
+        if(map.containsKey("dynamicddd")){
+            writeFileServiceV2.writeAllWithDDD(map);
+        }else {
+            Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
+            Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
+            Map<String,Object> varMap = new HashMap<>();
+            //循环写每个表对应的类
+            tableBeanMap.forEach((k,v)->{
+                varMap.put("table", v);
+                varMap.put("columns", columnBeanListMap.get(k));
+                varMap.put("package", map.get("package"));
+                varMap.put("author", map.get("author"));
+                writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"");
+            });
+            //写公共服务类
+            writeFileServiceV2.writeCommon(varMap,"");
+            //渲染e-r图
+            writeFileServiceV2.writeERPicture(tableBeanMap,columnBeanListMap);
+        }
+
 
         return "success";
     }

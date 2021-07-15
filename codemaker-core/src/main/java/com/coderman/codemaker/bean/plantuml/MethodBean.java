@@ -45,6 +45,19 @@ public class MethodBean {
      */
     private String returnBody;
 
+    /**
+     * controller方法的请求路径
+     */
+    private String pathValue;
+
+    public String getPathValue() {
+        return pathValue;
+    }
+
+    public void setPathValue(String pathValue) {
+        this.pathValue = pathValue;
+    }
+
     public String getMethodName() {
         return methodName;
     }

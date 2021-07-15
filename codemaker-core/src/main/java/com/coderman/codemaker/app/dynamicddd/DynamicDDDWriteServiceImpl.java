@@ -1,7 +1,9 @@
 package com.coderman.codemaker.app.dynamicddd;
 
+import com.coderman.codemaker.app.WriteService;
 import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.WriteContentBean;
+import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateDynamicDDDConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.IWriteFileService;
@@ -24,7 +26,11 @@ import java.util.Map;
  * @since JDK 1.8
  */
 @Component(value = "dynamicDDDWriteServiceImpl")
-public class DynamicDDDWriteServiceImpl implements IWriteFileService {
+public class DynamicDDDWriteServiceImpl extends WriteService implements IWriteFileService {
+
+
+    @Autowired
+    private AppServiceConfig appServiceConfig;
 
     @Autowired
     private ProjectTemplateDynamicDDDConfig projectTemplateDynamicDDDConfig;
@@ -33,12 +39,13 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
     public void writeContent(WriteContentBean writeContentBean) {
 
         //写domain.bo
-        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())){
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.BUSINESS_OBJECT_DDD.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.bo");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -55,6 +62,8 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.valueobject");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
+
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -72,6 +81,7 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setChildPackageName("domain.msgbody");
             classContentBean.setClassSuffix("");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -90,6 +100,7 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.gataway");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -106,6 +117,7 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName()+"Impl");
             classContentBean.setChildPackageName("domain.gataway.impl");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".impl");
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -122,6 +134,7 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.enums");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -137,9 +150,10 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setChildPackageName("infrast.factory");
+            classContentBean.setChildPackageName("domain.factory");
             classContentBean.setClassSuffix("");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -162,6 +176,31 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
                 classContentBean.setChildPackageName("infrast.adapter");
             }
             classContentBean.setClassSuffix("");
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+        //写infrast.acl.impl
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL_IMPL.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName()+"Impl");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".impl");
+            if(writeContentBean.getHumpClassName().toLowerCase().contains(TemplateFileEnum.ACL.getTempFileName())){
+                classContentBean.setChildPackageName("infrast.acl.impl");
+            }else {
+                classContentBean.setChildPackageName("infrast.adapter.impl");
+            }
+            classContentBean.setClassSuffix("");
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
+
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -177,6 +216,8 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setClassContent(writeContentBean.getContent());
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
+
             writeClassFileV2(classContentBean);
         }
 
@@ -187,6 +228,8 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setChildPackageName("app.command");
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
+
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -203,6 +246,8 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setChildPackageName("app.executor");
+            classContentBean.setModulePath(projectTemplateDynamicDDDConfig.getOutPath());
+
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -223,59 +268,6 @@ public class DynamicDDDWriteServiceImpl implements IWriteFileService {
 
     }
 
-
-    /**
-     * 写class文件
-     * @param classContentBean
-     */
-    public void writeClassFile(ClassContentBean classContentBean) {
-        String filePath = getFilePath(classContentBean.getChildPackageName(), classContentBean.getHumpClassName());
-        try {
-            FileUtils.write(new File(filePath), classContentBean.getClassContent(), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * @param childPackageName 最后一级子包名称
-     * @param humpClassName 驼峰式类名
-     * @return
-     */
-    private String getFilePath(String childPackageName, String humpClassName) {
-        String packageName = projectTemplateDynamicDDDConfig.getGlobalPackage();
-        String packagePath = packageName.replace(".", "/") ;
-        packagePath = Constant.JAVA + "/" + packagePath + "/" + childPackageName;
-        String fileName = humpClassName + ".java";
-        return projectTemplateDynamicDDDConfig.getOutPath()  + packagePath + "/" + fileName;
-    }
-
-
-    /**
-     * 写class文件
-     * @param classContentBean
-     */
-    public void writeClassFileV2(ClassContentBean classContentBean) {
-        String filePath = getClassPackageFilePath(classContentBean.getClassPackageName(), classContentBean.getHumpClassName());
-        try {
-            FileUtils.write(new File(filePath), classContentBean.getClassContent(), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * @param classPackageName 类包名
-     * @param humpClassName 驼峰式类名
-     * @return
-     */
-    private String getClassPackageFilePath(String classPackageName, String humpClassName) {
-        String packagePath = classPackageName.replace(".", "/") ;
-        packagePath = Constant.JAVA + "/" + packagePath;
-        String fileName = humpClassName + ".java";
-        return projectTemplateDynamicDDDConfig.getOutPath()  + packagePath + "/" + fileName;
-    }
 
 
 }

@@ -1,4 +1,4 @@
-package com.coderman.codemaker.app.dynamicddd;
+package com.coderman.codemaker.app.dynamicddd.handler;
 
 /**
  * Description:

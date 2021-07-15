@@ -14,13 +14,9 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Component
 @PropertySource( "classpath:projecttemplate-springboot.properties")
-public class ProjectTemplateConfig {
+public class ProjectTemplateSpringbootConfig {
 
-    @Value(value = "${codemaker.global.package}")
-    private String packageName;
 
-    @Value(value = "${codemaker.global.author}")
-    private String author;
 
     @Value(value = "${codemaker.global.dbName}")
     private String dbName;
@@ -40,28 +36,26 @@ public class ProjectTemplateConfig {
     @Value(value = "${codemaker.code.outpath}")
     private String outPath;
 
+    /**
+     * 应用服务的plantUML类图文件,不配置则走基于数据表的方式生成代码
+     */
+    @Value("${codemaker.domain.plantuml}")
+    private String plantumlName;
+
+    public String getPlantumlName() {
+        return plantumlName;
+    }
+
+    public void setPlantumlName(String plantumlName) {
+        this.plantumlName = plantumlName;
+    }
+
     public String getOutPath() {
         return outPath;
     }
 
     public void setOutPath(String outPath) {
         this.outPath = outPath;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getDbName() {
@@ -106,14 +100,14 @@ public class ProjectTemplateConfig {
 
     @Override
     public String toString() {
-        return "ProjectTemplateConfig{" +
-                "packageName='" + packageName + '\'' +
-                ", author='" + author + '\'' +
-                ", dbName='" + dbName + '\'' +
+        return "ProjectTemplateSpringbootConfig{" +
+                "dbName='" + dbName + '\'' +
                 ", projectName='" + projectName + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +
+                ", outPath='" + outPath + '\'' +
+                ", plantumlName='" + plantumlName + '\'' +
                 '}';
     }
 }

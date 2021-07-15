@@ -31,6 +31,19 @@ public class ClassContentBean {
      */
     private String classPackageName;
 
+    /**
+     * 所属模块
+     */
+    private String modulePath;
+
+    public String getModulePath() {
+        return modulePath;
+    }
+
+    public void setModulePath(String modulePath) {
+        this.modulePath = modulePath;
+    }
+
     public String getClassPackageName() {
         return classPackageName;
     }

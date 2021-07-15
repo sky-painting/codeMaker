@@ -1,5 +1,8 @@
 package com.coderman.codemaker.bean;
 
+import com.coderman.codemaker.bean.plantuml.ClassBean;
+import org.assertj.core.util.Lists;
+
 /**
  * Created  on 2018-7-19.
  *
@@ -60,6 +63,32 @@ public class TableBean {
      * 修改sql value替换字符串
      */
     private String updateColumnNameList;
+
+
+    /**
+     * 转换对应的class信息，打通dynamicddd派生类生成
+     */
+    private ClassBean classBean;
+
+    public ClassBean convertToClassBean(String packageName){
+        ClassBean classBean = new ClassBean();
+        classBean.setClassName(this.getHumpClassName()+"DO");
+        classBean.setPackageName(packageName);
+        classBean.setClassDesc(tableComment);
+        classBean.setPlantUMLPackage("dao.dataobject");
+        classBean.setMethodBeanList(Lists.newArrayList());
+
+        return classBean;
+    }
+
+    public ClassBean getClassBean() {
+
+        return classBean;
+    }
+
+    public void setClassBean(ClassBean classBean) {
+        this.classBean = classBean;
+    }
 
     public String getInsertColumnNames() {
         return insertColumnNames;

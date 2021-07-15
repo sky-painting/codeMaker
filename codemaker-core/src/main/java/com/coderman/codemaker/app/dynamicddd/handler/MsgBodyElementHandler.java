@@ -1,10 +1,10 @@
-package com.coderman.codemaker.app.dynamicddd;
+package com.coderman.codemaker.app.dynamicddd.handler;
 
 import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelement.DomainMsgBodyElementBean;
 import com.coderman.codemaker.bean.plantuml.ClassBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
-import com.coderman.codemaker.config.ProjectTemplateDynamicDDDConfig;
 import com.coderman.codemaker.enums.DomainElementEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,9 +23,6 @@ import java.util.List;
 @Component(value = "msgBodyElementHandler")
 public class MsgBodyElementHandler implements DomainElementHandler<DomainMsgBodyElementBean> {
 
-
-    @Autowired
-    private ProjectTemplateDynamicDDDConfig projectTemplateDynamicDDDConfig;
     @Autowired
     private ImportPackageService importPackageService;
 

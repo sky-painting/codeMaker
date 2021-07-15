@@ -1,10 +1,10 @@
-package com.coderman.codemaker.app.dubbo;
+package com.coderman.codemaker.app.cola;
 
 import com.coderman.codemaker.app.WriteService;
 import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.AppServiceConfig;
-import com.coderman.codemaker.config.ProjectTemplateDubboConfig;
+import com.coderman.codemaker.config.ProjectTemplateColaConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.IWriteFileService;
 import com.coderman.codemaker.utils.Constant;
@@ -19,34 +19,23 @@ import java.util.Map;
 
 /**
  * Description:
- * date: 2021/6/18
+ * date: 2021/7/6
  *
  * @author fanchunshuai
  * @version 1.0.0
  * @since JDK 1.8
- *
- * 写api模块服务
  */
-@Component(value = "dubboApiWriteFileService")
-public class DubboApiWriteServiceImpl extends WriteService implements IWriteFileService {
+@Component(value = "colaClientWriteService")
+public class ColaClientWriteServiceImpl extends WriteService implements IWriteFileService {
 
     @Autowired
-    private ProjectTemplateDubboConfig projectTemplateDubboConfig;
+    private ProjectTemplateColaConfig projectTemplateColaConfig;
 
     @Autowired
     private AppServiceConfig appServiceConfig;
 
     @Override
     public void writeContent(WriteContentBean writeContentBean) {
-        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DTO.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setChildPackageName("dto");
-            classContentBean.setClassSuffix("DTO.java");
-            writeDTO(classContentBean);
-        }
-
         //写api.dto-ddd
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DTO_DDD.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
@@ -56,7 +45,7 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
 
             classContentBean.setChildPackageName("api.dto");
             classContentBean.setClassSuffix("DTO.java");
-            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleApiPath());
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleClientPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -65,15 +54,27 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
                 writeClassFileV2(classContentBean);
             }
         }
+        //写api.dto
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DTO.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("dto");
+            classContentBean.setClassSuffix("DTO.java");
+            writeDTO(classContentBean);
+        }
 
+
+        //写api.facade
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.FACADE.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName().toLowerCase().endsWith("facade") ? writeContentBean.getHumpClassName() : writeContentBean.getHumpClassName()+"Facade");
-            classContentBean.setChildPackageName("facade");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setChildPackageName("api.facade");
             classContentBean.setClassSuffix("Facade.java");
-            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleApiPath());
+
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleClientPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -83,6 +84,8 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
                 writeClassFileV2(classContentBean);
             }
         }
+
+
     }
 
     @Override
@@ -93,19 +96,6 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
     @Override
     public void writeCommonContent(Map<String, Object> varMap, String fast) {
 
-    }
-
-    /**
-     * 写Facade文件
-     * @param classContentBean
-     */
-    public void writeFacade(ClassContentBean classContentBean) {
-        String filePath = getFilePath(classContentBean.getChildPackageName(), classContentBean.getHumpClassName(), classContentBean.getClassSuffix());
-        try {
-            FileUtils.write(new File(filePath), classContentBean.getClassContent(), "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -121,7 +111,6 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
         }
     }
 
-
     /**
      * @param childPackageName 最后一级子包名称
      * @param humpClassName 驼峰式类名
@@ -133,7 +122,7 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
         String packagePath = packageName.replace(".", "/") + "/api";
         packagePath = Constant.JAVA + "/" + packagePath + "/" + childPackageName;
         String fileName = humpClassName + classSuffix;
-        return projectTemplateDubboConfig.getModuleApiPath()  + packagePath + "/" + fileName;
+        return projectTemplateColaConfig.getModuleClientPath()  + packagePath + "/" + fileName;
     }
 
 

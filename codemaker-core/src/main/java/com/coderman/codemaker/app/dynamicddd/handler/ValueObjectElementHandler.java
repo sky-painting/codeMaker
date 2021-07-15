@@ -1,6 +1,7 @@
-package com.coderman.codemaker.app.dynamicddd;
+package com.coderman.codemaker.app.dynamicddd.handler;
 
 import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelement.ValueObjectElementBean;
 import com.coderman.codemaker.bean.plantuml.ClassBean;
 import com.coderman.codemaker.bean.plantuml.EnumBean;
@@ -55,6 +56,10 @@ public class ValueObjectElementHandler implements DomainElementHandler<ValueObje
             });
 
             v.setEnumValueList(enumValueList);
+            //包名兼容处理
+            if(v.getPlantUMLPackage().toLowerCase().endsWith("enum")){
+                v.setPlantUMLPackage(v.getPlantUMLPackage()+"s");
+            }
             importPackageService.setPackageName(v,"domain.enums");
 
 

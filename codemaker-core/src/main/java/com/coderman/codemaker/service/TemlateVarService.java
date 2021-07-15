@@ -3,7 +3,7 @@ package com.coderman.codemaker.service;
 import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
-import com.coderman.codemaker.config.ProjectTemplateConfig;
+import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.dao.SqlMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -27,9 +27,8 @@ public class TemlateVarService {
 
     private  final Logger LOGGER = LoggerFactory.getLogger(TemlateVarService.class);
 
-
     @Autowired
-    private ProjectTemplateConfig projectTemplateConfig;
+    private AppServiceConfig appServiceConfig;
 
     @Resource
     private SqlMapper sqlMapper;
@@ -44,7 +43,7 @@ public class TemlateVarService {
      * @return
      */
     public Map<String, TableBean> exeGetTableBeanMap(){
-        String dbName = projectTemplateConfig.getDbName();
+        String dbName = appServiceConfig.getDbName();
         List<TableBean> tableBeanList = sqlMapper.getDBTableBeanList(dbName);
         Map<String, TableBean> tableBeanMap = new HashMap<>();
         tableBeanList.stream().forEach(e->{
@@ -77,7 +76,7 @@ public class TemlateVarService {
      * @return
      */
     private Map<String, List<ColumnBean>> exeGetColumnBeanMap(){
-        String dbName = projectTemplateConfig.getDbName();
+        String dbName = appServiceConfig.getDbName();
         List<ColumnBean> columnBeanList = sqlMapper.getColumnBeanList(dbName);
         columnBeanList.stream().forEach(e->{
             String columnFieldName = getHumpTableName(e.getColumnName());
@@ -237,5 +236,15 @@ public class TemlateVarService {
             columnBeanMap = exeGetColumnBeanMap();
         }
         return columnBeanMap;
+    }
+
+    /**
+     * 根据表名获取对应类名
+     * @param tableName
+     * @return
+     */
+    public String getClassDOName(String tableName){
+        String humpTableName = getHumpTableName(tableName);
+        return getHumpClassName(humpTableName);
     }
 }

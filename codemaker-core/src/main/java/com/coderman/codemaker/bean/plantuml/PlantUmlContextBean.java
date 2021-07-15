@@ -22,7 +22,18 @@ public class PlantUmlContextBean {
 
     private Map<String,PackageBean> packageBeanMap = new HashMap<>();
 
+    /**
+     * 派生类上下文
+     */
+    private PlantUmlContextBean derivedPlantUmlContextBean;
 
+    public PlantUmlContextBean getDerivedPlantUmlContextBean() {
+        return derivedPlantUmlContextBean;
+    }
+
+    public void setDerivedPlantUmlContextBean(PlantUmlContextBean derivedPlantUmlContextBean) {
+        this.derivedPlantUmlContextBean = derivedPlantUmlContextBean;
+    }
 
     public Map<String, ClassBean> getClassBeanMap() {
         return classBeanMap;

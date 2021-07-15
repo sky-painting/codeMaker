@@ -1,5 +1,7 @@
 package com.coderman.codemaker.bean.plantuml;
 
+import com.coderman.codemaker.bean.GlobalConstant;
+
 /**
  * Description:
  * date: 2021/6/28
@@ -47,5 +49,31 @@ public class FieldBean {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+
+    public boolean isTableKey(){
+        return this.desc.toLowerCase().contains(GlobalConstant.TABLE_KEY)
+                || this.fieldName.toLowerCase().contains(GlobalConstant.TABLE_KEY);
+    }
+
+    public boolean isDtoKey(){
+        return this.desc.toLowerCase().contains(GlobalConstant.DTO_KEY_LIST)
+                || this.fieldName.toLowerCase().contains(GlobalConstant.DTO_KEY_LIST);
+    }
+    public boolean isFacadeKey(){
+        return this.desc.toLowerCase().contains(GlobalConstant.FACADE_KEY)
+                || this.fieldName.toLowerCase().contains(GlobalConstant.FACADE_KEY);
+    }
+
+    public boolean isVoKey(){
+        return this.desc.toLowerCase().contains(GlobalConstant.VO_KEY_LIST)
+                || this.fieldName.toLowerCase().contains(GlobalConstant.VO_KEY_LIST);
+    }
+
+    public boolean isControllerKey(){
+        return this.desc.toLowerCase().contains(GlobalConstant.CONTROLLER_KEY)
+                || this.fieldName.toLowerCase().contains(GlobalConstant.CONTROLLER_KEY);
+    }
+
 
 }

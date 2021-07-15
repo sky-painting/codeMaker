@@ -2,6 +2,7 @@ package com.coderman.codemaker.app.dubbo;
 
 import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.WriteContentBean;
+import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateDubboConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.service.IWriteFileService;
@@ -28,6 +29,9 @@ public class DubboCommonWriteServiceImpl implements IWriteFileService {
 
     @Autowired
     private ProjectTemplateDubboConfig projectTemplateDubboConfig;
+
+    @Autowired
+    private AppServiceConfig appServiceConfig;
 
     @Override
     public void writeContent(WriteContentBean writeContentBean) {
@@ -118,8 +122,8 @@ public class DubboCommonWriteServiceImpl implements IWriteFileService {
      * @return
      */
     private String getFilePath(String childPackageName, String humpClassName, String classSuffix) {
-        String packageName = projectTemplateDubboConfig.getGlobalPackage();
-        String packagePath = packageName.replace(".", "/") + "/common";
+        String packageName = appServiceConfig.getPackage();
+        String packagePath = packageName.replace(".", "/") + "/dao";
         packagePath = Constant.JAVA + "/" + packagePath + "/" + childPackageName;
         String fileName = humpClassName + classSuffix;
         return projectTemplateDubboConfig.getModuleCommonPath()  + packagePath + "/" + fileName;
