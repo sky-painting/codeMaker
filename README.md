@@ -54,7 +54,7 @@ codemaker-cola:基于cola应用框架生成的代码会放在这里
 ![image](doc/img/天画-低代码平台(codeMaker).png) 
 
     2. v2版本
-![image](doc/img/天画-低代码平台(codeMaker)-v2 (2).png) 
+![image](doc/img/天画-低代码平台(codeMaker)-v3.png) 
 
 
 #### 版本变更
