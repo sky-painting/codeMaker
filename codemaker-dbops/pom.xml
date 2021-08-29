@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.coderman.codemaker.dbops</groupId>
     <artifactId>codemaker-dbops</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>codemaker-dbops</name>
     <description>codemaker for dbops</description>
 
@@ -68,6 +68,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.72</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.coderman.codermaker.dberparse</groupId>
+            <artifactId>codemaker-dberparse</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

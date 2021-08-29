@@ -1,0 +1,217 @@
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+
+entity "staff_basic-员工基础信息表" as staff_basic{
+    id: 主键/bigint(20) unsigned
+    staff_number: 员工工号/varchar(30)
+    chinese_name: 员工姓名/varchar(30)
+    email: 员工邮箱/varchar(60)
+    department_id: 员工所在部门ID/bigint(20)
+    pict_url: 员工头像链接/varchar(100)
+    nick_name: 员工昵称/varchar(100)
+    card_number: 员工身份证号/varchar(30)
+    bank_card_number: 员工银行卡号/varchar(30)
+    bank_name: 工资卡所属银行/varchar(100)
+    bank_address_name: 工资卡所属分行地址/varchar(100)
+    leader_id: 员工领导ID/bigint(20)
+    status: 员工状态/bigint(20)
+    tec_level: 员工职位级别/varchar(30)
+    education_background: 员工学历/tinyint(4)
+    hr_user_id:员工对应hr/bigint(20)
+    home_city_id:户籍所在城市/bigint(20)
+    home_city_name:户籍所在城市名称/varchar(50)
+    marital_status:婚姻状况/tinyint(4)
+    current_address:现住地址/varchar(200)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    UKey:staff_number,email
+    Key:email
+    Key:department_id
+}
+
+
+entity "staff_education-员工教育信息表" as staff_education{
+    id: 主键/bigint(20) unsigned
+    staff_id: 员工ID/bigint(20)
+    school_name: 学校名称/varchar(30)
+    start_date: 开始时间/date
+    end_date: 结束时间/date
+    education_background:获取学历/varchar(30)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:staff_id
+}
+
+entity "staff_workexperience-员工工作经历信息表" as staff_workexperience{
+    id: 主键/bigint(20) unsigned
+    staff_id: 员工ID/bigint(20)
+    company: 公司名称/varchar(30)
+    start_date: 开始时间/date
+    end_date: 结束时间/date
+    content:工作内容描述/varchar(2000)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:staff_id
+}
+
+entity "staff_emergency_contact-员工紧急联系人信息表" as staff_emergency_contact{
+    id: 主键/bigint(20) unsigned
+    staff_id: 员工ID/bigint(20)
+    emergency_name: 紧急联系人名称/varchar(30)
+    hand_phone: 紧急联系人电话/varchar(30)
+    relation: 紧急联系人关系/varchar(30)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:staff_id
+}
+
+entity "department-部门信息表" as department{
+    id: 主键/bigint(20) unsigned
+    department_name: 部门名称/varchar(60)
+    level: 部门级别/tinyint(4)
+    manager_id: 部门管理员/bigint(20)
+    level_link: 链式部门/varchar(60)
+    parent_id: 父级部门ID/bigint(20)
+    status:部门状态/tinyint(4)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:parent_id
+}
+
+entity "post-岗位信息表" as post{
+    id: 主键/bigint(20) unsigned
+    post_name: 岗位名称/varchar(60)
+    levels: 岗位支持级别/varchar(100)
+    content: 职位职责内容/varchar(1000)
+    sort: 岗位序列/varchar(60)
+    status: 岗位状态/tinyint(4)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+}
+
+
+
+entity "regularization_apply-转正申请表" as regularization_apply{
+    id: 主键/bigint(20) unsigned
+    staff_id: 员工ID/bigint(20)
+    department_id: 申请人所在部门ID/bigint(20)
+    apply_date: 申请时间/date
+    hire_date: 入职时间/date
+    leader_id: 直属领导ID/bigint(20)
+    content: 试用期工作内容/varchar(2000)
+    date_create:创建时间/timestamp
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:staff_id
+}
+
+
+entity "leave_apply-离职申请表" as leave_apply{
+    id: 主键/bigint(20) unsigned
+    staff_id: 申请人员工ID/0/bigint(20)
+    department_id: 申请人所在部门ID/0/bigint(20)
+    handover: 是否交接完成/0/tinyint(4)
+    reason: 离职原因/varchar(200)
+    apply_status: 申请单状态/1/tinyint(4)
+    date_create:创建时间/timestamp
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:staff_id
+}
+
+
+entity "leave_transfer-离职交接单表" as leave_transfer{
+    id: 主键/bigint(20) unsigned
+    handover_title: 交接事项名称/varchar(60)
+    content: 交接内容/varchar(200)
+    handover: 是否交接完成/tinyint(4)
+    handover_user_id: 交接人userid/bigint(20)
+    transfer_status: 交接状态/tinyint(4)
+    chinese_name: 交接人姓名/varchar(30)
+    approval_user_id:审批人ID/bigint(20)
+    approval_date:审批完成时间/date
+    leave_apply_id:离职申请单ID/bigint(20)
+    sort:交接顺序/tinyint(4)
+    date_create:创建时间/timestamp
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:leave_apply_id
+}
+
+
+entity "leave_transfer_config-离职交接配置表" as leave_transfer_config{
+    id: 主键/bigint(20) unsigned
+    handover_title: 交接事项名称/varchar(60)
+    content: 交接内容/varchar(200)
+    approval_user_id:审批人ID/bigint(20)
+    sort:交接顺序/tinyint(4)
+    department_id:所属二级部门/业务线
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+}
+
+entity "data_column_config-数据字段管理表" as data_column_config{
+    id: 主键/bigint(20) unsigned
+    table_name:表名称/varchar(60)
+    table_desc:表描述/varchar(60)
+    column_name:字段名称/varchar(60)
+    column_desc:字段描述/varchar(60)
+    bus_model:业务模块/varchar(60)
+    field_name:业务属性名称/varchar(60)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+}
+
+
+
+
+
+
+
+staff_basic ||--o{ staff_education
+staff_basic ||--o{ staff_emergency_contact
+staff_basic ||--o{ staff_workexperience
+department ||--o{ staff_basic
+
+
+@enduml
