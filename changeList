@@ -56,3 +56,8 @@
  9.整体上支持基于数据库表结构的代码生成和基于plantUML类图文档的代码生成
 
 
+ 8. V0.0.2版本
+  本次版本新增codemaker-dberparse模块，支持plantuml er图解析为sql ddl create语句，已集成到codemaker-dbops
+  模块中。
+
+

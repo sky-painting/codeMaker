@@ -25,3 +25,6 @@
   cola-domain:cola应用的domain模块，属于领域层，主要负责bo,enum,factory,gataway等的代码管理
   cola-infrast:cola应用的基础设施层模块，主要负责gatawayimpl,do,mapper等的代码管理
 
+9.codemaker-dberparse
+  基于plantuml-er图解析数据库表实体生成sql create 语句，与dberpicture相互协作
+

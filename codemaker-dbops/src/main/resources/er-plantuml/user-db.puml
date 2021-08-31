@@ -1,0 +1,71 @@
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+
+entity "user_account-用户账号表" as user_account{
+    id: 主键/bigint(20) unsigned
+    user_name: 用户名/varchar(30)
+    chinese_name: 用户姓名/varchar(30)
+    password: 密码/varchar(60)
+    staff_id: 员工ID/bigint(20)
+    third_user: 是否是三方员工/tinyint(4)
+    ticket: 登录系统ticket/varchar(100)
+    ticket_expire_time: ticket有效期/timestamp
+    last_updatepw_time:上次修改密码的时间/timestamp
+    hand_phone:用户电话号码/varchar(30)
+    status: 账号状态/tinyint(4)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    UKey:user_name
+    Key:staff_id
+}
+
+
+entity "third_user-三方用户信息表" as third_user{
+    id: 主键/bigint(20) unsigned
+    email: 用户邮箱/varchar(30)
+    city_id: 用户所在城市ID/bigint(20)
+    city_name: 用户所在城市名称/varchar(30)
+    chinese_name:用户姓名/varchar(30)
+    hand_phone :用户电话/timestamp
+    status:用户状态/tinyint(4)
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:email
+}
+
+entity "login_log-用户登录日志表" as login_log{
+    id: 主键/bigint(20) unsigned
+    login_time: 登录时间/timestamp
+    user_id: 用户ID/bigint(20)
+    ticekt:登录ticket/varchar(100)
+    logout_time:退出时间/timestamp
+    system_url:登录目标系统域名/varchar(100)
+    date_create:创建时间/timestamp
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:user_id
+}
+
+
+entity "ding_user_relation-钉钉账号关联关系" as ding_user_relation{
+    id: 主键/bigint(20) unsigned
+    ding_user_id:钉钉账号id/varchar(60)
+    user_id:用户账号ID/bigint(20)
+    hand_phone:用户电话信息/varchar(30)
+    status:关联状态/tinyint(4)
+}
+
+@enduml

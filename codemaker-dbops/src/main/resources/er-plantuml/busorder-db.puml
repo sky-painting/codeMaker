@@ -1,0 +1,109 @@
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+
+entity "dba_order dba工单表" as dba_order{
+    id: 主键/bigint(20) unsigned
+    dba_biz_order_code:DBA工单编号/varchar(60)
+    order_type:DBA工单类型/varchar(60)
+    db_name:数据库名称/varchar(60)
+    rw_rate:数据库读写比/varchar(60)
+    size:数据库存储大小/varchar(20)
+    url:工单附件地址/varchar(100)
+    content:工单内容/varchar(3000)
+    status:工单状态/tinyint(4)
+    apply_reason:申请原因/varchar(300)
+    biz_order_code:关联业务单号/varchar(60)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:dba_biz_order_code
+    Key:create_user_id
+}
+
+
+entity "busniess_order 业务工单表" as staff_education{
+    id: 主键/bigint(20) unsigned
+    biz_order_code:业务工单编号/varchar(60)
+    biz_order_type:业务工单类型/varchar(60)
+	content:工单内容/varchar(300)
+	bus_line:业务线/varchar(30)
+	url:工单附件地址/varchar(100)
+    status:工单状态/tinyint(4)
+    apply_reason:申请原因/varchar(300)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+    --key extend --
+    PKey:id
+    Key:biz_order_code
+    Key:create_user_id
+
+}
+
+entity "ops_order 运维工单申请总表" as ops_order{
+    id: 主键/bigint(20) unsigned
+    ops_order_code:工单编号/varchar(60)
+    ops_order_type:工单类型/varchar(60)
+    url:工单附件地址/varchar(50)
+    status:工单状态/tinyint(4)
+    apply_reason:申请原因/varchar(300)
+    date_create:创建时间/timestamp
+    date_update:修改时间/timestamp
+    update_user_id:修改人/bigint(20)
+    create_user_id:创建人/bigint(20)
+
+    --key extend --
+    PKey:id
+    Key:ops_order_code
+    Key:create_user_id
+
+}
+
+entity "ops_domain_order 服务域名申请表" as ops_domain_order{
+    id: 主键/bigint(20) unsigned
+    ops_order_code:工单编号/varchar(60)
+    env_type:环境类型/varchar(60)
+    service_name:关联服务名/varchar(60)
+    domain_url:域名/varchar(60)
+    ip_content:IP地址列表/varchar(200)
+    --key extend --
+    PKey:id
+    Key:ops_order_code
+}
+
+entity "infrast_config_order-服务扩缩容申请表" as infrast_config_order{
+    id: 主键/bigint(20) unsigned
+    ops_order_code:工单编号/varchar(60)
+    op_type:扩容类型/tinyint(4)
+    service_name:关联服务名/varchar(60)
+    ip_content:IP地址列表/varchar(200)
+    cpu_count:cpu当前核数/tinyint(4)
+    target_cpu_count:cpu目标核数/tinyint(4)
+    mem_size:内存当前大小(G)/tinyint(4)
+    target_mem_size:内存目标大小(G)/tinyint(4)
+    disk_size:磁盘当前大小(G)/tinyint(4)
+    target_disk_size:磁盘目标大小(G)/tinyint(4)
+    --key extend --
+    PKey:id
+    Key:ops_order_code
+}
+
+entity "clust_offline_order 集群下线申请" as service_offline_order{
+    ops_order_code:工单编号/varchar(60)
+    service_name:关联服务名/varchar(60)
+    ip_content:IP地址列表/varchar(200)
+    check_user_id:工程效率校验人/bigint(20)
+    offline_domain:是否下线域名/tinyint(4)
+}
+
+
+@enduml
