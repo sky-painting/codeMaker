@@ -1,0 +1,35 @@
+
+读写场景的分析
+1.应用层(app_rpc)->应用层(app_rpc)
+ 读:被调用方返回值转:bo->dto
+ 写:调用方参数转:dto->bo,bo->cmd,dto->cmd,cmd->event,event->msgbody
+
+2.应用层(app_rpc)->领域层(domain)
+ 读:被调用方返回值转:bo->dto
+ 写:调用方参数转:dto->bo
+
+3.应用层(app_rpc)->基础设施层(infrast)
+ 读:被调用方返回值转:bo->dto,dto->dto
+ 写:调用方参数转:dto->bo
+
+
+4.领域层(domain)->领域层(domain)
+  读:正常绘制
+  写:正常绘制
+
+
+5.领域层(domain)->基础设施层(infrast)
+  读:被调用方返回值转:do->bo
+  写:调用方参数转:bo->do,bo->msgbody,bo->event
+
+6.基础设施层(infrast)->基础设施层(infrast)
+  读:正常绘制
+  写:正常绘制
+
+7.应用层(app_http)->领域层(domain)
+   读:被调用方返回值转:bo->vo
+   写:调用方参数转:vo->bo,bo->cmd,vo->cmd,cmd->event,event->msgbody
+
+8.应用层(app_http)->应用层(app_rpc)-->是否需要？
+   读:被调用方返回值转:bo->vo
+   写:调用方参数转:vo->bo,bo->cmd,vo->cmd,cmd->event,event->msgbody

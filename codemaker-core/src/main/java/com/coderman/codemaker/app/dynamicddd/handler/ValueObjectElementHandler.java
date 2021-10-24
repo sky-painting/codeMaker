@@ -1,6 +1,7 @@
 package com.coderman.codemaker.app.dynamicddd.handler;
 
 import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.app.dynamicddd.DerivedClassFactory;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelement.ValueObjectElementBean;
 import com.coderman.codemaker.bean.plantuml.ClassBean;
@@ -9,12 +10,15 @@ import com.coderman.codemaker.bean.plantuml.FieldBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.enums.DomainElementEnum;
 import com.coderman.codemaker.enums.VisibilityEnum;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -29,6 +33,8 @@ public class ValueObjectElementHandler implements DomainElementHandler<ValueObje
 
     @Autowired
     private ImportPackageService importPackageService;
+    @Autowired
+    private DerivedClassFactory derivedClassFactory;
 
     @Override
     public ValueObjectElementBean getElementBeanList(PlantUmlContextBean plantUmlContextBean) {
@@ -42,6 +48,9 @@ public class ValueObjectElementHandler implements DomainElementHandler<ValueObje
                 domainBoElementBeanList.add(v);
             }
         });
+
+
+        List<EnumBean> enumWithToRpcClientKeyList = new ArrayList<>();
 
         plantUmlContextBean.getEnumBeanMap().forEach((k, v) -> {
             List<String> enumValueList = new ArrayList<>();
@@ -63,10 +72,25 @@ public class ValueObjectElementHandler implements DomainElementHandler<ValueObje
             importPackageService.setPackageName(v,"domain.enums");
 
 
+            Optional<FieldBean> optionalFieldBean = v.getFieldBeanList().stream().filter(f -> f.isCopyToRpcClientKey()).findFirst();
+            if (optionalFieldBean.isPresent()) {
+                enumWithToRpcClientKeyList.add(v);
+            }
+
+            List<FieldBean> fieldBeanList = v.getFieldBeanList().stream()
+                    .filter(fieldBean -> !fieldBean.isCopyToRpcClientKey())
+                    .collect(Collectors.toList());
+            v.setFieldBeanList(fieldBeanList);
             dealConstruct(v);
 
             enumBeanList.add(v);
         });
+
+        //将领域值对象-枚举类复制到rpc client端
+        if(CollectionUtils.isNotEmpty(enumWithToRpcClientKeyList)){
+            //基于plantuml.enum的扩展信息进行派生
+            derivedClassFactory.deriveEnum2Enum(enumWithToRpcClientKeyList, plantUmlContextBean);
+        }
         valueObjectElementBean.setEnumBeanList(enumBeanList);
         valueObjectElementBean.setClassBeanList(domainBoElementBeanList);
         return valueObjectElementBean;

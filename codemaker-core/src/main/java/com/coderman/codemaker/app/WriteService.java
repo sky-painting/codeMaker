@@ -57,12 +57,11 @@ public abstract class WriteService {
      * @param classContentBean
      */
     public void writeClassFileV2(ClassContentBean classContentBean) {
-        log.info("classContentBean = "+ JSON.toJSONString(classContentBean));
         String filePath = getClassPackageFilePath(classContentBean);
         try {
             FileUtils.write(new File(filePath), classContentBean.getClassContent(), "UTF-8");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("error",e);
         }
     }
 
