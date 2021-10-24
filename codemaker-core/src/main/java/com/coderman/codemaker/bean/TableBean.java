@@ -1,7 +1,12 @@
 package com.coderman.codemaker.bean;
 
 import com.coderman.codemaker.bean.plantuml.ClassBean;
+import com.coderman.codemaker.bean.plantuml.InterfaceBean;
+import com.coderman.codemaker.bean.plantuml.MethodBean;
 import org.assertj.core.util.Lists;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created  on 2018-7-19.
@@ -79,6 +84,31 @@ public class TableBean {
         classBean.setMethodBeanList(Lists.newArrayList());
 
         return classBean;
+    }
+
+    /**
+     * 将mapper层整体注册到plantUmlContextBean 上下文中
+     * @param packageName
+     * @return
+     */
+    public InterfaceBean convertToMapperInterface(String packageName){
+        InterfaceBean interfaceBean = new InterfaceBean();
+        interfaceBean.setClassName(this.getHumpClassName()+"Mapper");
+        interfaceBean.setPackageName(packageName);
+        interfaceBean.setClassDesc(tableComment);
+        interfaceBean.setPlantUMLPackage("dao.mapper");
+
+        List<MethodBean> methodBeanList = new ArrayList<>();
+        String paramType = this.getHumpClassName()+"DO";
+        String varName = paramType.substring(0,1).toLowerCase()+paramType.substring(1);
+        methodBeanList.add(new MethodBean("insert("+paramType+" "+varName+")","int"));
+        methodBeanList.add(new MethodBean("update("+paramType+" "+varName+")","int"));
+        methodBeanList.add(new MethodBean("getAll()","Long"));
+        methodBeanList.add(new MethodBean("getById(Long id)","Long"));
+        methodBeanList.add(new MethodBean("deleteById(Long id)","int"));
+
+        interfaceBean.setMethodBeanList(methodBeanList);
+        return interfaceBean;
     }
 
     public ClassBean getClassBean() {
