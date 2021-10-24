@@ -94,7 +94,7 @@ public class AppServiceConfig {
             String moduleName = getModuleName(templateName);
             return appService.getModelAppService(moduleName);
         } catch (Exception e) {
-            logger.error("get WriteFileService impl error.");
+            logger.error("get WriteFileService impl error.templateName={}",templateName);
         }
         return null;
     }
