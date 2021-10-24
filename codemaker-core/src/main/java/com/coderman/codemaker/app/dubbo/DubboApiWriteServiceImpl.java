@@ -65,7 +65,7 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
                 writeClassFileV2(classContentBean);
             }
         }
-
+        //写facade
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.FACADE.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
@@ -73,6 +73,23 @@ public class DubboApiWriteServiceImpl extends WriteService implements IWriteFile
             classContentBean.setChildPackageName("facade");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setClassSuffix("Facade.java");
+            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleApiPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                writeClassFileV2(classContentBean);
+            }
+        }
+        //写domain.enum
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ENUM.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("enums");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setModulePath(projectTemplateDubboConfig.getModuleApiPath());
 
             //走默认的包生成方式
