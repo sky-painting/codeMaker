@@ -37,7 +37,8 @@ public class DerivedDOBOConvertElementHandler implements DomainElementHandler<Do
         List<InterfaceBean> convertElementBeanList = new ArrayList<>();
         plantUmlContextBean.getDerivedPlantUmlContextBean().getInterfaceBeanMap().forEach((k,v)->{
             if(v.getClassName().toLowerCase().endsWith(DomainDerivedElementEnum.DOBO_CONVERT.getElement())){
-                importPackageService.setPackageName(v,"data.convert");
+                v.setPlantUMLPackage(null);
+                importPackageService.setPackageName(v,"infrast.dataconvert");
                 String className = v.getClassName().substring(0,1).toUpperCase().concat(v.getClassName().substring(1));
                 v.setClassName(className.substring(0,className.lastIndexOf("er")));
                 convertElementBeanList.add(v);

@@ -4,13 +4,16 @@ import com.coderman.codemaker.app.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelementderive.ControllerElementBean;
 import com.coderman.codemaker.bean.plantuml.ClassBean;
+import com.coderman.codemaker.bean.plantuml.MethodBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.enums.DomainDerivedElementEnum;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -41,6 +44,16 @@ public class DerivedControllerElementHandler implements DomainElementHandler<Con
                 String className = v.getClassName().substring(0,1).toUpperCase().concat(v.getClassName().substring(1));
                 v.setClassName(className);
                 v.setDerived(true);
+
+                List<MethodBean> methodBeanFilterList = v.getMethodBeanList().stream().filter(methodBean ->
+                        methodBean.getMethodName().toLowerCase().contains(v.getClassName().toLowerCase())
+                ).collect(Collectors.toList());
+                //如果有多个facade则覆盖默认的方法列表
+                if(CollectionUtils.isNotEmpty(methodBeanFilterList)){
+                    methodBeanFilterList.stream().forEach(methodBean -> methodBean.setMethodName(methodBean.getMethodName().split("\\.")[1]));
+                    v.setMethodBeanList(methodBeanFilterList);
+                }
+                v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
                 classBeanList.add(v);
             }
         });
