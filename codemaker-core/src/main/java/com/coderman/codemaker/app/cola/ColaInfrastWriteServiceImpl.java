@@ -65,15 +65,13 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
             writeMapperXml(classContentBean);
         }
 
-
-
         //写domain.gataway.impl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.GATAWAY_IMPL.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName()+"Impl");
-            classContentBean.setChildPackageName("gataway.impl");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".impl");
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("gatawayimpl");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".gatawayimpl");
             classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
 
             //走默认的包生成方式
@@ -81,9 +79,30 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
                 writeClassFile(classContentBean);
             }else {
                 //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.gatawayimpl");
                 writeClassFileV2(classContentBean);
             }
         }
+
+        //写domain.repository.impl
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.REPOSITORY_IMPL.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("repositoryimpl");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".repositoryimpl");
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.repositoryimpl");
+                writeClassFileV2(classContentBean);
+            }
+        }
+
 
         //写infrast.acl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL.getTempFileName())){
@@ -124,12 +143,6 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
             }else {
-                if(!classContentBean.getClassPackageName().endsWith("impl") || !classContentBean.getClassPackageName().contains("impl")){
-                    classContentBean.setClassPackageName(classContentBean.getClassPackageName()+".impl");
-                }
-                if(!classContentBean.getHumpClassName().endsWith("impl") || !classContentBean.getHumpClassName().contains("impl")){
-                    classContentBean.setHumpClassName(classContentBean.getHumpClassName()+"Impl");
-                }
                 //走文档里的package包生成方式
                 writeClassFileV2(classContentBean);
             }
@@ -152,6 +165,8 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
+            classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.dataconvert");
+
             writeClassFileV2(classContentBean);
         }
 
@@ -169,6 +184,69 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
             writeClassFile(classContentBean);
         }
+
+        //写infras.mq.consumer
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_CONSUMER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("mq.consumer");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.mq.consumer");
+
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+        //写infras.mq.handler
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_HANDLER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("mq.handler");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.mq.handler");
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+        //写infras.mq.producer
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_PRODUCER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("mq.producer");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.mq.producer");
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+
     }
 
     @Override
@@ -229,7 +307,7 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
      */
     private String getFilePath(String childPackageName, String humpClassName, String classSuffix) {
         String packageName = appServiceConfig.getPackage();
-        String packagePath = packageName.replace(".", "/") + "/dao";
+        String packagePath = packageName.replace(".", "/") + "/infrast/dao";
         packagePath = Constant.JAVA + "/" + packagePath + "/" + childPackageName;
         String fileName = humpClassName + classSuffix;
         return projectTemplateColaConfig.getModuleInfrastPath()  + packagePath + "/" + fileName;

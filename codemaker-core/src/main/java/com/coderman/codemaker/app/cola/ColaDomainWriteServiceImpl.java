@@ -118,6 +118,28 @@ public class ColaDomainWriteServiceImpl extends WriteService implements IWriteFi
             }
 
         }
+
+        //写domain.event
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.EVENT_BODY.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("domain.event");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleDomainPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                writeClassFileV2(classContentBean);
+            }
+
+        }
+
+
         //写domain.gataway
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.GATAWAY.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
@@ -153,6 +175,7 @@ public class ColaDomainWriteServiceImpl extends WriteService implements IWriteFi
                 writeClassFileV2(classContentBean);
             }
         }
+
         //写service
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
