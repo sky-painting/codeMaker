@@ -42,6 +42,7 @@ public class AppExeElementHandler implements DomainElementHandler<ExecutorElemen
                 String className = v.getClassName().substring(0,1).toUpperCase().concat(v.getClassName().substring(1));
                 v.setClassName(className);
                 importPackageService.dealImportClass(v,plantUmlContextBean);
+                v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
                 interfaceBeanList.add(v);
             }
         });
@@ -52,6 +53,7 @@ public class AppExeElementHandler implements DomainElementHandler<ExecutorElemen
                 String className = v.getClassName().substring(0,1).toUpperCase().concat(v.getClassName().substring(1));
                 v.setClassName(className);
                 importPackageService.dealImportClass(v,plantUmlContextBean);
+                v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
                 classBeanList.add(v);
             }
         });
