@@ -209,6 +209,27 @@ public class DubboCoreWriteServiceImpl  extends WriteService implements IWriteFi
 
         }
 
+
+        //写domain.event
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.EVENT_BODY.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("domain.event");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleCorePath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                writeClassFileV2(classContentBean);
+            }
+
+        }
+
         //写domain.gataway
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.GATAWAY.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
@@ -231,9 +252,9 @@ public class DubboCoreWriteServiceImpl  extends WriteService implements IWriteFi
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.GATAWAY_IMPL.getTempFileName())){
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName()+"Impl");
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("gataway.impl");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".impl");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setModulePath(projectTemplateDubboConfig.getModuleCorePath());
 
             //走默认的包生成方式
@@ -284,12 +305,6 @@ public class DubboCoreWriteServiceImpl  extends WriteService implements IWriteFi
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
             }else {
-                if(!classContentBean.getClassPackageName().endsWith("impl") || !classContentBean.getClassPackageName().contains("impl")){
-                    classContentBean.setClassPackageName(classContentBean.getClassPackageName()+".impl");
-                }
-                if(!classContentBean.getHumpClassName().endsWith("impl") || !classContentBean.getHumpClassName().contains("impl")){
-                    classContentBean.setHumpClassName(classContentBean.getHumpClassName()+"Impl");
-                }
                 //走文档里的package包生成方式
                 writeClassFileV2(classContentBean);
             }
@@ -357,6 +372,85 @@ public class DubboCoreWriteServiceImpl  extends WriteService implements IWriteFi
                 writeClassFileV2(classContentBean);
             }
         }
+        //写app.listener
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_LISTENER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("app.listener");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleCorePath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+        //写infras.mq.consumer
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_CONSUMER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("infrast.mq.consumer");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleCorePath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.mq.consumer");
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+        //写infras.mq.handler
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_HANDLER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("infrast.mq.handler");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleCorePath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.mq.handler");
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+        //写infras.mq.producer
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_PRODUCER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("infrast.mq.producer");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateDubboConfig.getModuleCorePath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.mq.producer");
+                writeClassFileV2(classContentBean);
+            }
+        }
+
     }
 
     @Override

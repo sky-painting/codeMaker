@@ -1,10 +1,10 @@
 package com.coderman.codemaker.service;
 
-import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.dao.SqlMapper;
+import com.coderman.codemaker.utils.StringHelperUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +49,7 @@ public class TemlateVarService {
         tableBeanList.stream().forEach(e->{
             String humpTableName = getHumpTableName(e.getTableName());
             e.setHumpTableName(humpTableName);
-            String humpClassName = getHumpClassName(humpTableName);
+            String humpClassName = StringHelperUtils.getHumpClassName(humpTableName);
             e.setHumpClassName(humpClassName);
             String tableName ;
             if(e.getTableName().contains("_")){
@@ -66,8 +66,6 @@ public class TemlateVarService {
             e.setTableName(tableName);
             tableBeanMap.put(tableName,e);
         });
-
-        System.out.println(JSON.toJSONString(tableBeanMap));
         return tableBeanMap;
     }
 
@@ -112,7 +110,6 @@ public class TemlateVarService {
         });
 
         Map<String, List<ColumnBean>> stringListMap = columnBeanListNew.stream().collect(Collectors.groupingBy(ColumnBean::getTableName));
-        System.out.println("stringListMap = "+JSON.toJSONString(stringListMap));
         return stringListMap;
     }
 
@@ -169,18 +166,7 @@ public class TemlateVarService {
 
 
 
-    /**
-     * 获取表名对应的类名
-     * eg: user_info->UserInfo
-     * staff_education_info->StaffEducationInfo
-     *
-     * @param humpTableName
-     * @return
-     */
-    private String getHumpClassName(String humpTableName){
-        String resultName = humpTableName.substring(0,1).toUpperCase().concat(humpTableName.substring(1));
-        return resultName;
-    }
+
 
     /**
      * 获取字段类型对应的javaentity的java类型
@@ -238,13 +224,4 @@ public class TemlateVarService {
         return columnBeanMap;
     }
 
-    /**
-     * 根据表名获取对应类名
-     * @param tableName
-     * @return
-     */
-    public String getClassDOName(String tableName){
-        String humpTableName = getHumpTableName(tableName);
-        return getHumpClassName(humpTableName);
-    }
 }

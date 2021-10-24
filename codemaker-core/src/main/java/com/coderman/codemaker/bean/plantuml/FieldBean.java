@@ -1,6 +1,7 @@
 package com.coderman.codemaker.bean.plantuml;
 
 import com.coderman.codemaker.bean.GlobalConstant;
+import com.coderman.codemaker.enums.VisibilityEnum;
 
 /**
  * Description:
@@ -75,5 +76,37 @@ public class FieldBean {
                 || this.fieldName.toLowerCase().contains(GlobalConstant.CONTROLLER_KEY);
     }
 
+    public boolean isCopyToRpcClientKey(){
+        return this.desc.toLowerCase().contains(GlobalConstant.COPY2RPC_CLIENT_KEY)
+                || this.fieldName.toLowerCase().contains(GlobalConstant.COPY2RPC_CLIENT_KEY);
+    }
 
+    public boolean isInvokeFileKey(){
+        return this.desc.toLowerCase().contains(GlobalConstant.INVOKE_FILE_KEY)
+                || this.fieldName.toLowerCase().contains(GlobalConstant.INVOKE_FILE_KEY);
+    }
+
+    /**
+     * 构建属性注释
+     * @param desc
+     */
+    public void buildDesc(String desc){
+        if(desc.startsWith(VisibilityEnum.PUBLIC.getTag())
+                || desc.startsWith(VisibilityEnum.PRIVATE.getTag())
+                || desc.startsWith(VisibilityEnum.PROTECT.getTag())){
+            String newDesc = desc.substring(1,desc.length()-1);
+            this.setDesc(newDesc);
+        }else {
+            this.setDesc(desc);
+        }
+    }
+
+
+    public FieldBean copySelf(){
+        FieldBean fieldBean = new FieldBean();
+        fieldBean.setFieldName(this.getFieldName());
+        fieldBean.setVisibility(this.getVisibility());
+        fieldBean.setDesc(this.getDesc());
+        return fieldBean;
+    }
 }

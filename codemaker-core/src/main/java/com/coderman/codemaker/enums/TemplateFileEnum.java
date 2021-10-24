@@ -34,7 +34,9 @@ public enum  TemplateFileEnum {
     REPOSITORY_IMPL("repositoryimpl"),
     FACTORY("factory"),
     ENUM("enum"),
+    API_ENUM("apienum"),
     MESSAGE_BODY("msgbody"),
+    EVENT_BODY("event"),
     GATAWAY_IMPL("gatawayimpl"),
     ACL("acl"),
     ACL_IMPL("aclimpl"),
@@ -53,6 +55,10 @@ public enum  TemplateFileEnum {
     VO_DDD("voddd"),
     VOBO_CONVERT("voboconvert"),
     DTO_DDD("dtoddd"),
+    MQ_CONSUMER("mqconsumer"),
+    MQ_HANDLER("mqhandler"),
+    MQ_LISTENER("mqlistener"),
+    MQ_PRODUCER("mqproducer"),
     ;
     private String tempFileName;
     TemplateFileEnum(String tempFileName){

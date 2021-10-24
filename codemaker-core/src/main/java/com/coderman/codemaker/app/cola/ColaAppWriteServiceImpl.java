@@ -40,7 +40,7 @@ public class ColaAppWriteServiceImpl extends WriteService implements IWriteFileS
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName().toLowerCase().endsWith("facadeimpl") ? writeContentBean.getHumpClassName() : writeContentBean.getHumpClassName()+"FacadeImpl");
-            classContentBean.setChildPackageName("app.facade.impl");
+            classContentBean.setChildPackageName("app.facadeimpl");
             classContentBean.setModulePath(projectTemplateColaConfig.getModuleAppPath());
             writeClassFile(classContentBean);
 
@@ -48,6 +48,7 @@ public class ColaAppWriteServiceImpl extends WriteService implements IWriteFileS
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
             }else {
+                //lassContentBean.setClassPackageName(appServiceConfig.getPackage()+"/app/facadeimpl");
                 //走文档里的package包生成方式
                 writeClassFileV2(classContentBean);
             }
@@ -94,10 +95,31 @@ public class ColaAppWriteServiceImpl extends WriteService implements IWriteFileS
             ClassContentBean classContentBean = new ClassContentBean();
             classContentBean.setClassContent(writeContentBean.getContent());
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setModulePath(projectTemplateColaConfig.getModuleAppPath());
+            classContentBean.setClassPackageName(appServiceConfig.getPackage()+".app.convert");
+
             writeClassFileV2(classContentBean);
         }
+
+        //写app.listener
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_LISTENER.getTempFileName())){
+            ClassContentBean classContentBean = new ClassContentBean();
+            classContentBean.setClassContent(writeContentBean.getContent());
+            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
+            classContentBean.setChildPackageName("app.listener");
+            classContentBean.setClassSuffix("");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
+            classContentBean.setModulePath(projectTemplateColaConfig.getModuleAppPath());
+
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                writeClassFileV2(classContentBean);
+            }
+        }
+
 
 
         //指定服务类 or 工具类

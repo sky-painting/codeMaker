@@ -17,8 +17,7 @@ public interface ${table.humpClassName}Service{
 	 * @Title: save
 	 * @Description:新增
 	 * @author:
-	 * @param @param bo
-	 * @param @param userId
+	 * @param bo
 	 * @return ResultDto    返回类型
 	 * @throws
 	 */
@@ -29,7 +28,7 @@ public interface ${table.humpClassName}Service{
 	 * @Title: delete 
 	 * @Description: 通过id删除数据
 	 * @author: 
-	 * @param @param id
+	 * @param id
 	 * @return ResultDto    返回类型 
 	 * @throws
 	 */
@@ -40,7 +39,7 @@ public interface ${table.humpClassName}Service{
 	 * @Title: getById 
 	 * @Description: 通过id查询
 	 * @author: 
-	 * @param @param id
+	 * @param id
 	 * @return ResultDataDto<${table.humpClassName}BO>
 	 * @throws
 	 */
@@ -61,8 +60,8 @@ public interface ${table.humpClassName}Service{
 	* @Title: update
 	* @Description:修改
 	* @author:
-	* @param @param ${table.humpTableName}BO
-	* @return int
+	* @param  ${table.humpTableName}BO
+	* @return boolean
 	* @throws
 	*/
 	public boolean update(${table.humpClassName}BO ${table.humpTableName}BO) throws Exception;

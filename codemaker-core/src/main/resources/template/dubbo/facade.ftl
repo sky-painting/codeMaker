@@ -19,8 +19,7 @@ public interface ${table.humpClassName}Facade{
 	 * @Title: save
 	 * @Description:新增
 	 * @author:
-	 * @param @param dto
-	 * @param @param userId
+	 * @param dto
 	 * @return ResultDto    返回类型
 	 * @throws
 	 */
@@ -31,7 +30,7 @@ public interface ${table.humpClassName}Facade{
 	 * @Title: delete 
 	 * @Description: 通过id删除数据
 	 * @author: 
-	 * @param @param id
+	 * @param id
 	 * @return ResultDto    返回类型 
 	 * @throws
 	 */

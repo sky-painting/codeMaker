@@ -1,7 +1,9 @@
 package com.coderman.codemaker.bean.plantuml;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.coderman.codemaker.bean.invoke.InvokeContextBean;
+import com.google.common.collect.Sets;
+
+import java.util.*;
 
 /**
  * Description:
@@ -26,6 +28,22 @@ public class PlantUmlContextBean {
      * 派生类上下文
      */
     private PlantUmlContextBean derivedPlantUmlContextBean;
+
+    /**
+     * 动态调用时序图文件
+     */
+    private List<String> dynamicInvokeFileList = new ArrayList<>();
+
+    /**
+     * 记录解析调用时序中调用方的类和方法名
+     * key:调用方的类名.方法名
+     * value:被调用方的类名.方法名
+     */
+    private Map<String,Set<String>> dynamicInvokeChainMap = new HashMap<>();
+
+    public Map<String, Set<String>> getDynamicInvokeChainMap() {
+        return dynamicInvokeChainMap;
+    }
 
     public PlantUmlContextBean getDerivedPlantUmlContextBean() {
         return derivedPlantUmlContextBean;
@@ -52,6 +70,7 @@ public class PlantUmlContextBean {
     }
 
     public void addInterfaceBean(InterfaceBean interfaceBean){
+
         this.interfaceBeanMap.put(interfaceBean.getClassName(),interfaceBean);
     }
 
@@ -66,4 +85,50 @@ public class PlantUmlContextBean {
     public void addPacakge(PackageBean packageBean){
         this.packageBeanMap.put(packageBean.getPackageName(),packageBean);
     }
+
+    public List<String> getDynamicInvokeFileList() {
+        return dynamicInvokeFileList;
+    }
+
+    /**
+     * 解析多个调用时序图文件名称
+     * @param plantUMLFileName
+     */
+    public void addDynamicInvokeFile(String plantUMLFileName){
+        if(plantUMLFileName.contains(",")){
+            String [] arr = plantUMLFileName.split(",");
+            for (String fileName : arr){
+                dynamicInvokeFileList.add(fileName.trim());
+            }
+            return;
+        }
+        dynamicInvokeFileList.add(plantUMLFileName);
+    }
+
+    /**
+     * 记录调用时序图中的调用方信息
+     * @param invokeContextBean
+     * @return 是否保存成功
+     */
+    public boolean addInvokeMethod(InvokeContextBean invokeContextBean){
+
+        String key = invokeContextBean.getInvokerClassBean().getClassName()+"."+invokeContextBean.getMethodBean().getMethodName();
+
+        Set<String> providerMethodSet = this.dynamicInvokeChainMap.get(key);
+        if(providerMethodSet == null){
+            providerMethodSet = Sets.newHashSet();
+        }
+        String value = invokeContextBean.getProviderClassName()+invokeContextBean.getProviderClassMethod();
+
+        if(providerMethodSet.contains(value)){
+            return false;
+        }
+        providerMethodSet.add(value);
+
+        this.getDynamicInvokeChainMap().put(key,providerMethodSet);
+
+        return true;
+    }
+
+
 }

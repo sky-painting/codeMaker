@@ -1,8 +1,8 @@
-package ${package}.core.service;
+package ${package}.service;
 
 import java.util.List;
 
-import ${package}.core.model.bo.${table.humpClassName}BO;
+import ${package}.model.bo.${table.humpClassName}BO;
 
 /**
  * @Description:${table.tableComment}Service接口
@@ -17,31 +17,30 @@ public interface ${table.humpClassName}Service{
 	 * @Title: save
 	 * @Description:新增
 	 * @author:
-	 * @param @param dto
-	 * @param @param userId
-	 * @return ${table.humpClassName}BO    返回类型
+	 * @param bo
+	 * @return ResultDto    返回类型
 	 * @throws
 	 */
-	public ${table.humpClassName}BO save(${table.humpClassName}BO ${table.humpTableName}BO) throws Exception;
+	public ${table.humpClassName}BO save(${table.humpClassName}BO bo) throws Exception;
 
 	/**
 	 * 
 	 * @Title: delete 
 	 * @Description: 通过id删除数据
 	 * @author: 
-	 * @param @param id
+	 * @param id
 	 * @return ResultDto    返回类型 
 	 * @throws
 	 */
-	public Boolean delete(Long id);
+	public boolean delete(Long id);
 
 	/**
 	 * 
 	 * @Title: getById 
 	 * @Description: 通过id查询
 	 * @author: 
-	 * @param @param id
-	 * @return ${table.humpClassName}BO
+	 * @param id
+	 * @return ResultDataDto<${table.humpClassName}BO>
 	 * @throws
 	 */
 	public ${table.humpClassName}BO getById(Long id) throws Exception;
@@ -61,10 +60,10 @@ public interface ${table.humpClassName}Service{
 	* @Title: update
 	* @Description:修改
 	* @author:
-	* @param @param ${table.humpTableName}BO
-	* @return ${table.humpClassName}BO
+	* @param  ${table.humpTableName}BO
+	* @return boolean
 	* @throws
 	*/
-	public ${table.humpClassName}BO update(${table.humpClassName}BO ${table.humpTableName}BO) throws Exception;
+	public boolean update(${table.humpClassName}BO ${table.humpTableName}BO) throws Exception;
 
 }

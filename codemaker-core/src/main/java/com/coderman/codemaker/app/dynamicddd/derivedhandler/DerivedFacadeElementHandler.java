@@ -12,6 +12,7 @@ import com.coderman.codemaker.bean.plantuml.MethodBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.enums.DomainDerivedElementEnum;
 import com.coderman.codemaker.enums.DomainElementEnum;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,7 +55,18 @@ public class DerivedFacadeElementHandler implements DomainElementHandler<FacadeE
                         !methodBean.getReturnClass().toLowerCase().contains("vo")
                                 &&  !methodBean.getMethodName().toLowerCase().contains("vo")
                 ).collect(Collectors.toList());
+
                 v.setMethodBeanList(methodBeanList);
+
+                List<MethodBean> methodBeanFilterList = methodBeanList.stream().filter(methodBean ->
+                        methodBean.getMethodName().toLowerCase().contains(v.getClassName().toLowerCase())
+                ).collect(Collectors.toList());
+                //如果有多个facade则覆盖默认的方法列表
+                if(CollectionUtils.isNotEmpty(methodBeanFilterList)){
+                    methodBeanFilterList.stream().forEach(methodBean -> methodBean.setMethodName(methodBean.getMethodName().split("\\.")[1]));
+                    v.setMethodBeanList(methodBeanFilterList);
+                }
+                v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
 
                 facadeElementBeanList.add(v);
             }

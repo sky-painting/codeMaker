@@ -396,7 +396,12 @@ public class GeneratorController {
             List<InterfaceBean> repositoryBeanList = (List<InterfaceBean>)map.get("repository");
             gatawayBeanList.addAll(repositoryBeanList);
             writeFileService.writeDomainGataway(gatawayBeanList);
-            writeFileService.writeGatawayImpl(gatawayBeanList);
+
+            List<ClassBean> gatawayImplBeanList = (List<ClassBean>)map.get("gatawayimpl");
+            writeFileService.writeGatawayImpl(gatawayImplBeanList);
+
+            List<ClassBean> repositoryImplBeanList = (List<ClassBean>)map.get("repositoryimpl");
+            writeFileService.writeRepositoryImpl(repositoryImplBeanList);
         }else {
             //gataway需要依赖plantUML类图标示，否则基于数据库表生成会显得不伦不类
             log.warn("gataway class generation depends on plantuml..........!!!!!!!");
@@ -414,8 +419,11 @@ public class GeneratorController {
         Map<String,Object> map = entityVarRegistry.getTemplateVar();
         if(map.containsKey("dynamicddd")){
             List<InterfaceBean> aclBeanList = (List<InterfaceBean>)map.get("infrastacl");
+            List<ClassBean> aclImplBeanList = (List<ClassBean>)map.get("infrastaclimpl");
+
             List<ClassBean> aclParamBeanList = (List<ClassBean>)map.get("infrastaclparam");
-            writeFileService.writeAclInterfaceAndImpl(aclBeanList);
+            writeFileService.writeAclInterface(aclBeanList);
+            writeFileService.writeAclInterfaceImpl(aclImplBeanList);
             writeFileService.writeAclInterfaceParam(aclParamBeanList);
         }else {
             //gataway需要依赖plantUML类图标示，否则基于数据库表生成会显得不伦不类

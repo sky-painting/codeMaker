@@ -31,8 +31,7 @@ import java.util.Set;
 @Component(value = "infrastAclElementHandler")
 public class InfrastAclElementHandler implements DomainElementHandler<InfrastAclElementBean> {
 
-    @Autowired
-    private ProjectTemplateDynamicDDDConfig projectTemplateDynamicDDDConfig;
+
     @Autowired
     private ImportPackageService importPackageService;
 
@@ -104,7 +103,6 @@ public class InfrastAclElementHandler implements DomainElementHandler<InfrastAcl
 
         infrastAclElementBean.setInterfaceBeanList(interfaceBeanList);
         infrastAclElementBean.setClassBeanList(classBeanList);
-        System.out.println("infrastAclElementBean ="+ JSON.toJSONString(infrastAclElementBean));
         return infrastAclElementBean;
     }
 

@@ -5,6 +5,7 @@ import ${importClass};
 </#list>
 
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
  /**
  * @Description:${class.className}类
@@ -17,16 +18,15 @@ public class ${class.className}{
 
 	<#list fields as field>
 	/** ${field.desc} **/
+    @Autowired
     ${field.visibility} ${field.fieldName};
 	</#list>
 
     <#list methods as method>
-    /**
-     *
-     * @Description:${method.desc}
-     * @return ${method.returnClass}
-     */
+
+${method.doc}
     ${method.visibility} ${method.returnClass} ${method.methodName}{
+${method.methodContent}
         ${method.returnBody}
     }
     </#list>

@@ -55,13 +55,24 @@ public class WriteDynamicDDDModuleService {
         List<ClassBean> domainMsgBeanList = (List<ClassBean>)dynamicDDDMap.get("domainmsg");
         writeMsgBody(domainMsgBeanList,writeFileService,"ddd");
 
+
+        //写domainevent
+        List<ClassBean> domainEventBeanList = (List<ClassBean>)dynamicDDDMap.get("domainevent");
+        writeDomainEvent(domainEventBeanList,writeFileService,"ddd");
+
         //写factory
         List<ClassBean> domainFactoryBeanList = (List<ClassBean>)dynamicDDDMap.get("domainfactory");
         writeFactory(domainFactoryBeanList,writeFileService,"ddd");
 
         //写防腐层接口
         List<InterfaceBean> infrastAclInterfaceList = (List<InterfaceBean>)dynamicDDDMap.get("infrastacl");
-        writeAclInterfaceAndImpl(infrastAclInterfaceList,writeFileService,"ddd");
+        writeAclInterface(infrastAclInterfaceList,writeFileService,"ddd");
+
+
+        //写防腐层接口
+        List<ClassBean> infrastAclInterfaceImplList = (List<ClassBean>)dynamicDDDMap.get("infrastaclimpl");
+        writeAclInterfaceImpl(infrastAclInterfaceImplList,writeFileService,"ddd");
+
         //写防腐层接口需要的参数
         List<ClassBean> infrastAclParamClassList = (List<ClassBean>)dynamicDDDMap.get("infrastaclparam");
         writeACLParam(infrastAclParamClassList,writeFileService,"ddd");
@@ -92,12 +103,8 @@ public class WriteDynamicDDDModuleService {
     public void writeBO(List<ClassBean> classBeanList, IWriteFileService writeFileService,String dddTag){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = classBean.buildVarMap();
 
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
             String boContent;
             if (StringUtils.isNotEmpty(dddTag)){
                 boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.BUSINESS_OBJECT_DDD.getTempFileName(), varMap);
@@ -121,12 +128,8 @@ public class WriteDynamicDDDModuleService {
     public void writeMsgBody(List<ClassBean> classBeanList, IWriteFileService writeFileService,String dddTag){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = classBean.buildVarMap();
 
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
             String boContent;
             if(StringUtils.isNotEmpty(dddTag)){
                 boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.MESSAGE_BODY.getTempFileName(), varMap);
@@ -144,6 +147,35 @@ public class WriteDynamicDDDModuleService {
         }
     }
 
+
+
+    /**
+     * 写domainEvent
+     * @param classBeanList
+     * @param writeFileService
+     */
+    public void writeDomainEvent(List<ClassBean> classBeanList, IWriteFileService writeFileService,String dddTag){
+
+        for (ClassBean classBean : classBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
+
+            String boContent;
+            if(StringUtils.isNotEmpty(dddTag)){
+                boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.EVENT_BODY.getTempFileName(), varMap);
+            }else {
+                boContent = freemarkerService.parseTpl(TemplateFileEnum.EVENT_BODY.getTempFileName(), varMap);
+            }
+
+            WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
+                    .templateName(TemplateFileEnum.EVENT_BODY.getTempFileName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
+                    .build();
+            writeFileService.writeContent(writeContentBean);
+        }
+    }
+
+
     /**
      * 写DTO
      * @param classBeanList
@@ -152,12 +184,8 @@ public class WriteDynamicDDDModuleService {
     public void writeDTO(List<ClassBean> classBeanList, IWriteFileService writeFileService){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = classBean.buildVarMap();
 
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
             String boContent = freemarkerService.parseTpl(TemplateFileEnum.DTO_DDD.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
                     .templateName(TemplateFileEnum.DTO_DDD.getTempFileName())
@@ -176,12 +204,8 @@ public class WriteDynamicDDDModuleService {
     public void writeVO(List<ClassBean> classBeanList, IWriteFileService writeFileService){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = classBean.buildVarMap();
 
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
             String boContent = freemarkerService.parseTpl(TemplateFileEnum.VO_DDD.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
                     .templateName(TemplateFileEnum.VO_DDD.getTempFileName())
@@ -201,12 +225,8 @@ public class WriteDynamicDDDModuleService {
     public void writeController(List<ClassBean> classBeanList, IWriteFileService writeFileService){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = classBean.buildVarMap();
 
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
             String boContent = freemarkerService.parseTpl(TemplateFileEnum.CONTROLLER_DDD.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
                     .templateName(TemplateFileEnum.CONTROLLER_DDD.getTempFileName())
@@ -226,10 +246,8 @@ public class WriteDynamicDDDModuleService {
     public void writeFacadeImpl(List<ClassBean> classBeanList, IWriteFileService writeFileService){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",classBean);
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
+            Map<String, Object> varMap = classBean.buildVarMap();
+
             String boContent = freemarkerService.parseTpl(TemplateFileEnum.FACADE_IMPL_DDD.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
                     .templateName(TemplateFileEnum.FACADE_IMPL.getTempFileName())
@@ -248,11 +266,8 @@ public class WriteDynamicDDDModuleService {
     public void writeFacade(List<InterfaceBean> classBeanList, IWriteFileService writeFileService){
 
         for (InterfaceBean interfaceBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
 
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
             String boContent = freemarkerService.parseTpl(TemplateFileEnum.FACADE_DDD.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
                     .templateName(TemplateFileEnum.FACADE.getTempFileName())
@@ -272,12 +287,8 @@ public class WriteDynamicDDDModuleService {
     public void writeValueObject(List<ClassBean> classBeanList, IWriteFileService writeFileService,String dddTag){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
+            Map<String, Object> varMap = classBean.buildVarMap();
 
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
             String boContent;
             if(StringUtils.isNotEmpty(dddTag)){
                 boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.VALUE_OBJECT.getTempFileName(), varMap);
@@ -301,10 +312,8 @@ public class WriteDynamicDDDModuleService {
      */
     private void writeInterfaceAndImpl(List<InterfaceBean> repositoryInterfaceBeanList, IWriteFileService writeFileService,String dddTag){
         for (InterfaceBean interfaceBean : repositoryInterfaceBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
+
             String interfaceContent;
             if (StringUtils.isNotEmpty(dddTag)){
                 interfaceContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.GATAWAY.getTempFileName(), varMap);
@@ -336,10 +345,7 @@ public class WriteDynamicDDDModuleService {
      */
     public void writeGataWay(List<InterfaceBean> gataWayBeanList, IWriteFileService writeFileService,String dddTag) {
         for (InterfaceBean interfaceBean : gataWayBeanList) {
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class", interfaceBean);
-            varMap.put("methods", interfaceBean.getMethodBeanList());
-            varMap.put("imports", interfaceBean.getImportClassList());
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
 
             String interfaceContent = freemarkerService.parseTpl(TemplateFileEnum.GATAWAY.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(interfaceContent)
@@ -353,26 +359,45 @@ public class WriteDynamicDDDModuleService {
 
     /**
      * 写gataway实现
-     * @param gatawayInterfaceBeanList
+     * @param gatawayImplInterfaceBeanList
      * @param writeFileService
      */
-    public void writeGatawayImpl(List<InterfaceBean> gatawayInterfaceBeanList, IWriteFileService writeFileService,String dddTag){
-        for (InterfaceBean interfaceBean : gatawayInterfaceBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
-
+    public void writeGatawayImpl(List<ClassBean> gatawayImplInterfaceBeanList, IWriteFileService writeFileService,String dddTag){
+        for (ClassBean classBean : gatawayImplInterfaceBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
             //写接口实现
             String interfaceImplContent = freemarkerService.parseTpl(TemplateFileEnum.GATAWAY_IMPL.getTempFileName(), varMap);
             WriteContentBean writeContentBean2 = WriteContentBean.builder().content(interfaceImplContent)
                     .templateName(TemplateFileEnum.GATAWAY_IMPL.getTempFileName())
-                    .humpClassName(interfaceBean.getClassName())
-                    .classPackageName(interfaceBean.getPackageName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
                     .build();
+
+
             writeFileService.writeContent(writeContentBean2);
         }
     }
+
+    /**
+     * 写repository实现
+     * @param repositoryImplInterfaceBeanList
+     * @param writeFileService
+     */
+    public void writeRepositoryImpl(List<ClassBean> repositoryImplInterfaceBeanList, IWriteFileService writeFileService,String dddTag){
+        for (ClassBean classBean : repositoryImplInterfaceBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
+            //写接口实现
+            String interfaceImplContent = freemarkerService.parseTpl(TemplateFileEnum.GATAWAY_IMPL.getTempFileName(), varMap);
+            WriteContentBean writeContentBean2 = WriteContentBean.builder().content(interfaceImplContent)
+                    .templateName(TemplateFileEnum.REPOSITORY_IMPL.getTempFileName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
+                    .build();
+
+            writeFileService.writeContent(writeContentBean2);
+        }
+    }
+
 
     /**
      * 写枚举
@@ -382,13 +407,7 @@ public class WriteDynamicDDDModuleService {
     public void writeEnum(List<EnumBean> enumBeanList, IWriteFileService writeFileService,String dddTag){
         //写枚举
         for (EnumBean enumBean : enumBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",enumBean);
-            varMap.put("fields",enumBean.getFieldBeanList());
-            varMap.put("methods",enumBean.getMethodBeanList());
-            varMap.put("enums",enumBean.getEnumValueList());
-            varMap.put("methods",enumBean.getMethodBeanList());
-            varMap.put("bodys",enumBean.getConstructMethodBodyList());
+            Map<String, Object> varMap = enumBean.buildVarMap();
             String enumContent;
             if(StringUtils.isNotEmpty(dddTag)){
                 enumContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.ENUM.getTempFileName(), varMap);
@@ -412,11 +431,7 @@ public class WriteDynamicDDDModuleService {
     public void writeFactory(List<ClassBean> domainFactoryBeanList, IWriteFileService writeFileService,String dddTag){
         //写factory
         for (ClassBean classBean : domainFactoryBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
+            Map<String, Object> varMap = classBean.buildVarMap();
             String boContent;
             if(StringUtils.isNotEmpty(dddTag)){
                 boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.FACTORY.getTempFileName(), varMap);
@@ -435,16 +450,119 @@ public class WriteDynamicDDDModuleService {
 
 
     /**
-     * 写接口和实现
+     * 写app.listener
+     * @param appListenerBeanList
+     * @param writeFileService
+     */
+    public void writeAppListner(List<ClassBean> appListenerBeanList, IWriteFileService writeFileService,String dddTag){
+        //写app.listener
+        for (ClassBean classBean : appListenerBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
+
+            String boContent;
+            if(StringUtils.isNotEmpty(dddTag)){
+                boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.MQ_LISTENER.getTempFileName(), varMap);
+            }else {
+                boContent = freemarkerService.parseTpl(TemplateFileEnum.MQ_LISTENER.getTempFileName(), varMap);
+            }
+
+            WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
+                    .templateName(TemplateFileEnum.MQ_LISTENER.getTempFileName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
+                    .build();
+            writeFileService.writeContent(writeContentBean);
+        }
+    }
+
+
+    /**
+     * 写infrast.mq.producer
+     * @param appListenerBeanList
+     * @param writeFileService
+     */
+    public void writeMqProducer(List<ClassBean> appListenerBeanList, IWriteFileService writeFileService,String dddTag){
+        //写infrast.mq.producer
+        for (ClassBean classBean : appListenerBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
+
+            String boContent;
+            if(StringUtils.isNotEmpty(dddTag)){
+                boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.MQ_PRODUCER.getTempFileName(), varMap);
+            }else {
+                boContent = freemarkerService.parseTpl(TemplateFileEnum.MQ_PRODUCER.getTempFileName(), varMap);
+            }
+
+            WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
+                    .templateName(TemplateFileEnum.MQ_PRODUCER.getTempFileName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
+                    .build();
+            writeFileService.writeContent(writeContentBean);
+        }
+    }
+
+    /**
+     * 写infrast.mq.consumer
+     * @param appListenerBeanList
+     * @param writeFileService
+     */
+    public void writeMqConsumer(List<ClassBean> appListenerBeanList, IWriteFileService writeFileService,String dddTag){
+        //写infrast.mq.consumer
+        for (ClassBean classBean : appListenerBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
+
+            String boContent;
+            if(StringUtils.isNotEmpty(dddTag)){
+                boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.MQ_CONSUMER.getTempFileName(), varMap);
+            }else {
+                boContent = freemarkerService.parseTpl(TemplateFileEnum.MQ_CONSUMER.getTempFileName(), varMap);
+            }
+
+            WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
+                    .templateName(TemplateFileEnum.MQ_CONSUMER.getTempFileName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
+                    .build();
+            writeFileService.writeContent(writeContentBean);
+        }
+    }
+
+    /**
+     * 写infrast.mq.handler
+     * @param appListenerBeanList
+     * @param writeFileService
+     */
+    public void writeMqHandler(List<ClassBean> appListenerBeanList, IWriteFileService writeFileService,String dddTag){
+        //写infrast.mq.handler
+        for (ClassBean classBean : appListenerBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
+            String boContent;
+            if(StringUtils.isNotEmpty(dddTag)){
+                boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.MQ_HANDLER.getTempFileName(), varMap);
+            }else {
+                boContent = freemarkerService.parseTpl(TemplateFileEnum.MQ_HANDLER.getTempFileName(), varMap);
+            }
+
+            WriteContentBean writeContentBean = WriteContentBean.builder().content(boContent)
+                    .templateName(TemplateFileEnum.MQ_HANDLER.getTempFileName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
+                    .build();
+            writeFileService.writeContent(writeContentBean);
+        }
+    }
+
+
+    /**
+     * 写infrastacl接口
      * @param aclInterfaceBeanList
      * @param writeFileService
      */
-    public void writeAclInterfaceAndImpl(List<InterfaceBean> aclInterfaceBeanList, IWriteFileService writeFileService,String dddTag){
+    public void writeAclInterface(List<InterfaceBean> aclInterfaceBeanList, IWriteFileService writeFileService,String dddTag){
         for (InterfaceBean interfaceBean : aclInterfaceBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
+
             String interfaceContent;
             if(StringUtils.isNotEmpty(dddTag)){
                 interfaceContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.ACL.getTempFileName(), varMap);
@@ -458,26 +576,33 @@ public class WriteDynamicDDDModuleService {
                     .classPackageName(interfaceBean.getPackageName())
                     .build();
             writeFileService.writeContent(writeContentBean);
+        }
+    }
 
-            //写接口实现
+
+    /**
+     * 写infrastaclImpl
+     * @param infrastAclImplBeanList
+     * @param writeFileService
+     */
+    public void writeAclInterfaceImpl(List<ClassBean> infrastAclImplBeanList, IWriteFileService writeFileService,String dddTag){
+        for (ClassBean classBean : infrastAclImplBeanList){
+            Map<String, Object> varMap = classBean.buildVarMap();
             String interfaceImplContent;
             if(StringUtils.isNotEmpty(dddTag)){
                 interfaceImplContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.GATAWAY_IMPL.getTempFileName(), varMap);
             }else {
                 interfaceImplContent = freemarkerService.parseTpl(TemplateFileEnum.GATAWAY_IMPL.getTempFileName(), varMap);
             }
-
-
             WriteContentBean writeImplBean = WriteContentBean.builder()
                     .content(interfaceImplContent)
                     .templateName(TemplateFileEnum.ACL_IMPL.getTempFileName())
-                    .humpClassName(interfaceBean.getClassName())
-                    .classPackageName(interfaceBean.getPackageName())
+                    .humpClassName(classBean.getClassName())
+                    .classPackageName(classBean.getPackageName())
                     .build();
             writeFileService.writeContent(writeImplBean);
         }
     }
-
 
     /**
      * 写acl.param
@@ -515,11 +640,7 @@ public class WriteDynamicDDDModuleService {
     public void writeAppCommand(List<ClassBean> classBeanList, IWriteFileService writeFileService,String dddTag){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
+            Map<String, Object> varMap = classBean.buildVarMap();
             //使用BO的模板
             String boContent;
             if(StringUtils.isNotEmpty(dddTag)){
@@ -546,12 +667,7 @@ public class WriteDynamicDDDModuleService {
     public void writeAppExeImpl(List<ClassBean> classBeanList, IWriteFileService writeFileService,String dddTag){
 
         for (ClassBean classBean : classBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",classBean);
-            varMap.put("fields",classBean.getFieldBeanList());
-            varMap.put("methods",classBean.getMethodBeanList());
-            varMap.put("imports",classBean.getImportClassList());
-
+            Map<String, Object> varMap = classBean.buildVarMap();
             String boContent;
             if(StringUtils.isNotEmpty(dddTag)){
                 boContent = freemarkerService.parseTplDynamicDDD(TemplateFileEnum.EXE_IMPL.getTempFileName(), varMap);
@@ -582,11 +698,7 @@ public class WriteDynamicDDDModuleService {
      */
     public void writeAppExeInterface(List<InterfaceBean> interfaceBeanList, IWriteFileService writeFileService,String dddTag){
         for (InterfaceBean interfaceBean : interfaceBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
-
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
             //借用gataway的模板
             String interfaceContent;
             if(StringUtils.isNotEmpty(dddTag)){
@@ -613,11 +725,7 @@ public class WriteDynamicDDDModuleService {
      */
     public void writeDtoBOConvert(List<InterfaceBean> interfaceBeanList, IWriteFileService writeFileService){
         for (InterfaceBean interfaceBean : interfaceBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
-
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
             String interfaceContent = freemarkerService.parseTpl(TemplateFileEnum.CONVERT.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(interfaceContent)
                     .templateName(TemplateFileEnum.CONVERT.getTempFileName())
@@ -636,11 +744,7 @@ public class WriteDynamicDDDModuleService {
      */
     public void writeVoBOConvert(List<InterfaceBean> interfaceBeanList, IWriteFileService writeFileService){
         for (InterfaceBean interfaceBean : interfaceBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
-
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
             String interfaceContent = freemarkerService.parseTpl(TemplateFileEnum.CONVERT.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(interfaceContent)
                     .templateName(TemplateFileEnum.CONVERT.getTempFileName())
@@ -660,11 +764,7 @@ public class WriteDynamicDDDModuleService {
      */
     public void writeDoBOConvert(List<InterfaceBean> interfaceBeanList, IWriteFileService writeFileService){
         for (InterfaceBean interfaceBean : interfaceBeanList){
-            Map<String, Object> varMap = new HashMap<>();
-            varMap.put("class",interfaceBean);
-            varMap.put("methods",interfaceBean.getMethodBeanList());
-            varMap.put("imports",interfaceBean.getImportClassList());
-
+            Map<String, Object> varMap = interfaceBean.buildVarMap();
             String interfaceContent = freemarkerService.parseTpl(TemplateFileEnum.CONVERT.getTempFileName(), varMap);
             WriteContentBean writeContentBean = WriteContentBean.builder().content(interfaceContent)
                     .templateName(TemplateFileEnum.CONVERT.getTempFileName())

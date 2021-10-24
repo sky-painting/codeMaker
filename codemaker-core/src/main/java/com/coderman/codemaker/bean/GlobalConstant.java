@@ -33,4 +33,23 @@ public class GlobalConstant {
      * plantuml bo中的特殊属性-标示controller类名
      */
     public static final String CONTROLLER_KEY = "controllerkey";
+
+
+    /**
+     * plantuml enum中的特殊属性-标示enum要复制到rpc client模块中
+     */
+    public static final String COPY2RPC_CLIENT_KEY = "torpcclient";
+
+
+    /**
+     * plantuml invoke动态调用流程图的链路标示
+     */
+    public static final String INVOKE_TAG = "invoke";
+
+
+
+    /**
+     * plantuml bo中的特殊属性-标示BO对应的业务方法调用流程
+     */
+    public static final String INVOKE_FILE_KEY = "invokefilekey";
 }

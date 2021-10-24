@@ -19,7 +19,7 @@ public interface IWriteFileService {
      * 抽象写模块class文件
      * @param writeContentBean
      */
-    public void writeContent(WriteContentBean writeContentBean);
+    void writeContent(WriteContentBean writeContentBean);
 
     /**
      * 一次性生成单表需要的所有模块代码
@@ -27,14 +27,14 @@ public interface IWriteFileService {
      * @param humpClassName
      * @param varMap
      */
-    public void writeAllContent(String humpClassName, Map<String, Object> varMap, String fast);
+    void writeAllContent(String humpClassName, Map<String, Object> varMap, String fast);
 
     /**
      * 写公共基础服务类
      *
      * @param varMap
      */
-    public void writeCommonContent(Map<String, Object> varMap, String fast);
+    void writeCommonContent(Map<String, Object> varMap, String fast);
 
 
 }

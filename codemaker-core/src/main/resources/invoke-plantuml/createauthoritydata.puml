@@ -1,0 +1,17 @@
+@startuml
+
+participant  应用api层 as  app
+participant  领域层 as  domain
+participant  基础设施层 as  infrast
+group 系统上下文调用流程
+app --> app: 1.给某角色授权\n AuthorityFacade.saveAuthority invoke RoleAuthCmdExe.exe
+app --> domain:2.转入命令层\n RoleAuthCmdExe.exe invoke AuthorityRepository.buildAuthority
+domain --> infrast:3.准备保存角色授权数据\n AuthorityRepository.buildAuthority invoke AuthorityMapper.insert
+domain --> infrast:4.保存系统权限数据\n AuthorityRepository.buildAuthority invoke SystemAuthorityMapper.insert
+domain --> infrast:5.保存行政权限详情\n AuthorityRepository.buildAuthority invoke AdminAuthorityMapper.insert
+domain --> infrast:6.保存数据权限详情\n AuthorityRepository.buildAuthority invoke DataAuthorityMapper.insert
+app --> infrast:7.发送授权消息\n AuthorityFacade.saveAuthority invoke AuthorityMqProducer.authorityCreate
+
+end
+
+@enduml

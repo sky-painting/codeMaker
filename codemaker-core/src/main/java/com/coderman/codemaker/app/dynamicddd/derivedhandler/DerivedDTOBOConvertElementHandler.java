@@ -39,7 +39,8 @@ public class DerivedDTOBOConvertElementHandler implements DomainElementHandler<D
         List<InterfaceBean> convertElementBeanList = new ArrayList<>();
         plantUmlContextBean.getDerivedPlantUmlContextBean().getInterfaceBeanMap().forEach((k,v)->{
             if(v.getClassName().toLowerCase().endsWith(DomainDerivedElementEnum.DTOBO_CONVERT.getElement())){
-                importPackageService.setPackageName(v,"model.convert");
+                v.setPlantUMLPackage(null);
+                importPackageService.setPackageName(v,"app.convert");
                 String className = v.getClassName().substring(0,1).toUpperCase().concat(v.getClassName().substring(1));
                 v.setClassName(className);
                 convertElementBeanList.add(v);

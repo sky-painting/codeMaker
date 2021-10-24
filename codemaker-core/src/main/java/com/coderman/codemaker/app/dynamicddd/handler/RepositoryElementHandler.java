@@ -6,6 +6,7 @@ import com.coderman.codemaker.bean.dddelement.RepositoryElementBean;
 import com.coderman.codemaker.bean.plantuml.InterfaceBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.enums.DomainElementEnum;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +38,7 @@ public class RepositoryElementHandler implements DomainElementHandler<Repository
                 v.setClassName(className);
                 importPackageService.dealImportClass(v,plantUmlContextBean);
                 repositoryInterfaceBeanList.add(v);
+                v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
             }
         });
         repositoryElementBean.setInterfaceBeanList(repositoryInterfaceBeanList);

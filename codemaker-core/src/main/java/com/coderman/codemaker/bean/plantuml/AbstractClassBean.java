@@ -1,6 +1,17 @@
 package com.coderman.codemaker.bean.plantuml;
 
+import com.coderman.codemaker.enums.DomainElementEnum;
+import com.coderman.codemaker.utils.StringHelperUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Description:
@@ -71,6 +82,81 @@ public abstract class AbstractClassBean {
      * 是否是派生类
      */
     private boolean isDerived;
+
+
+    private String bodtoConvertInterface;
+
+    private String bodoConvertInterface;
+
+    private String bovoConvertInterface;
+
+    /**
+     * 在动态调用中产生的引用包
+     */
+    private List<String> dynamicImportPackageList;
+
+
+    /**
+     * 派生类链路
+     * 如bo派生dto
+     * dto的派生链路里就有boclass
+     * 用来记录派生过程中的关联关系
+     */
+    private List<String> derivedChainClassList;
+
+    /**
+     * bo上的扩展属性对象
+     */
+    private ExtendFieldBean extendFieldBean = new ExtendFieldBean();
+
+
+    public ExtendFieldBean getExtendFieldBean() {
+        return extendFieldBean;
+    }
+
+    public void setExtendFieldBean(ExtendFieldBean extendFieldBean) {
+        this.extendFieldBean = extendFieldBean;
+    }
+
+    public List<String> getDerivedChainClassList() {
+        return derivedChainClassList;
+    }
+
+    public void setDerivedChainClassList(List<String> derivedChainClassList) {
+        this.derivedChainClassList = derivedChainClassList;
+    }
+
+    public List<String> getDynamicImportPackageList() {
+        return dynamicImportPackageList;
+    }
+
+    public void setDynamicImportPackageList(List<String> dynamicImportPackageList) {
+        this.dynamicImportPackageList = dynamicImportPackageList;
+    }
+
+    public String getBodtoConvertInterface() {
+        return bodtoConvertInterface;
+    }
+
+    public void setBodtoConvertInterface(String bodtoConvertInterface) {
+        this.bodtoConvertInterface = bodtoConvertInterface;
+    }
+
+    public String getBodoConvertInterface() {
+        return bodoConvertInterface;
+    }
+
+    public void setBodoConvertInterface(String bodoConvertInterface) {
+        this.bodoConvertInterface = bodoConvertInterface;
+    }
+
+    public String getBovoConvertInterface() {
+        return bovoConvertInterface;
+    }
+
+    public void setBovoConvertInterface(String bovoConvertInterface) {
+        this.bovoConvertInterface = bovoConvertInterface;
+    }
 
     public boolean isDerived() {
         return isDerived;
@@ -169,5 +255,113 @@ public abstract class AbstractClassBean {
 
     public void setClassDesc(String classDesc) {
         this.classDesc = classDesc;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractClassBean that = (AbstractClassBean) o;
+        return Objects.equals(className, that.className) &&
+                Objects.equals(packageName, that.packageName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(className, packageName);
+    }
+
+
+    public void buildPlantUMLPackage(String plantUMLPackage){
+        if(plantUMLPackage.contains("\"")){
+            String content = plantUMLPackage.split("\"")[1];
+            if(content.contains("-")){
+                String [] arr = content.split("-");
+                if(arr[1].contains(".")){
+                    this.setPlantUMLPackage(arr[1].trim());
+                    return;
+                }
+                if(arr[0].contains(".")){
+                    this.setPlantUMLPackage(arr[0].trim());
+                    return;
+                }
+
+            }
+        }
+
+        this.setPlantUMLPackage(plantUMLPackage.trim().trim());
+    }
+
+
+    /**
+     * 如果是bo类的情况下可以通过bo类找到对应的DO类名
+     * @return
+     */
+    public String getDOClassFromTableKey(){
+        String tableKey = this.getExtendFieldBean().getTableKey();
+        if(StringUtils.isEmpty(tableKey)){
+            return null;
+        }
+        return StringHelperUtils.getClassDOName(tableKey);
+    }
+
+    /**
+     * 合并引用包，
+     * 接口的引用包与实现的引用包合并
+     * @param importClassList
+     */
+    public void mergeImportClass(List<String> importClassList){
+        if(CollectionUtils.isEmpty(importClassList)){
+            return;
+        }
+        if(CollectionUtils.isEmpty(this.getImportClassList())){
+            this.setImportClassList(importClassList);
+        }else {
+            Set<String> newHashSet = Sets.newHashSet(importClassList);
+            for (String importClassName : this.getImportClassList()){
+                newHashSet.remove(importClassName);
+            }
+            this.getImportClassList().addAll(Lists.newArrayList(newHashSet));
+        }
+    }
+    /**
+     * 构建简化版的field,去除扩展字段属性内容，对dto,vo屏蔽bo属性之间的关联关系，但是bo本身保留
+     * @return
+     */
+    public List<FieldBean> buildSimpleFieldList(){
+
+        List<FieldBean> fieldBeanList = new ArrayList<>();
+        if(CollectionUtils.isEmpty(this.getFieldBeanList())){
+            return fieldBeanList;
+        }
+        for (FieldBean oldBean : this.getFieldBeanList()){
+            fieldBeanList.add(oldBean.copySelf());
+        }
+
+        //dto没有bo那么多的丰富信息，需要去掉
+        List<FieldBean> newFieldBeanList = fieldBeanList.stream().filter(fieldBean ->
+                !fieldBean.getFieldName().trim().toLowerCase().endsWith(DomainElementEnum.BO.getElement())
+                        && !fieldBean.isTableKey()
+                        && !fieldBean.isDtoKey()
+                        && !fieldBean.isInvokeFileKey()
+                        && !fieldBean.getFieldName().trim().toLowerCase().contains(DomainElementEnum.BO.getElement()+">"))
+                .collect(Collectors.toList());
+
+        List<FieldBean> fieldBeanFilterList = fieldBeanList.stream().filter(fieldBean ->
+                fieldBean.getFieldName().trim().toLowerCase().endsWith(DomainElementEnum.BO.getElement())
+                        && !fieldBean.isTableKey()
+                        && !fieldBean.isDtoKey()
+                        && !fieldBean.isInvokeFileKey()
+                        || fieldBean.getFieldName().trim().toLowerCase().contains(DomainElementEnum.BO.getElement()+">"))
+                .collect(Collectors.toList());
+
+        fieldBeanFilterList.forEach(fieldBean -> {
+            fieldBean.setVisibility("/** "+fieldBean.getVisibility());
+            fieldBean.setFieldName(fieldBean.getFieldName()+" **/");
+        });
+
+        newFieldBeanList.addAll(fieldBeanFilterList);
+        return newFieldBeanList;
     }
 }

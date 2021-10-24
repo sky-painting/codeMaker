@@ -1,10 +1,8 @@
 package ${package}.service;
 
 import java.util.List;
-import com.coderman.utils.response.ResultDataDto;
-import com.coderman.utils.response.ResultDto;
 
-import ${package}.vo.${table.humpClassName}VO;
+import ${package}.model.bo.${table.humpClassName}BO;
 
 /**
  * @Description:${table.tableComment}Service接口
@@ -19,54 +17,53 @@ public interface ${table.humpClassName}Service{
 	 * @Title: save
 	 * @Description:新增
 	 * @author:
-	 * @param @param dto
-	 * @param @param userId
+	 * @param bo
 	 * @return ResultDto    返回类型
 	 * @throws
 	 */
-	public ResultDto save(${table.humpClassName}VO dto) throws Exception;
+	public ${table.humpClassName}BO save(${table.humpClassName}BO bo) throws Exception;
 
 	/**
 	 * 
 	 * @Title: delete 
 	 * @Description: 通过id删除数据
 	 * @author: 
-	 * @param @param id
+	 * @param id
 	 * @return ResultDto    返回类型 
 	 * @throws
 	 */
-	public ResultDto delete(Long id);
+	public boolean delete(Long id);
 
 	/**
 	 * 
 	 * @Title: getById 
 	 * @Description: 通过id查询
 	 * @author: 
-	 * @param @param id
-	 * @return ResultDataDto<${table.humpClassName}VO>
+	 * @param id
+	 * @return ResultDataDto<${table.humpClassName}BO>
 	 * @throws
 	 */
-	public ResultDataDto<${table.humpClassName}VO> getById(Long id) throws Exception;
+	public ${table.humpClassName}BO getById(Long id) throws Exception;
 
 	/**
 	 * 
 	 * @Title: getAll 
 	 * @Description:查询所有数据 
 	 * @author: 
-	 * @return ResultDataDto<List<${table.humpClassName}VO>>
+	 * @return List<${table.humpClassName}BO>
 	 * @throws
 	 */
-	public ResultDataDto<List<${table.humpClassName}VO>> getAll() throws Exception;
+	public List<${table.humpClassName}BO> getAll() throws Exception;
 
 	/**
 	*
 	* @Title: update
 	* @Description:修改
 	* @author:
-	* @param @param ${table.humpTableName}Entity
-	* @return int
+	* @param  ${table.humpTableName}BO
+	* @return boolean
 	* @throws
 	*/
-	public ResultDto update(${table.humpClassName}VO ${table.humpTableName}VO) throws Exception;
+	public boolean update(${table.humpClassName}BO ${table.humpTableName}BO) throws Exception;
 
 }

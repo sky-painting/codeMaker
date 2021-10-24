@@ -61,3 +61,31 @@
   模块中。
 
 
+9. verison 1.2.0-alpha 变更
+ 1.支持event模型生成,
+ 2.支持mqconsumer,applistener,mqproducer,mqhandler生成
+ 3.屏蔽扩展类dto带有bo属性的字段
+ 4.增加对plantuml domain类图内容的校验，比如重复字段和重复方法
+ 5.扩展动态ddd的代码生成能力，比如一个BO下出现多个facade,controller的接口
+ 6.提高plantuml内容的解析兼容性和稳定性
+ 7.支持动态链路调用plantuml-调用链路图解析
+ 8.支持读写分离的dubbo,restController接口调用
+ 9.支持将领域值对象枚举类暴露到dubbo client端
+ 10.优化convert代码生成
+ 11.gatawayimpl 与 repositoryimpl分开生成
+ 12.优化包路径生成模式
+ 13.优化访问描述符和代码注释
+ 14.读取plantuml文件对于方法的解析将方法参数独立解析出来
+
+
+
+10. verison 1.2.1-beta 变更(todo)
+ 1.支持默认带工具类SpringEventPublisher帮助事件发布与消费异步化
+ 2.支持事件发布异步化的代码绘制(产生事件->发布->消费事件)
+ 3.重构读取plantUML文件的相关逻辑降低复杂度
+ 4.重新梳理读取plantUML文件的相关路径,优化为按项目维度分别存放
+ 5.支持复杂场景下的代码绘制能力,进行精细化控制(如listbo,listvo的转换,代码参数动态绘制引用等)
+ 6.支持Page对象生成到代码里
+ 7.支持通过时序图的调用方法列表补充构建接口和类的方法，辅助完善业务调用流程(如xxMapper.getByCode不在XXMapper里，则通过时序图里的信息进行动态补充)
+ 8.根据动态调用方法绘制内容将return body也进行动态化绘制
+ 9.增加对基础设施层-适配层的调用绘制

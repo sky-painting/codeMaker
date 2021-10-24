@@ -13,11 +13,8 @@ import ${importClass};
 */
 public interface ${class.className}{
 <#list methods as method>
-	/**
-	*
-	* @Description:${method.desc}
-	* @return ${method.returnClass}
-	*/
+
+${method.doc}
 	${method.returnClass} ${method.methodName};
 </#list>
 }

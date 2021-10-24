@@ -51,6 +51,7 @@ public class DerivedVOElementHandler implements DomainElementHandler<VoElementBe
                         && !f.isDtoKey()
                         && !f.isFacadeKey()
                         && !f.isVoKey()
+                        && !f.isInvokeFileKey()
                         && !f.isControllerKey()
                 ).collect(Collectors.toList());
                 v.setFieldBeanList(beanList);

@@ -189,6 +189,19 @@ public class WriteAppModuleService {
         }
         writeDynamicDDDModuleService.writeMsgBody(classBeanList,writeFileService,null);
     }
+
+    /**
+     * 写event文件
+     * @param classBeanList
+     */
+    public void writeDomainEvent(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.EVENT_BODY.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeDomainEvent(classBeanList,writeFileService,null);
+    }
+
     /**
      * 写domaingataway文件
      * @param classBeanList
@@ -202,14 +215,26 @@ public class WriteAppModuleService {
     }
     /**
      * 写domaingatawayimpl文件
-     * @param interfaceBeanList
+     * @param gatawayImplBeanList
      */
-    public void writeGatawayImpl(List<InterfaceBean> interfaceBeanList) {
+    public void writeGatawayImpl(List<ClassBean> gatawayImplBeanList) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.GATAWAY_IMPL.getTempFileName());
         if (writeFileService == null) {
             return;
         }
-        writeDynamicDDDModuleService.writeGatawayImpl(interfaceBeanList,writeFileService,null);
+        writeDynamicDDDModuleService.writeGatawayImpl(gatawayImplBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写domainrepositoryimpl文件
+     * @param repositoryImplBeanList
+     */
+    public void writeRepositoryImpl(List<ClassBean> repositoryImplBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.REPOSITORY_IMPL.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeRepositoryImpl(repositoryImplBeanList,writeFileService,null);
     }
 
     /**
@@ -235,6 +260,56 @@ public class WriteAppModuleService {
         }
         writeDynamicDDDModuleService.writeFactory(classBeanList,writeFileService,null);
     }
+
+    /**
+     * 写applistener文件
+     * @param classBeanList
+     */
+    public void writeAppListener(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MQ_LISTENER.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeAppListner(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写mqproducer文件
+     * @param classBeanList
+     */
+    public void writeMqProducer(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MQ_PRODUCER.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeMqProducer(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写mqconsumer文件
+     * @param classBeanList
+     */
+    public void writeMqConsumer(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MQ_CONSUMER.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeMqConsumer(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写mqhandler文件
+     * @param classBeanList
+     */
+    public void writeMqHandler(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MQ_HANDLER.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeMqHandler(classBeanList,writeFileService,null);
+    }
+
+
 
     /**
      * 写AppExeImpl文件
@@ -314,12 +389,25 @@ public class WriteAppModuleService {
      * 写AppExeInterface文件
      * @param interfaceBeanList
      */
-    public void writeAclInterfaceAndImpl(List<InterfaceBean> interfaceBeanList) {
+    public void writeAclInterface(List<InterfaceBean> interfaceBeanList) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ACL.getTempFileName());
         if (writeFileService == null) {
             return;
         }
-        writeDynamicDDDModuleService.writeAclInterfaceAndImpl(interfaceBeanList,writeFileService,null);
+        writeDynamicDDDModuleService.writeAclInterface(interfaceBeanList,writeFileService,null);
+    }
+
+
+    /**
+     * 写InfrastAclImpl文件
+     * @param classBeanList
+     */
+    public void writeAclInterfaceImpl(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ACL_IMPL.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeAclInterfaceImpl(classBeanList,writeFileService,null);
     }
 
     /**
@@ -340,6 +428,19 @@ public class WriteAppModuleService {
      */
     public void writeEnum(List<EnumBean> classBeanList) {
         IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ENUM.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeEnum(classBeanList,writeFileService,null);
+    }
+
+
+    /**
+     * 写apienum文件
+     * @param classBeanList
+     */
+    public void writeAPIEnum(List<EnumBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.API_ENUM.getTempFileName());
         if (writeFileService == null) {
             return;
         }
@@ -662,19 +763,43 @@ public class WriteAppModuleService {
         this.writeValueObject(valueObjectBeanList);
         this.writeEnum(enumBeanList);
 
+
+
+        List<EnumBean> apiEnumBeanList = (List<EnumBean>)allMetaDataMap.get("apienum");
+        this.writeAPIEnum(apiEnumBeanList);
+
+
+
+
         List<ClassBean> msgClassBeanList = (List<ClassBean>)allMetaDataMap.get("domainmsg");
         this.writeMsgBody(msgClassBeanList);
+
+
+        List<ClassBean> eventClassBeanList = (List<ClassBean>)allMetaDataMap.get("domainevent");
+        this.writeDomainEvent(eventClassBeanList);
+
 
         List<InterfaceBean> gatawayBeanList = (List<InterfaceBean>)allMetaDataMap.get("gataway");
         List<InterfaceBean> repositoryBeanList = (List<InterfaceBean>)allMetaDataMap.get("repository");
         gatawayBeanList.addAll(repositoryBeanList);
         this.writeDomainGataway(gatawayBeanList);
-        this.writeGatawayImpl(gatawayBeanList);
+
+        List<ClassBean> gatawayImplBeanList = (List<ClassBean>)allMetaDataMap.get("gatawayimpl");
+        this.writeGatawayImpl(gatawayImplBeanList);
+
+        List<ClassBean> repositoryImplBeanList = (List<ClassBean>)allMetaDataMap.get("repositoryimpl");
+        this.writeRepositoryImpl(repositoryImplBeanList);
+
+
 
         List<InterfaceBean> aclBeanList = (List<InterfaceBean>)allMetaDataMap.get("infrastacl");
         List<ClassBean> aclParamBeanList = (List<ClassBean>)allMetaDataMap.get("infrastaclparam");
-        this.writeAclInterfaceAndImpl(aclBeanList);
+        List<ClassBean> aclImplBeanList = (List<ClassBean>)allMetaDataMap.get("infrastaclimpl");
+
+        this.writeAclInterface(aclBeanList);
         this.writeAclInterfaceParam(aclParamBeanList);
+        this.writeAclInterfaceImpl(aclImplBeanList);
+
 
 
         List<ClassBean> commandBeanList = (List<ClassBean>)allMetaDataMap.get("cmd");
@@ -688,6 +813,23 @@ public class WriteAppModuleService {
 
         List<ClassBean> factoryBeanList = (List<ClassBean>)allMetaDataMap.get("domainfactory");
         this.writeFactory(factoryBeanList);
+
+        List<ClassBean> appListenerBeanList = (List<ClassBean>)allMetaDataMap.get("applistener");
+        this.writeAppListener(appListenerBeanList);
+
+        List<ClassBean> mqProducerBeanList = (List<ClassBean>)allMetaDataMap.get("mqproducer");
+        this.writeMqProducer(mqProducerBeanList);
+
+        List<ClassBean> mqConsumerBeanList = (List<ClassBean>)allMetaDataMap.get("mqconsumer");
+        this.writeMqConsumer(mqConsumerBeanList);
+
+        List<ClassBean> mqHandlerBeanList = (List<ClassBean>)allMetaDataMap.get("mqhandler");
+        this.writeMqHandler(mqHandlerBeanList);
+
+
+
+
+
 
         List<ClassBean> voClassBeanList = (List<ClassBean>)allMetaDataMap.get("adaptervo");
         this.writeVO(voClassBeanList);
@@ -704,8 +846,6 @@ public class WriteAppModuleService {
 
         List<ClassBean> dtoClassBeanList = (List<ClassBean>)allMetaDataMap.get("derivedto");
         this.writeDTO(dtoClassBeanList);
-
-
 
         List<InterfaceBean> dtoboconvertBeanList = (List<InterfaceBean>)allMetaDataMap.get("dtoboconvert");
         this.writeDTOBOConvert(dtoboconvertBeanList);

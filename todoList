@@ -7,6 +7,20 @@
 [5]:codemaker-core全面梳理其他文件的生成依赖数据，具体
    比如pom.xml需要的公共dependency
    应用application启动类（down）
-[6]:增加cola架构代码生成器功能
+[6]:增加cola架构代码生成器功能（down）
 [7]:增加对枚举数据的代码生成(down some)
 [8]:支持dubbo应用类型的代码生成(down)
+
+
+
+
+10. verison 1.2.1-beta 变更(todo)
+ 1.支持默认带工具类SpringEventPublisher帮助事件发布与消费异步化
+ 2.支持事件发布异步化的代码绘制(产生事件->发布->消费事件)
+ 3.重构读取plantUML文件的相关逻辑降低复杂度
+ 4.重新梳理读取plantUML文件的相关路径,优化为按项目维度分别存放
+ 5.支持复杂场景下的代码绘制能力,进行精细化控制(如listbo,listvo的转换,代码参数动态绘制引用等)
+ 6.支持Page对象生成到代码里
+ 7.支持通过时序图的调用方法列表补充构建接口和类的方法，辅助完善业务调用流程(如xxMapper.getByCode不在XXMapper里，则通过时序图里的信息进行动态补充)
+ 8.根据动态调用方法绘制内容将return body也进行动态化绘制
+ 9.增加对基础设施层-适配层的调用绘制
