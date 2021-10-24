@@ -21,14 +21,17 @@ public class ${class.className} {
 	
 	protected Logger logger = LoggerFactory.getLogger(${class.className}.class);
 
+<#list fields as field>
+	@Autowired
+	${field.visibility} ${field.fieldName};
+</#list>
+
 <#list methods as method>
-	/**
-	 *
-	 * @Description:${method.desc}
-	 * @return ${method.returnClass}
-	 */
+
+${method.doc}
 	@RequestMapping(value = "${method.pathValue}")
 	public ${method.returnClass} ${method.methodName}{
+${method.methodContent}
 		${method.returnBody}
 	}
 </#list>
