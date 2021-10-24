@@ -53,8 +53,14 @@ public enum  ModuleEnum {
                     TemplateFileEnum.VOBO_CONVERT.getTempFileName(),
                     TemplateFileEnum.FACTORY.getTempFileName(),
                     TemplateFileEnum.MESSAGE_BODY.getTempFileName(),
+                    TemplateFileEnum.EVENT_BODY.getTempFileName(),
                     TemplateFileEnum.CONVERT.getTempFileName(),
                     TemplateFileEnum.DOBO_CONVERT.getTempFileName(),
+
+                    TemplateFileEnum.MQ_CONSUMER.getTempFileName(),
+                    TemplateFileEnum.MQ_PRODUCER.getTempFileName(),
+                    TemplateFileEnum.MQ_LISTENER.getTempFileName(),
+                    TemplateFileEnum.MQ_HANDLER.getTempFileName(),
 
                     TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())),
     /**
@@ -64,7 +70,8 @@ public enum  ModuleEnum {
             TemplateFileEnum.FACADE.getTempFileName(),
             TemplateFileEnum.FACADE_DDD.getTempFileName(),
             TemplateFileEnum.DTO_DDD.getTempFileName(),
-            TemplateFileEnum.DTO.getTempFileName()
+            TemplateFileEnum.DTO.getTempFileName(),
+            TemplateFileEnum.API_ENUM.getTempFileName()
     )),
     /**
      *
@@ -107,8 +114,13 @@ public enum  ModuleEnum {
             TemplateFileEnum.DTOBO_CONVERT.getTempFileName(),
             TemplateFileEnum.DOBO_CONVERT.getTempFileName(),
             TemplateFileEnum.MESSAGE_BODY.getTempFileName(),
-            TemplateFileEnum.ACL_PARAM.getTempFileName()
+            TemplateFileEnum.EVENT_BODY.getTempFileName(),
+            TemplateFileEnum.ACL_PARAM.getTempFileName(),
 
+            TemplateFileEnum.MQ_CONSUMER.getTempFileName(),
+            TemplateFileEnum.MQ_PRODUCER.getTempFileName(),
+            TemplateFileEnum.MQ_LISTENER.getTempFileName(),
+            TemplateFileEnum.MQ_HANDLER.getTempFileName()
 
             )),
 
@@ -122,7 +134,6 @@ public enum  ModuleEnum {
             TemplateFileEnum.VO.getTempFileName(),
             TemplateFileEnum.CONTROLLER_DDD.getTempFileName(),
             TemplateFileEnum.VOBO_CONVERT.getTempFileName(),
-
             TemplateFileEnum.VO_DDD.getTempFileName()
 
     )),
@@ -140,6 +151,7 @@ public enum  ModuleEnum {
             TemplateFileEnum.REPOSITORY.getTempFileName(),
             TemplateFileEnum.VALUE_OBJECT.getTempFileName(),
             TemplateFileEnum.MESSAGE_BODY.getTempFileName(),
+            TemplateFileEnum.EVENT_BODY.getTempFileName(),
             TemplateFileEnum.ENUM.getTempFileName()
 
             )),
@@ -150,7 +162,8 @@ public enum  ModuleEnum {
             TemplateFileEnum.DTO.getTempFileName(),
             TemplateFileEnum.DTO_DDD.getTempFileName(),
             TemplateFileEnum.FACADE.getTempFileName(),
-            TemplateFileEnum.FACADE_DDD.getTempFileName()
+            TemplateFileEnum.FACADE_DDD.getTempFileName(),
+            TemplateFileEnum.API_ENUM.getTempFileName()
             )),
 
     /**
@@ -166,7 +179,11 @@ public enum  ModuleEnum {
             TemplateFileEnum.SERVICE_IMPL.getTempFileName(),
             TemplateFileEnum.ACL.getTempFileName(),
             TemplateFileEnum.ACL_IMPL.getTempFileName(),
-            TemplateFileEnum.ACL_PARAM.getTempFileName()
+            TemplateFileEnum.ACL_PARAM.getTempFileName(),
+
+            TemplateFileEnum.MQ_CONSUMER.getTempFileName(),
+            TemplateFileEnum.MQ_PRODUCER.getTempFileName(),
+            TemplateFileEnum.MQ_HANDLER.getTempFileName()
             )),
 
     /**
@@ -184,8 +201,10 @@ public enum  ModuleEnum {
             TemplateFileEnum.EXE_IMPL.getTempFileName(),
             TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(),
             TemplateFileEnum.DTOBO_CONVERT.getTempFileName(),
-            TemplateFileEnum.FACADE_AOP.getTempFileName()
-    )),
+            TemplateFileEnum.FACADE_AOP.getTempFileName(),
+            TemplateFileEnum.MQ_LISTENER.getTempFileName()
+
+            )),
     ;
     private String appName;
     private String moduleName;
