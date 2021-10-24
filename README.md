@@ -19,10 +19,11 @@ coderMaker 立足于低代码平台，致力于解决软件开发过程中的效
 0.  所建即所得，文档即代码的代码生成服务理念
 1.  提供便捷且所建即所得的代码生成服务
 2.  提供便捷的sql脚本(支持分库分表)生成服务
-3.  提供一键式的数据库e-r图生成服务
+3.  提供一键式的数据库e-r图生成服务，以及从plantUML-er图中解析还原到sql脚本的能力
 4.  提供基于springboot,cola,dubbo应用框架和架构下的应用级代码生成服务
 5.  提供基于plantuml类图的dynamic-ddd模块级的代码生成服务
 6.  支持基于数据库表的代码生成和支持plantuml领域文档的代码生成服务
+7.  支持基于数据库表+DDD+plantUML类图文档+plantUML调用时序文档的代码生成服务
 
 #### 软件架构
 1.  整个项目分为多个工程模块
@@ -59,13 +60,80 @@ codemaker-cola:基于cola应用框架生成的代码会放在这里
 
 #### 版本变更
 
-1.  实现codermaker-core代码生成功能 1.0.0
-2.  实现数据库表sql生成功能 1.0.0
-3.  实现数据库表e-r图生成功能 1.0.1
-4.  实现代码生成极速模式  1.0.2
-5.  实现dubbo应用的代码生成  1.0.3，详情见changeList文件
-6.  实现ddd业务模型的代码生成  1.0.4，详情见changeList文件
-7.  实现springboot,cola,dubbo+ddd的代码生成  1.1.0，详情见changeList文件
+##### 版本-1.0.0
+
+简介: 实现codermaker-core代码生成功能 
+
+##### 版本-1.0.1
+简介: 实现数据库表e-r图生成功能
+
+##### 版本-1.0.2
+简介:  实现代码生成极速模式
+
+##### 版本-1.0.3
+简介:  实现dubbo应用的代码生成
+
+##### 版本-1.0.4
+简介:  实现ddd业务模型的代码生成 
+
+1. 基于plantUML文档生成代码，基于ddd思想和模式生成模块级的代码内容
+2. 增加makeddd接口，支持生成dynamicddd模块的代码
+3. 引入支持ddd代码生成的配置(projecttemplate-dynamicddd.properties)和代码模板(template/dynamicddd)
+4. codemaker-core模块resources目录增加ddd-plantuml目录存放plantUML类图
+5. 支持ddd的一些模式代码生成：实体模式,值对象模式,聚合根模式,工厂模式,仓库模式,防腐层模式,服务模式,模块模式,CQE模式,领域网关
+6. 产出部分公共代码生成服务方法
+7. 优化代码生成核心链路代码模型，针对ddd代码生成做了分层处理
+8. 修复若干其他bug
+
+##### 版本-0.0.2
+简介:  本次版本新增codemaker-dberparse模块，支持plantuml er图解析为sql ddl create语句，已集成到codemaker-dbops
+  模块中。
+##### 版本-1.1.0
+简介:  实现springboot,cola,dubbo+ddd的代码生成
+
+1. 支持cola应用架构代码生成,增加cola应用的template代码模板
+2. 增加基于plantuml类图的领域服务代码生成接口
+   /getproject/valueobject
+   /getproject/msgbody
+   /getproject/gataway
+   /getproject/acladapter
+   /getproject/command
+   /getproject/executor
+   /getproject/factory
+   /getproject/dtoboconvert
+   /getproject/voboconvert
+   /getproject/doboconvert
+3. 精简不同应用框架的代码生成配置
+    在每个应用框架配置下增加dubbo.domain.plantuml配置项,配置plantuml类图文件名称,支持基于类图-ddd的代码生成
+    如果不配置则不能借助plantuml类图生成基于领域服务ddd的代码，而是生成基于数据库表的常规代码
+    去除以下三个配置，集中到application.properties文件中
+    *.global.package
+    *.global.author
+    *.global.applicationName
+
+4. 在springboot,cola,dubbo的代码模板目录下增加ddd元素的tempalte代码模板
+5. 将dynamic-ddd的代码生成服务整合到springboot,cola,dubbo的代码生成服务中，支持基于DDD思想的代码生成
+6. 扩展plantuml中类图标签,基于BO派生多个代码生成对象（vo,dto,facade,doboconvert,controller,voboconvert,dtoboconvert）
+7. 整合底层代码支持一套api,一套服务支撑springboot,cola,dubbo应用级代码生成和dynamic-ddd模块级代码生成
+8. 修复多个兼容性bug
+9. 整体上支持基于数据库表结构的代码生成和基于plantUML类图文档的代码生成
+ 
+##### 版本-1.2.0-alpha
+简介: 实现springboot,cola,dubbo+ddd的代码生成的基础上增加解析调用时序图的逻辑，将调用时序代码逻辑融入到生成的代码方法里
+1. 支持event模型生成,
+2. 支持mqconsumer,applistener,mqproducer,mqhandler生成
+3. 屏蔽扩展类dto带有bo属性的字段
+4. 增加对plantuml domain类图内容的校验，比如重复字段和重复方法
+5. 扩展动态ddd的代码生成能力，比如一个BO下出现多个facade,controller的接口
+6. 提高plantuml内容的解析兼容性和稳定性
+7. 增加解析plantUML调用时序文档的能力，并将调用逻辑融入代码生成的方法里
+8. 支持读写分离的dubbo,restController接口调用
+9. 支持将领域值对象枚举类暴露到rpc client端
+10. 优化convert代码生成
+11. gatawayimpl 与 repositoryimpl分开生成
+12. 优化包路径生成模式
+13. 优化访问描述符和代码注释
+14. 读取plantuml文件对于方法的解析将方法参数独立解析出来
 
 ####  配置文件说明
 1.application.properties:代码生成服务的核心配置
