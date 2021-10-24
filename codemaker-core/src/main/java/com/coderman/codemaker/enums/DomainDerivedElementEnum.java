@@ -11,6 +11,7 @@ package com.coderman.codemaker.enums;
 public enum DomainDerivedElementEnum {
     DTO("dto","数据传输对象"),
     FACADE("facade","api门面接口"),
+    ENUM("enum","api 枚举包"),
     FACADE_IMPL("facadeimpl","api门面接口实现"),
     DTOBO_CONVERT("convert","dto-bo相互转换mapstruct接口"),
     DOBO_CONVERT("converter","do-bo相互转换mapstruct接口"),

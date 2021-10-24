@@ -1,5 +1,6 @@
 package com.coderman.codemaker.app.dynamicddd.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.app.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DerivedClassFactory;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
@@ -46,31 +47,46 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
         List<ClassBean> boWithVoKeyList = new ArrayList<>();
         List<ClassBean> boWithControllerKeyList = new ArrayList<>();
 
-
         //过滤带有数据库表映射的bo
         plantUmlContextBean.getClassBeanMap().forEach((k, v) -> {
-            importPackageService.setPackageName(v, "domain.bo");
+
             if (v.getClassName().toLowerCase().endsWith(DomainElementEnum.BO.getElement())) {
+                importPackageService.setPackageName(v, "domain.bo");
                 Optional<FieldBean> optionalFieldBean = v.getFieldBeanList().stream().filter(f -> f.isTableKey()).findFirst();
                 if (optionalFieldBean.isPresent()) {
                     boWithTableKeyList.add(v);
+                    v.getExtendFieldBean().buildTableKey(optionalFieldBean.get().getFieldName());
                 }
                 Optional<FieldBean> optionalFieldBeanDtoKey = v.getFieldBeanList().stream().filter(f -> f.isDtoKey()).findFirst();
                 if (optionalFieldBeanDtoKey.isPresent()) {
                     boWithDtoKeyList.add(v);
+                    v.getExtendFieldBean().buildDtoKeyArr(optionalFieldBeanDtoKey.get().getFieldName());
                 }
                 Optional<FieldBean> optionalFieldBeanFacadeKey = v.getFieldBeanList().stream().filter(f -> f.isFacadeKey()).findFirst();
                 if (optionalFieldBeanFacadeKey.isPresent()) {
                     boWithFacadeKeyList.add(v);
+                    v.getExtendFieldBean().buildFacadeKeyArr(optionalFieldBeanFacadeKey.get().getFieldName());
                 }
 
                 Optional<FieldBean> optionalFieldBeanVOKey = v.getFieldBeanList().stream().filter(f -> f.isVoKey()).findFirst();
                 if (optionalFieldBeanVOKey.isPresent()) {
                     boWithVoKeyList.add(v);
+                    v.getExtendFieldBean().buildVoKeyArr(optionalFieldBeanVOKey.get().getFieldName());
+
                 }
                 Optional<FieldBean> optionalFieldBeanControllerKey = v.getFieldBeanList().stream().filter(f -> f.isControllerKey()).findFirst();
                 if (optionalFieldBeanControllerKey.isPresent()) {
                     boWithControllerKeyList.add(v);
+                    v.getExtendFieldBean().buildControllerKeyArr(optionalFieldBeanControllerKey.get().getFieldName());
+
+                }
+
+                Optional<FieldBean> optionalFieldBeanInvokeFileKey= v.getFieldBeanList().stream().filter(f -> f.isInvokeFileKey()).findFirst();
+                if (optionalFieldBeanInvokeFileKey.isPresent()) {
+                    v.getExtendFieldBean().buildInvokeFileKeyArr(optionalFieldBeanInvokeFileKey.get().getFieldName());
+
+                    String invokeFileName = optionalFieldBeanInvokeFileKey.get().getFieldName().replace("String","").replace("string","").trim();
+                    plantUmlContextBean.addDynamicInvokeFile(invokeFileName);
                 }
             }
         });
@@ -89,9 +105,9 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
         //处理bo-vo的派生
         if(CollectionUtils.isNotEmpty(boWithVoKeyList)){
             //基于plantuml.bo的扩展信息进行派生
-            derivedClassFactory.deriveBo2VO(boWithDtoKeyList, plantUmlContextBean);
+            derivedClassFactory.deriveBo2VO(boWithVoKeyList, plantUmlContextBean);
             //通过vo 派生convert,
-            derivedClassFactory.deriveBoVO2Convert(boWithFacadeKeyList,plantUmlContextBean);
+            derivedClassFactory.deriveBoVO2Convert(boWithVoKeyList,plantUmlContextBean);
         }
 
         //处理facade
@@ -104,9 +120,7 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
         //处理controller
         if(CollectionUtils.isNotEmpty(boWithControllerKeyList)){
             derivedClassFactory.deriveBo2Controller(boWithControllerKeyList,plantUmlContextBean);
-
         }
-
 
         plantUmlContextBean.getClassBeanMap().forEach((k, v) -> {
             if (v.getClassName().toLowerCase().endsWith(DomainElementEnum.BO.getElement())) {
@@ -116,6 +130,7 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
                         && !f.isFacadeKey()
                         && !f.isVoKey()
                         && !f.isControllerKey()
+                        && !f.isInvokeFileKey()
                 ).collect(Collectors.toList());
                 v.setFieldBeanList(beanList);
 
@@ -139,9 +154,6 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
 
         domainBoElementBeanList.stream().forEach(v -> importPackageService.dealImportClass(v, plantUmlContextBean));
         domainBoElementBean.setClassBeanList(domainBoElementBeanList);
-
-
-
 
         return domainBoElementBean;
     }

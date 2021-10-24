@@ -37,6 +37,7 @@ public class DomainFactoryElementHandler implements DomainElementHandler<Factory
                 v.setClassName(className);
                 importPackageService.dealImportClass(v,plantUmlContextBean);
                 domainBoElementBeanList.add(v);
+                v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
             }
         });
         factoryElementBean.setClassBeanList(domainBoElementBeanList);
