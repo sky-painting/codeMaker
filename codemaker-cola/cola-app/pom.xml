@@ -55,20 +55,6 @@
       <version>1.0.2-SNAPSHOT</version>
     </dependency>
 
-    <dependency>
-      <groupId>com.codemaker.dubbo</groupId>
-      <artifactId>dubbo-api</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
-
-
-
-
-    <dependency>
-      <groupId>com.codemaker.dubbo</groupId>
-      <artifactId>dubbo-common</artifactId>
-      <version>1.0-SNAPSHOT</version>
-    </dependency>
 
     <!-- Dubbo -->
     <dependency>
