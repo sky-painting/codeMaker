@@ -1,7 +1,10 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.registry;
 
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.app.dynamicddd.DynamicInvokeHandler;
+import com.coderman.codemaker.bean.ColumnBean;
+import com.coderman.codemaker.enums.TemplateFileEnum;
+import com.coderman.codemaker.service.invoker.InvokeElementRegistService;
+import com.coderman.codemaker.service.invoker.InvokeSequenceService;
 import com.coderman.codemaker.app.dynamicddd.derivedhandler.*;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.bean.dddelement.*;
@@ -12,10 +15,12 @@ import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.enums.DomainDerivedElementEnum;
 import com.coderman.codemaker.enums.DomainElementEnum;
+import com.coderman.codemaker.service.plantuml.ReadDomainPlantDocService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,16 +31,13 @@ import java.util.Map;
  */
 public abstract   class AbstractVarRegistry {
     @Autowired
-    //private ReadPlantUMLFileService readFileService;
-    private ReadPlantUMLFileServiceV2 readFileService;
+    private ReadDomainPlantDocService readFileService;
 
     @Autowired
     private AppServiceConfig appServiceConfig;
 
-
     @Resource(name = "domainBoElementHandler")
     private DomainElementHandler domainElementHandler;
-
 
     @Resource(name = "valueObjectElementHandler")
     private DomainElementHandler valueObjectElementHandler;
@@ -45,7 +47,6 @@ public abstract   class AbstractVarRegistry {
 
     @Resource(name = "domainGatawayElementHandler")
     private DomainElementHandler domainGatawayElementHandler;
-
 
     @Resource(name = "msgBodyElementHandler")
     private DomainElementHandler msgBodyElementHandler;
@@ -65,7 +66,6 @@ public abstract   class AbstractVarRegistry {
     @Resource(name = "eventElementHandler")
     private DomainElementHandler eventElementHandler;
 
-
     @Resource(name = "appListenerElementHandler")
     private DomainElementHandler appListenerElementHandler;
 
@@ -78,6 +78,8 @@ public abstract   class AbstractVarRegistry {
     @Resource(name = "mqProducerElementHandler")
     private DomainElementHandler mqProducerElementHandler;
 
+    @Resource(name = "dynamicMapperElementHandler")
+    private DomainElementHandler dynamicMapperElementHandler;
 
     //------------------以下为领域元素派生类对象处理器
 
@@ -120,8 +122,10 @@ public abstract   class AbstractVarRegistry {
 
     //------------------以下为动态调用处理服务
     @Autowired
-    private DynamicInvokeHandler dynamicInvokeHandler;
+    private InvokeSequenceService invokeSequenceService;
 
+    @Autowired
+    private InvokeElementRegistService invokeElementRegistService;
 
     /**
      * 合并全局配置
@@ -131,6 +135,9 @@ public abstract   class AbstractVarRegistry {
         Map<String,Object> varMap = getRegistVarMap();
 
         varMap.putIfAbsent("package",appServiceConfig.getPackage());
+        varMap.putIfAbsent("packageInfrast",appServiceConfig.getPackage()+".infrast");
+        varMap.putIfAbsent("packageDomain",appServiceConfig.getPackage()+".domain");
+
         varMap.putIfAbsent("author",appServiceConfig.getAuthor());
         String plantUMLName = appServiceConfig.getPlantUMLFileName();
         if(StringUtils.isEmpty(plantUMLName)){
@@ -144,16 +151,21 @@ public abstract   class AbstractVarRegistry {
 
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)varMap.get("table");
 
-        varMap.put("package",appServiceConfig.getPackage()+".infrast");
+
+        Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)varMap.get("columns");
+
+        //varMap.put("package",appServiceConfig.getPackage()+".infrast");
 
         tableBeanMap.forEach((k,v)->{
-            ClassBean classBean = v.convertToClassBean(appServiceConfig.getPackage()+".infrast.dao.dataobject");
-            InterfaceBean mapperInterface = v.convertToMapperInterface(appServiceConfig.getPackage()+".infrast.dao.mapper");
-
+            ClassBean classBean = v.convertToClassBean(appServiceConfig.getPackage()+".infrast.dao.dataobject",columnBeanListMap.get(k));
+            InterfaceBean mapperInterface = v.convertToMapperInterface(appServiceConfig.getPackage()+".infrast.dao.mapper",columnBeanListMap.get(k));
             plantUmlContextBean.getClassBeanMap().put(classBean.getClassName(),classBean);
             plantUmlContextBean.getInterfaceBeanMap().put(mapperInterface.getClassName(),mapperInterface);
 
         });
+
+        //注册内置工具类和方法
+        invokeElementRegistService.registDefaultClass(plantUmlContextBean);
 
         //打标
         varMap.put("dynamicddd","dynamicddd");
@@ -189,8 +201,10 @@ public abstract   class AbstractVarRegistry {
         InfrastAclImplElementBean infrastAclImplElementBean = derivedInfrastAclImplElementHandler.getElementBeanList(plantUmlContextBean);
 
         //最后进行动态调用绘制
-        dynamicInvokeHandler.exeDynamicInvoke(plantUmlContextBean);
+        invokeSequenceService.exeDynamicInvoke(plantUmlContextBean);
 
+        //这里增加动态mapper的代码生成，补足调用时序图中缺失的方法
+        DynamicMapperElementBean dynamicMapperElementBean = (DynamicMapperElementBean)dynamicMapperElementHandler.getElementBeanList(plantUmlContextBean);
 
 
         varMap.put("domainevent",domainEventElementBean.getClassBeanList());
@@ -224,7 +238,8 @@ public abstract   class AbstractVarRegistry {
         varMap.put("gatawayimpl",gatawayImplElementBean.refreshClass(plantUmlContextBean, DomainElementEnum.GATAWAY_IMPL.getElement()).getClassBeanList());
         varMap.put("repositoryimpl",repositoryImplElementBean.refreshClass(plantUmlContextBean, DomainElementEnum.REPOSITORY_IMPL.getElement()).getClassBeanList());
         varMap.put("infrastaclimpl",infrastAclImplElementBean.refreshClass(plantUmlContextBean, DomainElementEnum.ADAPTER_ACL_IMPL.getElement()).getClassBeanList());
-
+        varMap.put("dynamicmapper",dynamicMapperElementBean.getInterfaceBeanList());
+        varMap.put("dynamicmapperxml",dynamicMapperElementBean.getClassBeanList());
 
         return varMap;
     }

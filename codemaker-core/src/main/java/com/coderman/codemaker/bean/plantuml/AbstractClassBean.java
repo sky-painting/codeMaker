@@ -1,16 +1,20 @@
 package com.coderman.codemaker.bean.plantuml;
 
+import com.coderman.codemaker.bean.ColumnBean;
+import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.enums.DomainElementEnum;
+import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.utils.StringHelperUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -109,6 +113,31 @@ public abstract class AbstractClassBean {
      */
     private ExtendFieldBean extendFieldBean = new ExtendFieldBean();
 
+    /**
+     * 对应的tableBean  mapper对象使用
+     */
+    private TableBean tableBean;
+
+    /**
+     * 对应的columnBeanList  mapper对象使用
+     */
+    private List<ColumnBean> columnBeanList;
+
+    public TableBean getTableBean() {
+        return tableBean;
+    }
+
+    public void setTableBean(TableBean tableBean) {
+        this.tableBean = tableBean;
+    }
+
+    public List<ColumnBean> getColumnBeanList() {
+        return columnBeanList;
+    }
+
+    public void setColumnBeanList(List<ColumnBean> columnBeanList) {
+        this.columnBeanList = columnBeanList;
+    }
 
     public ExtendFieldBean getExtendFieldBean() {
         return extendFieldBean;
@@ -293,19 +322,6 @@ public abstract class AbstractClassBean {
         this.setPlantUMLPackage(plantUMLPackage.trim().trim());
     }
 
-
-    /**
-     * 如果是bo类的情况下可以通过bo类找到对应的DO类名
-     * @return
-     */
-    public String getDOClassFromTableKey(){
-        String tableKey = this.getExtendFieldBean().getTableKey();
-        if(StringUtils.isEmpty(tableKey)){
-            return null;
-        }
-        return StringHelperUtils.getClassDOName(tableKey);
-    }
-
     /**
      * 合并引用包，
      * 接口的引用包与实现的引用包合并
@@ -364,4 +380,149 @@ public abstract class AbstractClassBean {
         newFieldBeanList.addAll(fieldBeanFilterList);
         return newFieldBeanList;
     }
+
+
+    /**
+     * 在动态调用过程中匹配出调用者的调用方法和提供者的提供方法
+     * 兼容写法
+     * xxx.methodName invoke yyy.methodName
+     * xxx.method(2) invoke yyy.method(3)
+     * xxx.method(XxxBO, XxxEvent) invoke yyy.method(YyyDTO, YyyCmd)
+     * xxx.method(XxxBO xxxBO, XxxEvent xxxEvent) invoke yyy.method(YyyDTO yyyDTO, YyyCmd yyyCmd)
+     * @param currentMethod
+     * @return
+     */
+    public Optional<MethodBean> getMatchMethodBean(String currentMethod){
+
+        //如果没有方法参数则直接匹配
+        if(!currentMethod.contains("(")){
+            return  this.getMethodBeanList().stream().filter(methodBean1 -> methodBean1.getMethodName().toLowerCase().startsWith(currentMethod.toLowerCase()+"(")).findFirst();
+        }
+
+        String methodName = currentMethod.split("\\(")[0];
+        String currentMethodTag = currentMethod+"(";
+        String paramCountStr = currentMethod.replace(methodName,"").trim();
+        //判断是否是xxx.method(2)这种写法
+        int count = 0;
+        if(paramCountStr.length() == 3){
+            String paramCount = paramCountStr.replace("(","").replace(")","");
+            count = Integer.parseInt(paramCount);
+        }
+
+        //方法名一样，参数数量不同
+        if(count > 0){
+            int finalCount = count;
+            return  this.getMethodBeanList().stream()
+                    .filter(methodBean1 -> methodBean1.getMethodName().toLowerCase().startsWith(currentMethodTag)
+                        && methodBean1.getParamArr().length == finalCount
+                    )
+                    .findFirst();
+        }
+
+
+        //通过参数类型进行匹配
+        String [] currentParamArr = currentMethod.split("\\(")[1].split(",");
+
+        AtomicReference<MethodBean> matchResultBean = new AtomicReference<>();
+        this.getMethodBeanList().stream().forEach(
+                methodBean -> {
+                    if(methodBean.getMethodName().toLowerCase().startsWith(currentMethodTag)){
+                        String [] paramArr = methodBean.getParamArr();
+                        for (int i = 0;i < paramArr.length;i ++){
+                            for (int j = 0;j < currentParamArr.length;j ++){
+                                String currentParamType = currentParamArr[j].trim().split(" ")[0];
+                                String paramType = paramArr[i].trim().split(" ")[0];
+                                if(currentParamType.equals(paramType.toLowerCase())){
+                                    matchResultBean.set(methodBean);
+                                }
+                            }
+                        }
+                    }
+                }
+        );
+        if(matchResultBean.get() == null){
+            return  Optional.empty();
+        }
+
+        return Optional.of(matchResultBean.get());
+    }
+
+
+    /**
+     * 如果匹配不到，则将plantUML调用时序图中的方法注册到当前类中，做动态扩展
+     * @param currentMethod
+     * @return
+     */
+    public MethodBean getOrAddMethodBean(String currentMethod){
+        Optional<MethodBean> methodBeanOptional = getMatchMethodBean(currentMethod);
+        if(methodBeanOptional.isPresent()){
+            methodBeanOptional.get().initInvokeRowContentList();
+            return methodBeanOptional.get();
+        }
+        if(!currentMethod.contains("(")){
+            currentMethod = currentMethod +"()";
+        }
+
+        MethodBean methodBean = new MethodBean();
+        methodBean.setDesc("");
+        methodBean.setMethodName(currentMethod);
+        methodBean.buildParamArr();
+        methodBean.setReturnClass("void");
+        methodBean.setVisibility("public");
+        methodBean.initInvokeRowContentList();
+        this.getMethodBeanList().add(methodBean);
+        return methodBean;
+    }
+
+
+    /**
+     * 根据调用时序的调用内容判断调用方和被调用方是不是当前类
+     * @param contentArr
+     * @return
+     */
+    public boolean checkMatchClass(String [] contentArr){
+        for (String content : contentArr){
+            if(content.trim().toLowerCase().endsWith(this.getClassName().toLowerCase())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 将classBean转换为WrteContentBean为后续的写文件做准备
+     * @param content
+     * @param templateFileEnum
+     * @return
+     */
+    public WriteContentBean buildWriteContentBean(String content, TemplateFileEnum templateFileEnum){
+        return WriteContentBean.builder().content(content)
+                .templateName(templateFileEnum.getTempFileName())
+                .humpClassName(this.getClassName())
+                .classPackageName(this.getPackageName())
+                .build();
+    }
+
+
+    /**
+     * 由当前对象派生到新对象
+     * @param className
+     * @param plantUMLPackage
+     * @param fieldBeanList
+     * @return
+     */
+    public ClassBean derivedNewClassBean(String className,String plantUMLPackage,List<FieldBean> fieldBeanList){
+        ClassBean modelClassBean = new ClassBean();
+        modelClassBean.setClassName(className);
+        modelClassBean.setFieldBeanList(fieldBeanList);
+        modelClassBean.setClassDesc(this.getClassDesc());
+        modelClassBean.setMethodBeanList(Lists.newArrayList());
+        modelClassBean.setPlantUMLPackage(plantUMLPackage);
+        modelClassBean.setDerivedChainClassList(Lists.newArrayList(this.getClassName()));
+        return modelClassBean;
+    }
+
+
+
+
 }
