@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.lightsnail.schoolmanager.mapper.ClassMapper">
+<mapper namespace="com.coderman.infosys.auth.dao.mapper.ClassMapper">
 
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.lightsnail.schoolmanager.entity.ClassEntity">
+    <resultMap id="BaseResultMap" type="com.coderman.infosys.auth.dao.dataobject.ClassDO">
         <result column="id" property="id" />
         <result column="manager" property="manager" />
         <result column="student_count" property="studentCount" />
@@ -16,52 +16,40 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-            id,
-            manager,
-            student_count,
-            grade_num,
-            class_num,
+        id,manager,student_count,grade_num,class_num
     </sql>
 
-    <insert id="insert" parameterType="com.lightsnail.schoolmanager.entity.ClassEntity">
+    <insert id="insert" parameterType="com.coderman.infosys.auth.dao.dataobject.ClassDO">
         insert into class(
-            id,
-            manager,
-            student_count,
-            grade_num,
-            class_num,
+        manager,student_count,grade_num,class_num
         )
         values(
-            #{id},
-            #{manager},
-            #{studentCount},
-            #{gradeNum},
-            #{classNum},
+        #{manager},#{student_count},#{grade_num},#{class_num}
         )
     </insert>
 
-    <update id="update" parameterType="com.lightsnail.schoolmanager.entity.ClassEntity">
+    <update id="update" parameterType="com.coderman.infosys.auth.dao.dataobject.ClassDO">
         update class
         set
-            id=#{id},
-            manager=#{manager},
-            student_count=#{studentCount},
-            grade_num=#{gradeNum},
-            class_num=#{classNum},
+        manager=#{manager},student_count=#{student_count},grade_num=#{grade_num},class_num=#{class_num}
         where  id = #{id}
     </update>
 
-    <select id="getAll" resultType="com.lightsnail.schoolmanager.entity.ClassEntity">
+    <select id="getAll" resultType="com.coderman.infosys.auth.dao.dataobject.ClassDO">
         select <include refid="Base_Column_List" />  from class
     </select>
 
-    <select id="getById" parameterType="com.lightsnail.schoolmanager.entity.ClassEntity"
-            resultType="com.lightsnail.schoolmanager.entity.ClassEntity">
+    <select id="getById" parameterType="com.coderman.infosys.auth.dao.dataobject.ClassDO"
+            resultType="com.coderman.infosys.auth.dao.dataobject.ClassDO">
         select <include refid="Base_Column_List" /> from class  where id = #{id}
     </select>
 
     <delete id="deleteById" >
         delete from class where id = #{id}
     </delete>
+
+    <select id="getPageList" resultType="com.coderman.infosys.auth.dao.dataobject.ClassDO">
+        select <include refid="Base_Column_List" />  from class
+    </select>
 
 </mapper>
