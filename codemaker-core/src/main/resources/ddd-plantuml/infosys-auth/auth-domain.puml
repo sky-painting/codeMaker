@@ -37,18 +37,18 @@ package domain.bo  {
         组编码:String groupCode
         组内用户列表:List<UserBO> userList
         用户组状态:Integer status
-        用户组对应的角色列表:List<RoleBO> userList
-        用户组对应角色组列表:List<RoleGroupBO> userList
+        用户组对应的角色列表:List<RoleBO> roleList
+        用户组对应角色组列表:List<RoleGroupBO> roleGroupList
         .. extend info ..
         tableKey:String user_group
         facadeKey:String UserGroupFacade,UserGroupQueryFacade
         controllerKey:String UserGroupController,UserGroupQueryController
         dtoKeyList:String UpdateUserGroupRequestDTO,UserGroupResponseDTO,CreateUserGroupRequestDTO
-        voKeyList:String UserGroupPageVO,UserGroupVO
+        voKeyList:String UserGroupVO
         获取用户组信息: ResultDataDto<UserGroupResponseDTO> userGroupQueryFacade.getByGroupCode(String groupCode)
         创建用户组: ResultDataDto<UserGroupResponseDTO> userGroupFacade.createUserGroup(CreateUserGroupRequestDTO createUserGroupRequestDTO)
-        分页获取用户组信息/usergroup/pagelist: ResultDataDto<UserGroupPageVO> userGroupQueryController.getPageList()
-        创建用户组/usergroup/creategroup: ResultDataDto<UserGroupPageVO> userGroupController.createUserGroup(UserGroupVO userGroupVO)
+        分页获取用户组信息/usergroup/pagelist: ResultDataDto<PageVO<UserGroupVO>> userGroupQueryController.getPageList()
+        创建用户组/usergroup/creategroup: ResultDataDto<UserGroupVO> userGroupController.createUserGroup(UserGroupVO userGroupVO)
 
     }
 
@@ -69,10 +69,14 @@ package domain.bo  {
         tableKey:String role
         facadeKey:String RoleFacade
         controllerKey:String RoleController,RoleQueryController
-        dtoKeyList:String UpdateRoleRequestDTO,RoleResponseDTO
-        voKeyList:String RolePageVO
+        dtoKeyList:String UpdateRoleRequestDTO,RoleResponseDTO,CreateRoleRequestDTO
+        voKeyList:String RoleVO,CreateRoleRequestVO
+        创建角色/role/createrule: ResultDataDto<RoleVO> RoleController.createRole(CreateRoleRequestVO createRoleRequestVO)
+        根据编码获取角色详情/role/getbyrolecode: ResultDataDto<RoleVO> RoleController.getByRoleCode(String roleCode)
         获取角色详情: ResultDataDto<RoleResponseDTO> getByRoleCode(String roleCode)
-        分页获取用户组信息/role/pagelist: ResultDataDto<RolePageVO> getPageList()
+        禁用角色/role/disable: ResultDataDto<Boolean> RoleController.disable(String roleCode)
+        启用角色/role/enable: ResultDataDto<Boolean> RoleController.enable(String roleCode)
+        分页获取用户组信息/role/pagelist: ResultDataDto<PageVO<RoleVO>> RoleQueryController.getPageList(PageVO pageVO)
     }
 
     class "角色组-RoleGroupBO" as RoleGroupBO{
@@ -85,9 +89,9 @@ package domain.bo  {
         facadeKey:String RoleGroupFacade
         controllerKey:String RoleGroupController
         dtoKeyList:String UpdateRoleGroupRequestDTO,RoleGroupResponseDTO
-        voKeyList:String RoleGroupPageVO
+        voKeyList:String RoleGroupVO
         获取学生信息: ResultDataDto<RoleGroupResponseDTO> getByNumber(String number)
-        分页获取用户组信息/role/pagelist: ResultDataDto<RoleGroupPageVO> getPageList()
+        分页获取用户组信息/role/pagelist: ResultDataDto<PageVO<RoleGroupVO>> getPageList(PageVO pageVO)
     }
 
     class "权限-AuthorityBO" as AuthorityBO{
@@ -100,17 +104,17 @@ package domain.bo  {
         行政权限列表:List<AdminAuthorityBO> adminAuthorityBOList
         权限状态:Integer status
         .. extend info ..
-        invokeFileKey:String queryauthoritydata.puml
         tableKey:String authority
         facadeKey:String AuthorityFacade
         controllerKey:String AuthorityOperationController,AuthorityQueryController
         dtoKeyList:String UpdateAuthorityRequestDTO,AuthorityResponseDTO,CreateAuthorityRequestDTO
-        voKeyList:String AuthorityPageVO,AuthorityVO
+        voKeyList:String AuthorityVO
+        !invokeFileKey:String createauthoritydata.puml,createauthoritydatahttp.puml
         判断用户有没有访问某系统的权限: ResultDataDto<AuthorityResponseDTO> checkUserSystemAuth(Long userId,String systemCode)
         根据用户和系统获取系统权限信息: ResultDataDto<AuthorityResponseDTO> getUserSystemAuth(Long userId,String systemCode)
         根据权限code获取权限信息: ResultDataDto<AuthorityResponseDTO> getByCode(String authCode)
         保存权限信息: ResultDataDto<AuthorityResponseDTO> saveAuthority(CreateAuthorityRequestDTO createAuthorityRequestDTO)
-        分页获取权限信息/authority/pagelist: ResultDataDto<AuthorityPageVO> AuthorityQueryController.getPageList()
+        分页获取权限信息/authority/pagelist: ResultDataDto<PageVO<AuthorityVO>> AuthorityQueryController.getPageList()
         获取权限信息/authority/getbycode: ResultDataDto<AuthorityVO> AuthorityQueryController.getByCode(String authCode)
         给角色授权/authority/savetorole: ResultDataDto<AuthorityVO> AuthorityOperationController.saveAuthority(AuthorityVO authorityVO)
 
@@ -146,11 +150,10 @@ package domain.bo  {
         facadeKey:String SystemAuthorityFacade
         controllerKey:String SystemAuthorityController
         dtoKeyList:String UpdateSystemAuthorityRequestDTO,SystemAuthorityResponseDTO,CreateSystemAuthorityRequestDTO
-        voKeyList:String SystemAuthorityResponseVO
-        invokeFileKey:String queryauthoritydata.puml,queryauthoritydatahttp.puml,createauthoritydata.puml,createauthoritydatahttp.puml
+        voKeyList:String SystemAuthorityVO
         获取权限信息: ResultDataDto<SystemAuthorityResponseDTO> getByCode(String authCode)
-        获取权限信息/systemauthority/getbycode: ResultDataDto<SystemAuthorityResponseVO> getByCode(String authCode)
-        分页获取权限信息/systemauthority/pagelist: ResultDataDto<AuthorityPageVO> getPageList()
+        获取权限信息/systemauthority/getbycode: ResultDataDto<SystemAuthorityVO> getByCode(String authCode)
+        分页获取权限信息/systemauthority/pagelist: ResultDataDto<PageVO<SystemAuthorityVO>> getPageList()
 
     }
 
@@ -180,8 +183,22 @@ package domain.bo  {
         .. extend info ..
         tableKey:String system
         facadeKey:String SystemFacade
-        dtoKeyList:String SystemDTO
+        dtoKeyList:String SystemDTO,CreateSystemRequestDTO,UpdateSystemRequestDTO
+        voKeyList:String CreateSystemRequestVO,UpdateSystemRequestVO,SystemVO
+        controllerKey:String SystemController
+        invokeFileKey:String systemcontextseq.puml
         注册系统: ResultDataDto<SystemDTO> registSystem(SystemDTO systemDTO)
+        分页获取系统信息: ResultDataDto<PageDTO<SystemDTO>> getPageList(PageDTO pageDto)
+        获取单条系统信息: ResultDataDto<SystemDTO> getBySystemCode(String systemCode)
+        修改系统信息: ResultDataDto<Boolean> updateSystem(UpdateSystemRequestDTO dto)
+        搜索获取系统信息: ResultDataDto<List<SystemDTO>> getSearchList(String search)
+
+        分页获取系统信息/system/pagelist: ResultDataDto<PageVO<SystemVO>> getPageList(SystemVO systemVO)
+        搜索获取系统信息/system/search: ResultDataDto<List<SystemVO>> getSearchList(String search)
+        新建系统信息/system/save: ResultDataDto<SystemVO> saveSystem(CreateSystemRequestVO systemVO)
+        修改系统信息/system/update: ResultDataDto<Boolean> updateSystem(UpdateSystemRequestVO systemVO)
+        通过系统编号获取系统信息/system/getbycode: ResultDataDto<SystemVO> getByCode(String systemCode)
+
     }
     class "菜单/模块管理-ModuleBO" as ModuleBO{
         菜单名称:String moduleName
@@ -194,32 +211,32 @@ package domain.bo  {
         facadeKey:String ModuleFacade
         controllerKey:String ModuleController
         dtoKeyList:String UpdateModuleRequestDTO,ModuleResponseDTO,CreateModuleRequestDTO
-        voKeyList:String ModuleResponseVO,ModulePageVO
-        创建菜单信息/module/createmodule: ResultDataDto<List<ModuleResponseVO>> getBySystemCode(CreateModuleRequestDTO createRequest)
-        获取系统菜单列表信息/module/getbysystemcode: ResultDataDto<List<ModuleResponseVO>> getBySystemCode(String systemCode)
-        获取权限信息/module/getbycode: ResultDataDto<ModuleResponseVO> getByCode(String authCode)
-        分页获取权限信息/module/pagelist: ResultDataDto<ModulePageVO> getPageList()
+        voKeyList:String ModuleVO,UpdateModuleRequestVO,CreateModuleRequestVO
+        创建菜单信息/module/createmodule: ResultDataDto<List<ModuleVO>> createModule(CreateModuleRequestVO createRequest)
+        创建菜单信息/module/updatemodule: ResultDataDto<List<ModuleVO>> updateModule(UpdateModuleRequestVO updateRequest)
+        获取系统菜单列表信息/module/getbysystemcode: ResultDataDto<List<ModuleVO>> getBySystemCode(String systemCode)
+        获取菜单信息/module/getbycode: ResultDataDto<ModuleVO> getByModuleCode(String moduleCode)
+        分页获取菜单信息/module/pagelist: ResultDataDto<PageVO<ModuleVO>> getPageList()
         导入菜单信息/module/import: ResultDataDto<Boolean> importModuleList(List<CreateModuleRequestDTO> createRequest)
         导出菜单信息/module/export: ResultDataDto<Boolean> exportModuleList(String systemCode)
-
     }
 
      class "按钮管理-MenuBO" as MenuBO{
          按钮名称:String menuName
          按钮编码:String menuCode
          按钮链接:String menuUrl
-         系统编码:String menuCode
+         系统编码:String systemCode
          菜单编码:String moduleCode
         .. extend info ..
         tableKey:String menu
         facadeKey:String MenuFacade
         controllerKey:String MenuController
         dtoKeyList:String UpdateMenuRequestDTO,MenuResponseDTO,CreateMenuRequestDTO
-        voKeyList:String MenuResponseVO,MenuPageVO
-        修改按钮信息/menu/updatemenu: ResultDataDto<Boolean> updateMenu(UpdateMenuRequestDTO updateMenuRequestDTO)
-        创建按钮信息/menu/createmenu: ResultDataDto<Boolean> createMenu(CreateMenuRequestDTO createMenuRequestDto)
-        获取按钮详情信息/menu/getbycode: ResultDataDto<MenuResponseVO> getByCode(String menuCode)
-        获取按钮列表信息/menu/pagelist: ResultDataDto<List<MenuResponseVO>> getPageList(String moduleCode )
+        voKeyList:String MenuVO,UpdateMenuRequestVO,CreateMenuRequestVO
+        修改按钮信息/menu/updatemenu: ResultDataDto<Boolean> updateMenu(UpdateMenuRequestVO updateMenuRequestVO)
+        创建按钮信息/menu/createmenu: ResultDataDto<MenuVO> createMenu(CreateMenuRequestVO createMenuRequestVO)
+        获取按钮详情信息/menu/getbycode: ResultDataDto<MenuVO> getByCode(String menuCode)
+        获取按钮列表信息/menu/pagelist: ResultDataDto<List<MenuVO>> getPageList(String moduleCode )
      }
 
      class "数据字段实体-DataColumnBO" as DataColumnBO{
@@ -234,8 +251,9 @@ package domain.bo  {
          tableKey:String data_column_config
          controllerKey:String DataColumnController
          voKeyList:String DataColumnResponseVO,DataColumnVO
-         获取数据字段信息/datacolumn/getbycode: ResultDataDto<DataColumnResponseVO> getByBusDataBase(String busDataBase)
-         分页获取数据字段信息/datacolumn/pagelist: ResultDataDto<Page<DataColumnVO>> getPageList()
+         !invokeFileKey:String datacolumncontextseq.puml
+         获取数据字段信息/datacolumn/getbycode: ResultDataDto<List<DataColumnVO>> getListByBusDataBase(String busDataBase)
+         分页获取数据字段信息/datacolumn/pagelist: ResultDataDto<PageVO<DataColumnVO>> getPageList(PageVO pageVO)
          导入数据字段列表/datacolumn/import: ResultDataDto<Boolean> importDataColumnList(List<DataColumnVO> updateMenuRequestDTO)
      }
 
@@ -302,16 +320,18 @@ package domain.gataway {
         更新菜单信息:Integer updateModule(ModuleBO moduleBO)
         创建按钮信息:Long saveMenu(MenuBO moduleBO)
         更新按钮信息:Integer updateMenu(MenuBO moduleBO)
-        根据code查询系统详情:SystemBO getSystemByCode(String systemCode)
-        根据code查询菜单详情:ModuleBO getModule(String moduleCode)
-        根据code查询按钮详情:MenuBO getMenu(String menuCode)
+
     }
 
     interface "系统菜单按钮查询服务-SystemModuleQueryGataWay" as SystemModuleQueryGataWay{
-        分页查询系统列表:List<SystemBO> querySystemPage()
+        分页查询系统列表:List<SystemBO> querySystemPage(PageBO pageBO)
         分页查询菜单列表:List<ModuleBO> queryModulePage()
         基于系统code查询菜单和按钮:SystemBO queryBySystemCode(String systemCode)
-        查询所有系统菜单和按钮:List<SystemBO> queryAll()
+        根据条件查询系统:List<SystemBO> queryByCondition(String search)
+        查询所有系统菜单和按钮:List<SystemBO> queryWithAll(String search)
+        根据code查询系统详情:SystemBO getSystemByCode(String systemCode)
+        根据code查询菜单详情:ModuleBO getModuleByCode(String moduleCode)
+        根据code查询按钮详情:MenuBO getMenu(String menuCode)
     }
 
 
@@ -325,9 +345,11 @@ package domain.gataway {
 
     interface "数据字段管理网关-DataColumnGataWay" as DataColumnGataWay{
         保存数据字段:Long saveDataColumn(DataColumnBO dataColumnBO)
+        批量保存保存数据字段:Boolean saveBatchDataColumn(List<DataColumnBO> list)
         更新数据字段:Long updateDataColumn(DataColumnBO dataColumnBO)
         根据ID查询数据字段详情:DataColumnBO getById(Long id)
-        分页查询数据字段内容:List<DataColumnBO> getPageList()
+        根据数据库名称获取字段元数据内容:List<DataColumnBO> getByDBCode(String busDataBase)
+        分页查询数据字段内容:List<DataColumnBO> getPageList(PageBO pageBO)
     }
 
     interface "用户和角色管理仓库-UserRoleRepository" as UserRoleRepository{
@@ -335,8 +357,9 @@ package domain.gataway {
         更新用户组:Integer updateUserGroup(UserGroupBO userGroupBO)
         保存角色组并尝试关联角色:Long saveRoleGroup(RoleGroupBO roleGroupBO)
         更新角色组:Integer updateRoleGroup(RoleGroupBO roleGroupBO)
-        保存角色并尝试关联用户:Long saveRole(RoleBO roleBO)
+        保存角色:Long saveRole(RoleBO roleBO)
         更新角色:Integer updateRole(RoleBO roleBO)
+        分页获取角色:List<RoleBO> getPageList(PageBO pageBO)
         根据code查询用户组详情:UserGroupBO getByUserGroupCode(String userGroupCode)
         根据code查询角色详情:RoleBO getByRoleCode(String roleCode)
         根据code查询角色组详情:RoleGroupBO getByRoleGroupCode(String roleGroupCode)
@@ -350,7 +373,6 @@ package "领域工厂服务包-domain.factory" {
         +基于权限本身的维度-权限编码构建权限模型:AuthorityBO buildAuthorityByCode(String authorityCode)
         +基于用户的维度构建权限模型:UserAuthAggregateBO buildAuthorityWithRoleCode(String roleCode)
     }
-
 
 }
 
@@ -457,12 +479,12 @@ package app.exe {
 
 package "应用层事件监听器包支持域内消息和域外消息，在应用层处理消息-app.listener"  as app.listener{
     class "权限变更监听器-AuthorityChangeListener" as AuthorityChangeListener{
-         事务提交后权限变更监听:void authorityCreate(String authCode)
-         用户状态信息变更监听消费:void userStatusChange(Long userId)
+         +事务提交后权限变更监听:void authorityCreate(String authCode)
+         +用户状态信息变更监听消费:void userStatusChange(Long userId)
     }
 
     class "系统菜单按钮变更监听器-SystemChangeListener" as SystemChangeListener{
-         事务提交后权限变更监听:void systemChange(MenuChangeEvent event)
+         +事务提交后权限变更监听:void systemChange(MenuChangeEvent event)
     }
 }
 
@@ -470,28 +492,28 @@ package "应用层事件监听器包支持域内消息和域外消息，在应�
 
 package   "基础设施层消息生产者-mq.producer" as   mq.producer {
     class "权限上下文消息生产者-AuthorityMqProducer" as AuthorityMqProducer{
-         权限创建:void authorityCreate(String authCode)
-         权限更新:void authorityUpdate(String authCode)
+         +权限创建:void authorityCreate(String authCode)
+         +权限更新:void authorityUpdate(String authCode)
     }
 
     class "系统上下文消息生产者-SystemMqProducer" as SystemMqProducer{
-         事务提交后权限变更监听:void systemChange(MenuChangeEvent event)
+         +事务提交后权限变更监听:void systemChange(MenuChangeEvent event)
     }
 }
 
 package   "基础设施层消息消费者-mq.consumer" as   mq.consumer {
     class "用户上下文消息消费者或者监听-UserMqConsumer" as UserMqConsumer{
-         监听用户状态变更:void consumeUserStatusChange(String mqBody)
+         +监听用户状态变更:void consumeUserStatusChange(String mqBody)
     }
     class "组织上下文消息消费者或者监听-DepartmentMqConsumer" as DepartmentMqConsumer{
-         监听组织状态变更:void consumeDepartmentStatusChange(String mqBody)
+         +监听组织状态变更:void consumeDepartmentStatusChange(String mqBody)
     }
 }
 
 
 package   "基础设施层消息消费处理器或者直接在基础设施层处理消息代码方案一-mq.handler" as   mq.handler {
     class "用户上下文消息处理器-UserMqHandler" as UserMqHandler{
-         处理用户状态变更的权限信息:void handleUserStatusChange(String mqBody)
+         +处理用户状态变更的权限信息:void handleUserStatusChange(String mqBody)
     }
 }
 
