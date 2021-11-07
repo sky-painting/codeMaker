@@ -3,6 +3,7 @@ package ${package}.api.facade;
 import java.util.List;
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
+import com.coderman.utils.response.PageDTO;
 
 import ${package}.api.dto.${table.humpClassName}DTO;
 
@@ -15,9 +16,7 @@ import ${package}.api.dto.${table.humpClassName}DTO;
 public interface ${table.humpClassName}Facade{
 
 	/**
-	 *
-	 * @Title: save
-	 * @Description:新增
+	 * @Description:新增${table.tableComment}
 	 * @author:
 	 * @param dto
 	 * @return ResultDto    返回类型
@@ -27,9 +26,7 @@ public interface ${table.humpClassName}Facade{
 
 	/**
 	 * 
-	 * @Title: delete 
 	 * @Description: 通过id删除数据
-	 * @author: 
 	 * @param id
 	 * @return ResultDto    返回类型 
 	 * @throws
@@ -38,9 +35,7 @@ public interface ${table.humpClassName}Facade{
 
 	/**
 	 * 
-	 * @Title: getById 
 	 * @Description: 通过id查询
-	 * @author: 
 	 * @param @param id
 	 * @return ResultDataDto<${table.humpClassName}DTO>
 	 * @throws
@@ -48,24 +43,26 @@ public interface ${table.humpClassName}Facade{
 	public ResultDataDto<${table.humpClassName}DTO> getById(Long id) throws Exception;
 
 	/**
-	 * 
-	 * @Title: getAll 
-	 * @Description:查询所有数据 
-	 * @author: 
+	 * @Description:查询所有数据
 	 * @return ResultDataDto<List<${table.humpClassName}DTO>>
 	 * @throws
 	 */
 	public ResultDataDto<List<${table.humpClassName}DTO>> getAll() throws Exception;
 
 	/**
-	*
-	* @Title: update
-	* @Description:修改
-	* @author:
-	* @param @param ${table.humpTableName}DTO
-	* @return int
-	* @throws
-	*/
+	 * @Description:修改
+	 * @param @param ${table.humpTableName}DTO
+	 * @return int
+	 * @throws
+	 */
 	public ResultDto update(${table.humpClassName}DTO ${table.humpTableName}DTO) throws Exception;
+
+
+	/**
+	 * @Description:分页查询记录
+	 * @return ResultDataDto<PageDTO<${table.humpClassName}DTO>>
+	 * @throws
+	 */
+	public ResultDataDto<PageDTO<${table.humpClassName}DTO>> getPageList(PageDTO pageDto) throws Exception;
 
 }

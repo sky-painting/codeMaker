@@ -1,4 +1,4 @@
-package ${package}.core.facade.impl;
+package ${package}.facade.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,6 +6,7 @@ import org.apache.dubbo.config.annotation.Service;
 
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
+import com.coderman.utils.response.PageDTO;
 
 import ${package}.api.facade.${table.humpClassName}Facade;
 import ${package}.api.dto.${table.humpClassName}DTO;
@@ -59,6 +60,13 @@ public class ${table.humpClassName}FacadeImpl implements ${table.humpClassName}F
 		ResultDto resultDto = new ResultDto();
 		//todo impl code
 		return resultDto;
+	}
+
+	@Override
+	public ResultDataDto<PageDTO<${table.humpClassName}DTO>> getPageList(PageDTO pageDto) {
+		ResultDataDto<PageDTO<${table.humpClassName}DTO>> resultDataDto = new ResultDataDto<PageDTO<${table.humpClassName}DTO>>();
+		//todo impl code
+		return	resultDataDto;
 	}
 
 }
