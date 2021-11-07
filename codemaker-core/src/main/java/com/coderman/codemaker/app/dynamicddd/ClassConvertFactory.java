@@ -28,6 +28,12 @@ public class ClassConvertFactory {
     @Autowired
     private AppServiceConfig appServiceConfig;
 
+    @Autowired
+    private ClassBeanFactory classBeanFactory;
+
+    @Autowired
+    private MethodBeanFactory methodBeanFactory;
+
     /**
      * 处理派生类bo->dto
      *
@@ -36,23 +42,11 @@ public class ClassConvertFactory {
      */
     public List<ClassBean> getDTOClassList(List<ClassBean> domainBOClassList) {
         List<ClassBean> dtoClassList = new ArrayList<>();
-
         for (ClassBean classBean : domainBOClassList) {
             List<FieldBean> fieldBeanList = classBean.buildSimpleFieldList();
             String[] classNameArr = classBean.getExtendFieldBean().getDtoKeyList();
             for (String className : classNameArr) {
-                ClassBean dtoClassBean = new ClassBean();
-                if (!className.toLowerCase().endsWith("dto")) {
-                    dtoClassBean.setClassName(className + "DTO");
-                } else {
-                    dtoClassBean.setClassName(className);
-                }
-                dtoClassBean.setFieldBeanList(fieldBeanList);
-                dtoClassBean.setClassDesc(classBean.getClassDesc());
-                dtoClassBean.setMethodBeanList(Lists.newArrayList());
-                dtoClassBean.setPlantUMLPackage("api.dto");
-                dtoClassBean.setDerivedChainClassList(Lists.newArrayList(classBean.getClassName()));
-                dtoClassList.add(dtoClassBean);
+                dtoClassList.add(classBeanFactory.buildDtoClassBean(className,classBean,fieldBeanList));
             }
         }
         return dtoClassList;
@@ -65,7 +59,7 @@ public class ClassConvertFactory {
      * @return
      */
     public List<ClassBean> getVOClassList(List<ClassBean> domainBOClassList) {
-        List<ClassBean> dtoClassList = new ArrayList<>();
+        List<ClassBean> voClassList = new ArrayList<>();
 
         for (ClassBean classBean : domainBOClassList) {
             List<FieldBean> fieldBeanList = classBean.buildSimpleFieldList();
@@ -74,21 +68,11 @@ public class ClassConvertFactory {
                 continue;
             }
             for (String className : classNameArr) {
-                ClassBean dtoClassBean = new ClassBean();
-                if (!className.toLowerCase().endsWith("vo")) {
-                    dtoClassBean.setClassName(className + "VO");
-                } else {
-                    dtoClassBean.setClassName(className);
-                }
-                dtoClassBean.setFieldBeanList(fieldBeanList);
-                dtoClassBean.setClassDesc(classBean.getClassDesc());
-                dtoClassBean.setMethodBeanList(Lists.newArrayList());
-                dtoClassBean.setPlantUMLPackage("adapter.vo");
-                dtoClassList.add(dtoClassBean);
+                voClassList.add(classBeanFactory.buildVOClassBean(className,classBean,fieldBeanList));
             }
         }
 
-        return dtoClassList;
+        return voClassList;
     }
 
 
@@ -102,16 +86,12 @@ public class ClassConvertFactory {
         List<InterfaceBean> facadeInterfaceList = new ArrayList<>();
 
         for (ClassBean classBean : dtoClassList) {
-            InterfaceBean interfaceBean = new InterfaceBean();
-            int x = classBean.getClassName().toLowerCase().lastIndexOf(DomainDerivedElementEnum.DTO.getElement());
-            if (x >= 0) {
-                String className = classBean.getClassName().substring(0, x) + "Facade";
-                interfaceBean.setClassName(className);
-                interfaceBean.setPlantUMLPackage("api.facade");
-                interfaceBean.setClassDesc(classBean.getClassDesc());
-                interfaceBean.setMethodBeanList(Lists.newArrayList());
-                facadeInterfaceList.add(interfaceBean);
+            InterfaceBean interfaceBean = classBeanFactory.buildInterfaceBean(classBean);
+            if(interfaceBean == null){
+                continue;
             }
+            facadeInterfaceList.add(interfaceBean);
+
         }
         return facadeInterfaceList;
     }
@@ -568,11 +548,10 @@ public class ClassConvertFactory {
                             .replace("string", "")
                             .trim();
 
-
                     String[] arr = voClassNameStr.split(",");
+                    int i = 0;
                     for (String voClassName : arr) {
                         String varBOClassName = classBean.getClassName().substring(0, 1).toLowerCase().concat(classBean.getClassName().substring(1));
-
                         importClassSet.add(appServiceConfig.getPackage() + ".adapter.vo." + voClassName);
                         MethodBean dto2bo = new MethodBean();
                         String varVoName = voClassName.substring(0, 1).toLowerCase().concat(voClassName.substring(1));
@@ -586,8 +565,8 @@ public class ClassConvertFactory {
                         if (StringUtils.isEmpty(varVoName)) {
                             varVoName = "vo";
                         }
-
-                        dtoList2boList.setMethodName(varVoName + "List2boList(List<" + voClassName + "> " + varVoName + "List)");
+                        String volist2bolist = methodBeanFactory.getvolist2boListMethod(i);
+                        dtoList2boList.setMethodName(volist2bolist + "(List<" + voClassName + "> " + varVoName + "List)");
                         dtoList2boList.setReturnClass("List<" + classBean.getClassName() + ">");
                         methodBeanList.add(dtoList2boList);
 
@@ -599,9 +578,12 @@ public class ClassConvertFactory {
                         methodBeanList.add(bo2to);
 
                         MethodBean boList2dtoList = new MethodBean();
-                        boList2dtoList.setMethodName(varBOClassName + "List2" + tmpVar + "List(List<" + classBean.getClassName() + "> " + varBOClassName + "List)");
+                        String bolist2volist = methodBeanFactory.getbolist2voListMethod(i);
+
+                        boList2dtoList.setMethodName(bolist2volist+"(List<" + classBean.getClassName() + "> " + varBOClassName + "List)");
                         boList2dtoList.setReturnClass("List<" + voClassName + ">");
                         methodBeanList.add(boList2dtoList);
+                        i++;
                     }
                     classMethodList.addAll(methodBeanList);
                 }
@@ -622,16 +604,11 @@ public class ClassConvertFactory {
             convertInterfaceBean.setMethodBeanList(map.values().stream().collect(Collectors.toList()));
             convertInterfaceBean.getMethodBeanList().forEach(methodBean -> methodBean.buildParamArr());
             interfaceConvertBeanList.add(convertInterfaceBean);
-
-
         });
         convertMap.put("voboconvertlist", interfaceConvertBeanList);
         convertMap.put("voboconvertrelation", boConvertRelationMap);
-
         return convertMap;
-
     }
-
 
     /**
      * 构建方法内容
@@ -674,7 +651,6 @@ public class ClassConvertFactory {
         }
         return gatawayImplList;
     }
-
 
     /**
      * 处理派生类infrastacl->infrastaclimpl
@@ -733,7 +709,6 @@ public class ClassConvertFactory {
         }
         return repositoryImplList;
     }
-
 
     /**
      * 构建api的枚举数据
