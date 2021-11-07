@@ -8,10 +8,9 @@ import org.springframework.stereotype.Service;
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
 
-import ${package}.mapper.${table.humpClassName}Mapper;
+import ${package}.dao.mapper.${table.humpClassName}Mapper;
 import ${package}.service.${table.humpClassName}Service;
-import ${package}.vo.${table.humpClassName}VO;
-import ${package}.entity.${table.humpClassName}Entity;
+import ${package}.bo.${table.humpClassName}BO;
 
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -32,40 +31,47 @@ public class ${table.humpClassName}ServiceImpl implements ${table.humpClassName}
 	private ${table.humpClassName}Mapper ${table.humpTableName}Mapper;
 	
 	@Override
-	public ResultDto save(${table.humpClassName}VO vo) {
-		ResultDto resultDto = new ResultDto();
+	public ${table.humpClassName}BO save(${table.humpClassName}BO bo) {
         //todo impl code
-		return resultDto;
+		return null;
 	}
 	
 	@Override
-	public ResultDto delete(Long id) {
-		ResultDto resultDto = new ResultDto();
+	public Boolean delete(Long id) {
 		logger.info("${table.humpTableName}Service.delete,id="+id);
         //todo impl code
-		return resultDto;
+		return false;
 	}
 	
 	@Override
-	public ResultDataDto<${table.humpClassName}VO> getById(Long id) {
-		ResultDataDto<${table.humpClassName}VO> resultDataDto = new ResultDataDto<${table.humpClassName}VO>();
+	public ${table.humpClassName}BO getById(Long id) {
 		logger.info("${table.humpTableName}Service.getById,id="+id);
 		//todo impl code
-		return resultDataDto;
+		return null;
 	}
 	
 	@Override
-	public ResultDataDto<List<${table.humpClassName}VO>> getAll() {
-		ResultDataDto<List<${table.humpClassName}VO>> resultDataDto = new ResultDataDto<List<${table.humpClassName}VO>>();
+	public List<${table.humpClassName}BO> getAll() {
 		//todo impl code
-		return	resultDataDto;
+		return	null;
 	}
 
 	@Override
-	public ResultDto update(${table.humpClassName}VO vo) {
-		ResultDto resultDto = new ResultDto();
+	public Boolean update(${table.humpClassName}BO bo) {
 		//todo impl code
-		return resultDto;
+		return false;
+	}
+
+
+	@Override
+	public List<${table.humpClassName}BO> getPageList()  throws Exception {
+		return null;
+	}
+
+
+	@Override
+	public int getCount()  throws Exception {
+		return 0;
 	}
 
 }

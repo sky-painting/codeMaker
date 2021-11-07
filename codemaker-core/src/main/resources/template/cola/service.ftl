@@ -13,10 +13,7 @@ import ${package}.model.bo.${table.humpClassName}BO;
 public interface ${table.humpClassName}Service{
 
 	/**
-	 *
-	 * @Title: save
 	 * @Description:新增
-	 * @author:
 	 * @param bo
 	 * @return ResultDto    返回类型
 	 * @throws
@@ -24,21 +21,15 @@ public interface ${table.humpClassName}Service{
 	public ${table.humpClassName}BO save(${table.humpClassName}BO bo) throws Exception;
 
 	/**
-	 * 
-	 * @Title: delete 
 	 * @Description: 通过id删除数据
-	 * @author: 
 	 * @param id
 	 * @return ResultDto    返回类型 
 	 * @throws
 	 */
-	public boolean delete(Long id);
+	public Boolean delete(Long id);
 
 	/**
-	 * 
-	 * @Title: getById 
 	 * @Description: 通过id查询
-	 * @author: 
 	 * @param id
 	 * @return ResultDataDto<${table.humpClassName}BO>
 	 * @throws
@@ -46,24 +37,26 @@ public interface ${table.humpClassName}Service{
 	public ${table.humpClassName}BO getById(Long id) throws Exception;
 
 	/**
-	 * 
-	 * @Title: getAll 
-	 * @Description:查询所有数据 
-	 * @author: 
+	 * @Description:查询所有数据
 	 * @return List<${table.humpClassName}BO>
 	 * @throws
 	 */
 	public List<${table.humpClassName}BO> getAll() throws Exception;
 
 	/**
-	*
-	* @Title: update
-	* @Description:修改
-	* @author:
-	* @param  ${table.humpTableName}BO
-	* @return boolean
-	* @throws
-	*/
-	public boolean update(${table.humpClassName}BO ${table.humpTableName}BO) throws Exception;
+	 * @Description:修改
+	 * @param  ${table.humpTableName}BO
+	 * @return boolean
+	 * @throws
+	 */
+	public Boolean update(${table.humpClassName}BO ${table.humpTableName}BO) throws Exception;
+
+
+	/**
+	 * @Description:分页查询数据
+	 * @return List<${table.humpClassName}BO>
+	 * @throws
+	 */
+	public List<${table.humpClassName}BO> getPageList() throws Exception;
 
 }
