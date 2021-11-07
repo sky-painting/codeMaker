@@ -1,10 +1,15 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.plantuml;
 
+import com.alibaba.fastjson.JSON;
+import com.coderman.codemaker.bean.GlobalConstant;
 import com.coderman.codemaker.bean.plantuml.*;
-import com.coderman.codemaker.config.ProjectTemplateDynamicDDDConfig;
+import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.enums.ClassEnum;
 import com.coderman.codemaker.enums.ClassRelationEnum;
 import com.coderman.codemaker.enums.VisibilityEnum;
+import com.coderman.codemaker.service.plantuml.ReadPlantUMLDocService;
+import com.coderman.codemaker.utils.StringCheckUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,10 +19,7 @@ import org.springframework.util.ResourceUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Description: 读文件服务
@@ -30,54 +32,54 @@ import java.util.Map;
  *
  */
 @Service
-public class ReadPlantUMLFileService {
+@Slf4j
+public class ReadDomainPlantDocService {
 
     @Autowired
-    private ProjectTemplateDynamicDDDConfig projectTemplateDynamicDDDConfig;
+    private AppServiceConfig appServiceConfig;
 
-    /**
-     * 读取plantUMl文件
-      * @return
-     */
-    private List<String> readPlantUMLContent(){
-        try {
-            File file = ResourceUtils.getFile("classpath:ddd-plantuml/"+projectTemplateDynamicDDDConfig.getPlantumlFileName());
-            return FileUtils.readLines(file,"UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+    @Autowired
+    private ReadPlantUMLDocService readPlantUMLDocService;
+
 
     /**
      * 解析plantUML文件内容
+     * @param plantUMLFileName
      * @return
      */
-    public PlantUmlContextBean getPlantUmlContextBean(){
-        List<String> contentList = readPlantUMLContent();
+    public PlantUmlContextBean getPlantUmlContextBean(String plantUMLFileName){
+        List<String> contentList = readPlantUMLDocService.readDomainPlantDoc(plantUMLFileName);
+        if(CollectionUtils.isEmpty(contentList)){
+            return null;
+        }
         List<String> elementList = new ArrayList<>();
         PlantUmlContextBean plantUmlContextBean = new PlantUmlContextBean();
 
+        String currentPackage= "";
         //对class,enum,interface进行解析
         for(String str : contentList){
-            if(StringUtils.isEmpty(str) || str.contains("@startuml") || str.contains("package")){
+            String content = str.trim();
+            if(StringUtils.isEmpty(content) || content.contains("@startuml") || content.startsWith(GlobalConstant.PLANT_DOC_IGNORE)){
                 continue;
             }
 
-            if(str.trim().contains("{")){
-                elementList.add(str.trim());
+            if(content.contains("package")){
+                currentPackage = content.replace("package","").replace("{","").trim();
                 continue;
             }
-            if(str.trim().contains("}")){
-                elementList.add(str.trim());
-                parseClassElement(elementList,plantUmlContextBean);
+
+            if(content.contains("{")){
+                elementList.add(content);
+                continue;
+            }
+            if(content.contains("}")){
+                elementList.add(content);
+                parseClassElement(elementList,plantUmlContextBean,currentPackage);
                 elementList.clear();
                 continue;
             }
-            elementList.add(str.trim());
+            elementList.add(content);
         }
-
-
 
         //对类与类的关系进行解析
         Map<String, List<String>> relationListMap = new HashMap<>();
@@ -106,30 +108,69 @@ public class ReadPlantUMLFileService {
             }
         });
 
+        //统一对解析内容进行校验，提前暴露
+        plantUmlContextBean.getClassBeanMap().forEach((className,classBean)->{
+            List<FieldBean> fieldBeanList = classBean.getFieldBeanList();
+            Set<String> fieldNameSet = new HashSet<>();
+            Set<String> fieldSimpleNameSet = new HashSet<>();
+            fieldBeanList.forEach(fieldBean -> {
+                fieldBean.buildFieldDetail();
+                if(fieldNameSet.contains(fieldBean.getFieldName()) || fieldSimpleNameSet.contains(fieldBean.getFieldSimpleName())){
+                    log.error("属性重复,类名{},属性信息:{}",className, fieldBean.toString());
+                }
+
+                fieldSimpleNameSet.add(fieldBean.getFieldSimpleName());
+                fieldNameSet.add(fieldBean.getFieldName());
+            });
+
+            List<MethodBean> methodBeanList = classBean.getMethodBeanList();
+            Set<String> methodNameSet = new HashSet<>();
+            methodBeanList.forEach(methodBean -> {
+                if(fieldNameSet.contains(methodBean.getMethodName())){
+                    log.error("方法重复,类名{},属性名:{}",className,methodBean.getMethodName());
+                }
+                methodNameSet.add(methodBean.getMethodName());
+            });
+
+        });
+
+        plantUmlContextBean.getInterfaceBeanMap().forEach((className,interfaceBean)->{
+            List<MethodBean> methodBeanList = interfaceBean.getMethodBeanList();
+            Set<String> methodNameSet = new HashSet<>();
+            methodBeanList.forEach(methodBean -> {
+                if(methodNameSet.contains(methodBean.getMethodName())){
+                    log.error("方法重复,类名{},属性名:{}",className,methodBean.getMethodName());
+                }
+                methodNameSet.add(methodBean.getMethodName());
+            });
+        });
+
         return plantUmlContextBean;
     }
-
 
     /**
      * 解析文件内容整体路由
      * @param elementList
      * @param plantUmlContextBean
      */
-    private void parseClassElement(List<String> elementList, PlantUmlContextBean plantUmlContextBean){
+    private void parseClassElement(List<String> elementList, PlantUmlContextBean plantUmlContextBean, String currentPackage){
         String classType = getClassType(elementList.get(0));
         if(classType.equals(ClassEnum.CLASS.getClassType())){
             ClassBean classBean = buildClassBean(elementList);
+            classBean.buildPlantUMLPackage(currentPackage);
             plantUmlContextBean.addClassBean(classBean);
         }
         else if(classType.equals(ClassEnum.ENUM.getClassType())){
             EnumBean enumBean = builEnumBean(elementList);
+            enumBean.buildPlantUMLPackage(currentPackage);
             plantUmlContextBean.addEnumBean(enumBean);
         }
-
         else if(classType.equals(ClassEnum.INTERFACE.getClassType())){
             InterfaceBean interfaceBean = buildInterfaceBean(elementList);
+            interfaceBean.buildPlantUMLPackage(currentPackage);
             plantUmlContextBean.addInterfaceBean(interfaceBean);
         }
+
     }
 
 
@@ -144,16 +185,26 @@ public class ReadPlantUMLFileService {
      */
     private ClassBean buildClassBean(List<String> elementList ){
 
-        String[] array = elementList.get(0).trim().replace("{","").trim().split(" ");
+        String[] array = elementList.get(0).trim().replace("{","").trim().split("\"");
 
         String classMetaInfoArr = array[1];
         List<FieldBean> fieldBeanList = getFieldBeanList(elementList.subList(1,elementList.size()));
         List<MethodBean> methodBeanList = getMethodBeanList(elementList.subList(1,elementList.size()));
         ClassBean classBean = new ClassBean();
         classBean.setFieldBeanList(fieldBeanList);
-        classBean.setMethodBeanList(methodBeanList);
+
+        classBean.setAuthor(appServiceConfig.getAuthor());
         classBean.setClassName(classMetaInfoArr.split("-")[1].replace("\"",""));
         classBean.setClassDesc(classMetaInfoArr.split("-")[0].replace("\"",""));
+
+        if(StringCheckUtils.isContainChinese(classBean.getClassName())){
+            String className = classBean.getClassDesc();
+            classBean.setClassDesc(classBean.getClassName());
+            classBean.setClassName(className);
+        }
+        methodBeanList.forEach(methodBean -> methodBean.setClassName(classBean.getClassName()));
+        classBean.setMethodBeanList(methodBeanList);
+
         return classBean;
     }
 
@@ -164,14 +215,23 @@ public class ReadPlantUMLFileService {
      */
     private InterfaceBean buildInterfaceBean(List<String> elementList ){
 
-        String[] array = elementList.get(0).trim().replace("{","").trim().split(" ");
+        String[] array = elementList.get(0).trim().replace("{","").trim().split("\"");
 
         String classMetaInfoArr = array[1];
         List<MethodBean> methodBeanList = getMethodBeanList(elementList.subList(1,elementList.size()));
         InterfaceBean interfaceBean = new InterfaceBean();
-        interfaceBean.setMethodBeanList(methodBeanList);
+        interfaceBean.setAuthor(appServiceConfig.getAuthor());
+
         interfaceBean.setClassName(classMetaInfoArr.split("-")[1].replace("\"",""));
         interfaceBean.setClassDesc(classMetaInfoArr.split("-")[0].replace("\"",""));
+        if(StringCheckUtils.isContainChinese(interfaceBean.getClassName())){
+            String className = interfaceBean.getClassDesc();
+            interfaceBean.setClassDesc(interfaceBean.getClassName());
+            interfaceBean.setClassName(className);
+        }
+        methodBeanList.stream().forEach(methodBean -> methodBean.setClassName(interfaceBean.getClassName()));
+        interfaceBean.setMethodBeanList(methodBeanList);
+
         return interfaceBean;
     }
 
@@ -182,14 +242,20 @@ public class ReadPlantUMLFileService {
      */
     private EnumBean builEnumBean(List<String> elementList ){
 
-        String[] array = elementList.get(0).trim().replace("{","").trim().split(" ");
+        String[] array = elementList.get(0).trim().replace("{","").trim().split("\"");
 
         String classMetaInfoArr = array[1];
         List<FieldBean> fieldBeanList = getFieldBeanList(elementList.subList(1,elementList.size()));
         EnumBean enumBean = new EnumBean();
         enumBean.setFieldBeanList(fieldBeanList);
+        enumBean.setAuthor(appServiceConfig.getAuthor());
         enumBean.setClassName(classMetaInfoArr.split("-")[1].replace("\"",""));
         enumBean.setClassDesc(classMetaInfoArr.split("-")[0].replace("\"",""));
+        if(StringCheckUtils.isContainChinese(enumBean.getClassName())){
+            String className = enumBean.getClassDesc();
+            enumBean.setClassDesc(enumBean.getClassName());
+            enumBean.setClassName(className);
+        }
         dealEnumMethodBeanList(elementList,enumBean);
         return enumBean;
     }
@@ -209,10 +275,9 @@ public class ReadPlantUMLFileService {
             if(!fieldStr.trim().contains(":")){
                 continue;
             }
-            //+主交易单类型:string tradeOrderType
             String[] fieldArr = fieldStr.trim().split(":");
             FieldBean fieldBean = new FieldBean();
-            fieldBean.setDesc(fieldArr[0]);
+            fieldBean.buildDesc(fieldArr[0]);
             fieldBean.setVisibility(VisibilityEnum.getVisibilityStr(fieldArr[0]));
             fieldBean.setFieldName(fieldArr[1]);
             fieldBeanList.add(fieldBean);
@@ -228,17 +293,14 @@ public class ReadPlantUMLFileService {
     private List<MethodBean> getMethodBeanList(List<String> elementList){
         List<MethodBean> methodBeanList = new ArrayList<>();
         for (String fieldStr : elementList){
-
             if(!fieldStr.contains("()") && !fieldStr.contains("(") && !fieldStr.contains(")")){
                 continue;
             }
-            MethodBean methodBean =new MethodBean();
-
-            //-创建变更日志: TradeOrderLogBO getTradeOrderLogBO()
+            MethodBean methodBean = new MethodBean();
             if(fieldStr.contains(":")){
                 String[] fieldArr = fieldStr.trim().split(":");
-                methodBean.setVisibility(VisibilityEnum.getVisibilityStr(fieldArr[1]));
-                methodBean.setDesc(fieldArr[0]);
+                methodBean.setVisibility(VisibilityEnum.getVisibilityStr(fieldArr[0]));
+                methodBean.buildDesc(fieldArr[0]);
 
                 String[] arr = fieldArr[1].trim().split(" ");
                 if(arr.length == 2){
@@ -246,7 +308,7 @@ public class ReadPlantUMLFileService {
                     methodBean.setMethodName(arr[1]);
                 }else{
                     methodBean.setReturnClass(arr[0]);
-                    methodBean.setMethodName(fieldArr[1].trim().replace(arr[0],""));
+                    methodBean.setMethodName(fieldArr[1].trim().replaceFirst(arr[0],"").trim());
                 }
             }else {
                 String[] fieldArr = fieldStr.trim().split(" ");
@@ -256,7 +318,7 @@ public class ReadPlantUMLFileService {
                     methodBean.setReturnClass(fieldStr.trim().split(" ")[0]);
                     methodBean.setMethodName(fieldStr.trim().split(" ")[1]);
                 }else{
-                    methodBean.setDesc(fieldArr[0]);
+                    methodBean.buildDesc(fieldArr[0]);
                     methodBean.setVisibility(VisibilityEnum.getVisibilityStr(fieldStr.trim()));
                     methodBean.setReturnClass(fieldArr[1]);
                     StringBuilder builder = new StringBuilder();
@@ -269,7 +331,7 @@ public class ReadPlantUMLFileService {
             if(!methodBean.getReturnClass().contains("void")){
                 methodBean.setReturnBody("return null;");
             }
-
+            methodBean.buildParamArr();
             methodBeanList.add(methodBean);
         }
         return methodBeanList;
