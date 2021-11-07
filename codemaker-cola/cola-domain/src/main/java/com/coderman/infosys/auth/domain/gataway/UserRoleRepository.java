@@ -1,0 +1,97 @@
+package com.coderman.infosys.auth.domain.gataway;
+
+import java.util.List;
+import com.coderman.infosys.auth.domain.bo.UserGroupBO;
+import com.coderman.utils.commonbo.PageBO;
+import com.coderman.infosys.auth.domain.bo.RoleBO;
+import com.coderman.infosys.auth.domain.bo.RoleGroupBO;
+
+
+/**
+ * @Description:用户和角色管理仓库接口
+ * @Author:shenshuai
+ * @CreateTime:2021-11-07 08:23:49
+ * @version v1.0
+ */
+public interface UserRoleRepository{
+
+	/**
+	 *
+	 * @Description 保存用户组并尝试关联用户
+	 * @param userGroupBO
+	 * @return Long
+	 */
+     Long saveUserGroup(UserGroupBO userGroupBO);
+
+	/**
+	 *
+	 * @Description 更新用户组
+	 * @param userGroupBO
+	 * @return Integer
+	 */
+     Integer updateUserGroup(UserGroupBO userGroupBO);
+
+	/**
+	 *
+	 * @Description 保存角色组并尝试关联角色
+	 * @param roleGroupBO
+	 * @return Long
+	 */
+     Long saveRoleGroup(RoleGroupBO roleGroupBO);
+
+	/**
+	 *
+	 * @Description 更新角色组
+	 * @param roleGroupBO
+	 * @return Integer
+	 */
+     Integer updateRoleGroup(RoleGroupBO roleGroupBO);
+
+	/**
+	 *
+	 * @Description 保存角色
+	 * @param roleBO
+	 * @return Long
+	 */
+     Long saveRole(RoleBO roleBO);
+
+	/**
+	 *
+	 * @Description 更新角色
+	 * @param roleBO
+	 * @return Integer
+	 */
+     Integer updateRole(RoleBO roleBO);
+
+	/**
+	 *
+	 * @Description 分页获取角色
+	 * @param pageBO
+	 * @return List<RoleBO>
+	 */
+     List<RoleBO> getPageList(PageBO pageBO);
+
+	/**
+	 *
+	 * @Description 根据code查询用户组详情
+	 * @param userGroupCode
+	 * @return UserGroupBO
+	 */
+     UserGroupBO getByUserGroupCode(String userGroupCode);
+
+	/**
+	 *
+	 * @Description 根据code查询角色详情
+	 * @param roleCode
+	 * @return RoleBO
+	 */
+     RoleBO getByRoleCode(String roleCode);
+
+	/**
+	 *
+	 * @Description 根据code查询角色组详情
+	 * @param roleGroupCode
+	 * @return RoleGroupBO
+	 */
+     RoleGroupBO getByRoleGroupCode(String roleGroupCode);
+}
