@@ -1,7 +1,7 @@
-package com.coderman.codemaker.app.dynamicddd;
+package com.coderman.codemaker.service.invoker;
 
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
-import com.coderman.codemaker.service.ReadInvokePlantUMLFileService;
+import com.coderman.codemaker.service.plantuml.ReadInvokeSequencePlantDocService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
  * @since JDK 1.8
  */
 @Service
-public class DynamicInvokeHandler {
+public class InvokeSequenceService {
 
     @Autowired
-    private ReadInvokePlantUMLFileService readInvokePlantUMLFileService;
+    private ReadInvokeSequencePlantDocService readInvokePlantUMLFileService;
 
     /**
      * 进行动态调用的入口
@@ -31,7 +31,5 @@ public class DynamicInvokeHandler {
             });
         }
     }
-
-
 
 }

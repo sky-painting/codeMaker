@@ -1,6 +1,7 @@
-package com.coderman.codemaker.service.invoker;
+package com.coderman.codemaker.service.invoker.handler;
 
 import com.coderman.codemaker.bean.invoke.InvokeContextBean;
+import com.coderman.codemaker.service.invoker.InvokeHandler;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,9 +13,9 @@ import org.springframework.stereotype.Service;
  * @since JDK 1.8
  */
 @Service(value = "infrastInvokeHandler")
-public class InfrastInvokeHandler implements InvokeHandler{
+public class InfrastInvokeHandler implements InvokeHandler {
     @Override
     public void dealInvoke(InvokeContextBean invokeBean) {
-        invokeBean.getMethodBean().addInvokeRowContent(invokeBean.getCurrentInvokeRowContent(),invokeBean.getCurrentInvokeRowBean());
+        invokeBean.getInvokerMethodBean().addInvokeRowContent(invokeBean.getCurrentInvokeRowContent(),invokeBean.getCurrentInvokeRowBean());
     }
 }
