@@ -112,7 +112,7 @@ public class PlantUmlContextBean {
      */
     public boolean addInvokeMethod(InvokeContextBean invokeContextBean){
 
-        String key = invokeContextBean.getInvokerClassBean().getClassName()+"."+invokeContextBean.getMethodBean().getMethodName();
+        String key = invokeContextBean.getInvokerClassBean().getClassName()+"."+invokeContextBean.getInvokerMethodBean().getMethodName();
 
         Set<String> providerMethodSet = this.dynamicInvokeChainMap.get(key);
         if(providerMethodSet == null){
