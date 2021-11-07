@@ -11,6 +11,10 @@
         </#list>
     </resultMap>
 
+    <!--查询总数-->
+    <resultMap type="java.lang.Integer" id="count">
+        <result column="total"/>
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
@@ -33,17 +37,26 @@
         where  id = <#noparse>#{</#noparse>id<#noparse>}</#noparse>
     </update>
 
-    <select id="getAll" resultType="${package}.dao.dataobject.${table.humpClassName}DO">
+    <select id="getAll" resultMap="BaseResultMap">
         select <include refid="Base_Column_List" />  from ${table.tableName}
     </select>
 
     <select id="getById" parameterType="${package}.dao.dataobject.${table.humpClassName}DO"
-            resultType="${package}.dao.dataobject.${table.humpClassName}DO">
+            resultMap="BaseResultMap">
         select <include refid="Base_Column_List" /> from ${table.tableName}  where id = <#noparse>#{</#noparse>id<#noparse>}</#noparse>
     </select>
 
     <delete id="deleteById" >
         delete from ${table.tableName} where id = <#noparse>#{</#noparse>id<#noparse>}</#noparse>
     </delete>
+
+    <select id="getPageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from ${table.tableName}
+    </select>
+
+    <select id="getCount" resultMap="count">
+        select count(1)  from ${table.tableName}
+    </select>
+
 
 </mapper>
