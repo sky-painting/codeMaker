@@ -18,6 +18,7 @@ import lombok.ToString;
 public class ${class.className} ${class.relationClassStr}{
 
 	<#list fields as field>
+
 	/** ${field.desc} **/
     ${field.visibility} ${field.fieldName};
 	</#list>

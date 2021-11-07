@@ -1,4 +1,4 @@
-package ${package}.core.model.bo;
+package ${package}.bo;
 
 import java.util.Date;
 import java.math.BigDecimal;
