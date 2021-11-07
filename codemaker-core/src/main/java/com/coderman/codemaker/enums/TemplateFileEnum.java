@@ -59,6 +59,10 @@ public enum  TemplateFileEnum {
     MQ_HANDLER("mqhandler"),
     MQ_LISTENER("mqlistener"),
     MQ_PRODUCER("mqproducer"),
+    APP_EVENT_PUBLISHER("AppEventPublisher"),
+    BASE_EVENT("BaseEvent"),
+    MAPPER_DDD("mapperddd"),
+    MAPPER_XML_DDD("mapperxmlddd"),
     ;
     private String tempFileName;
     TemplateFileEnum(String tempFileName){
@@ -67,5 +71,20 @@ public enum  TemplateFileEnum {
 
     public String getTempFileName() {
         return tempFileName;
+    }
+
+
+    /**
+     * 判断类名是否是bo,vo,dto,entity
+     * @param className
+     * @return
+     */
+    public static boolean isClassModel(String className){
+        String classType = className.toLowerCase();
+        return classType.endsWith(TemplateFileEnum.VO.getTempFileName())
+                || classType.endsWith(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())
+                || classType.endsWith(TemplateFileEnum.DTO.getTempFileName())
+                || classType.endsWith(TemplateFileEnum.DATA_OBJECT.getTempFileName())
+                || classType.endsWith(TemplateFileEnum.ENTITY.getTempFileName());
     }
 }
