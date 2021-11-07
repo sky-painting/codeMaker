@@ -17,6 +17,8 @@ public class ClassBean extends AbstractClassBean {
     public Map<String,Object> buildVarMap(){
         Map<String, Object> varMap = new HashMap<>();
         varMap.put("class",this);
+        varMap.put("table",this.getTableBean());
+        varMap.put("columns",this.getColumnBeanList());
         varMap.put("fields",this.getFieldBeanList());
         varMap.put("methods",this.getMethodBeanList());
         varMap.put("imports",this.getImportClassList());

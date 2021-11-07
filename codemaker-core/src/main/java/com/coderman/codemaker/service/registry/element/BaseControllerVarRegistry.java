@@ -1,6 +1,6 @@
-package com.coderman.codemaker.service.registry;
+package com.coderman.codemaker.service.registry.element;
 
-import com.coderman.codemaker.service.AbstractVarRegistry;
+import com.coderman.codemaker.service.registry.AbstractVarRegistry;
 
 import java.util.Map;
 
@@ -10,6 +10,7 @@ import java.util.Map;
  * author: coderman <br>
  * version: 1.0 <br>
  */
+@Deprecated
 public class BaseControllerVarRegistry extends AbstractVarRegistry {
     @Override
     public Map<String, Object> getRegistVarMap() {
