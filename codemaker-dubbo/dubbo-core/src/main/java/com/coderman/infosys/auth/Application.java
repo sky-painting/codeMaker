@@ -1,4 +1,4 @@
-package com.lightsnail.schoolmanager.core;
+package com.coderman.infosys.auth;
 
 
 import org.apache.dubbo.config.spring.context.annotation.DubboComponentScan;
@@ -9,14 +9,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
 * @Description:应用启动入口
-* @Author:fanchunshuai
-* @CreateTime:2021-06-25 16:19:52
+* @Author:shenshuai
+* @CreateTime:2021-11-07 08:18:28
 * @version v1.0
 */
-@DubboComponentScan(basePackages = "com.lightsnail.schoolmanager.core")
+@DubboComponentScan(basePackages = "com.coderman.infosys.auth")
 @EnableDubbo //开启Dubbo的注解支持
-@SpringBootApplication(scanBasePackages = {"com.lightsnail.schoolmanager"})
-@MapperScan(basePackages = "com.lightsnail.schoolmanager.common")
+@SpringBootApplication(scanBasePackages = {"com.coderman.infosys.auth"})
+@MapperScan(basePackages = "com.coderman.infosys.auth.common.infrast")
 public class Application {
 
     public static void main(String[] args) {
