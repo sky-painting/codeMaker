@@ -1,4 +1,4 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.template;
 
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.utils.FreemarkerUtils;
