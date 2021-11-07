@@ -1,11 +1,12 @@
 package com.coderman.codemaker.app.dubbo;
 
+import com.coderman.codemaker.app.WriteService;
 import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateDubboConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
-import com.coderman.codemaker.service.IWriteFileService;
+import com.coderman.codemaker.app.IWriteFileService;
 import com.coderman.codemaker.utils.Constant;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Description:
@@ -25,7 +25,7 @@ import java.util.Map;
  * 写持久层模块服务
  */
 @Component(value = "dubboCommonWriteFileService")
-public class DubboCommonWriteServiceImpl implements IWriteFileService {
+public class DubboCommonWriteServiceImpl extends WriteService implements IWriteFileService {
 
     @Autowired
     private ProjectTemplateDubboConfig projectTemplateDubboConfig;
@@ -35,20 +35,16 @@ public class DubboCommonWriteServiceImpl implements IWriteFileService {
 
     @Override
     public void writeContent(WriteContentBean writeContentBean) {
+        ClassContentBean classContentBean = writeContentBean.buildClassContentBean(projectTemplateDubboConfig.getModuleCommonPath());
+
         //写do class
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DATA_OBJECT.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setChildPackageName("dataobject");
+            classContentBean.setChildPackageName("infrast.dao.dataobject");
             classContentBean.setClassSuffix("DO.java");
             writeDO(classContentBean);
         }
         //写mapper class
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mapper");
             classContentBean.setClassSuffix("Mapper.java");
             writeMapper(classContentBean);
@@ -56,23 +52,15 @@ public class DubboCommonWriteServiceImpl implements IWriteFileService {
 
         //写mapper.xml
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_XML.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mapper");
             classContentBean.setClassSuffix("Mapper.xml");
             writeMapperXml(classContentBean);
         }
-    }
-
-    @Override
-    public void writeAllContent(String humpClassName, Map<String, Object> varMap, String fast) {
-
-    }
-
-    @Override
-    public void writeCommonContent(Map<String, Object> varMap, String fast) {
-
+        //写infrast.dao.mapper
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_DDD.getTempFileName())){
+            classContentBean.setChildPackageName("infrast.dao.mapper");
+            writeRoute(classContentBean);
+        }
     }
 
     /**
@@ -123,7 +111,7 @@ public class DubboCommonWriteServiceImpl implements IWriteFileService {
      */
     private String getFilePath(String childPackageName, String humpClassName, String classSuffix) {
         String packageName = appServiceConfig.getPackage();
-        String packagePath = packageName.replace(".", "/") + "/dao";
+        String packagePath = packageName.replace(".", "/") ;
         packagePath = Constant.JAVA + "/" + packagePath + "/" + childPackageName;
         String fileName = humpClassName + classSuffix;
         return projectTemplateDubboConfig.getModuleCommonPath()  + packagePath + "/" + fileName;

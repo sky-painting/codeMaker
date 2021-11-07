@@ -1,4 +1,4 @@
-package com.coderman.codemaker.service.registry;
+package com.coderman.codemaker.service.registry.element;
 
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.app.dynamicddd.derivedhandler.DerivedInfrastAclImplElementHandler;
@@ -7,8 +7,8 @@ import com.coderman.codemaker.bean.dddelementderive.InfrastAclImplElementBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.config.ProjectTemplateDynamicDDDConfig;
 import com.coderman.codemaker.enums.DomainElementEnum;
-import com.coderman.codemaker.service.AbstractVarRegistry;
-import com.coderman.codemaker.service.ReadPlantUMLFileServiceV2;
+import com.coderman.codemaker.service.registry.AbstractVarRegistry;
+import com.coderman.codemaker.service.plantuml.ReadDomainPlantDocService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,7 +29,7 @@ public class DynamicDDDVarRegistry extends AbstractVarRegistry {
 
     @Autowired
     //private ReadPlantUMLFileService readFileService;
-   private ReadPlantUMLFileServiceV2 readFileService;
+   private ReadDomainPlantDocService readFileService;
 
     @Resource(name = "domainBoElementHandler")
     private DomainElementHandler domainElementHandler;
