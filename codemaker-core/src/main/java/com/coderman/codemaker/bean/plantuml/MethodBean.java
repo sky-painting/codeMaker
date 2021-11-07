@@ -1,14 +1,13 @@
 package com.coderman.codemaker.bean.plantuml;
 
 import com.coderman.codemaker.bean.invoke.InvokeRowBean;
+import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.enums.VisibilityEnum;
+import com.coderman.codemaker.utils.ResultDto;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Description:
@@ -26,6 +25,11 @@ public class MethodBean {
         this.returnClass = returnClass;
     }
 
+    public MethodBean(String methodName,String returnClass, String desc){
+        this.methodName = methodName;
+        this.returnClass = returnClass;
+        this.desc = desc;
+    }
     /**
      * 方法名称，
      * 包括参数，括号
@@ -96,10 +100,25 @@ public class MethodBean {
      */
     private String [] paramArr;
 
+
+    /**
+     * 对于mapper和controller需要增加参数注解的进行动态构建参数注解
+     */
+    private String [] paramAnnotationArr;
+
     /**
      * 所属类名
      */
     private String className;
+
+
+    public String[] getParamAnnotationArr() {
+        return paramAnnotationArr;
+    }
+
+    public void setParamAnnotationArr(String[] paramAnnotationArr) {
+        this.paramAnnotationArr = paramAnnotationArr;
+    }
 
     public List<InvokeRowBean> getInvokeRowBeanList() {
         return invokeRowBeanList;
@@ -262,7 +281,11 @@ public class MethodBean {
         if (!this.getMethodName().contains("()")){
             String [] paramArr = this.getMethodName().replace(")","").split("\\(")[1].split(",");
             for (String param : paramArr){
-                builder.append("\t * @param "+param.trim().split(" ")[1]+"\n");
+                if(param.contains(" ")){
+                    builder.append("\t * @param "+param.trim().split(" ")[1]+"\n");
+                }else {
+                    builder.append("\t * @param "+getParamVar(param)+"\n");
+                }
             }
         }
         builder.append("\t * @return "+this.getReturnClass()+"\n");
@@ -270,11 +293,34 @@ public class MethodBean {
         this.setDoc(builder.toString());
     }
 
+    /**
+     * 通过变量类型获取变量对应的变量名
+     * @param paramType
+     * @return
+     */
+    public String getParamVar(String paramType){
+        if(paramType.contains("List<")){
+            String paramModel = paramType.trim().replace("List<","").replace(">","");
+            return paramModel.trim().substring(0,1).toLowerCase()+paramModel.substring(1)+"List";
+        }
+        if(paramType.contains("Set<")){
+            String paramModel = paramType.trim().replace("List<","").replace(">","");
+            return  paramModel.trim().substring(0,1).toLowerCase()+paramModel.substring(1)+"Set";
+        }
+
+        return paramType.trim().substring(0,1).toLowerCase()+paramType.substring(1);
+    }
 
     /**
      * 从方法名称中解析到方法参数
      */
     public void buildParamArr(){
+        if(this.getParamArr() != null){
+            return;
+        }
+        if(!this.getMethodName().contains("(") && !this.getMethodName().contains(")")){
+            return;
+        }
         if (!this.getMethodName().contains("()")){
             String [] paramArr = this.getMethodName().replace(")","").split("\\(")[1].split(",");
 
@@ -289,7 +335,7 @@ public class MethodBean {
      * @return
      */
     public String buildReturnClassType(){
-        if(this.getReturnClass().toLowerCase().equals("void")){
+        if(this.getReturnClass().contains("void")){
             return null;
         }
         return this.getReturnClass()
@@ -337,10 +383,33 @@ public class MethodBean {
         newBean.setParamArr(this.getParamArr());
         newBean.setStatic(this.isStatic());
         newBean.setPathValue(this.getPathValue());
-        newBean.setMethodName(this.getMethodName());
+        newBean.setMethodName(refreshMethodName());
+
         return newBean;
     }
 
+    /**
+     * 刷新方法声明，注入方法参数注解，也可能是方法注解，后续可扩展
+     * @return
+     */
+    public String refreshMethodName(){
+        if(this.getParamAnnotationArr() == null || this.getParamAnnotationArr().length == 0){
+            return this.getMethodName();
+        }
+        String preMethod = this.getMethodName().split("\\(")[0];
+        StringBuilder builder = new StringBuilder(preMethod);
+        List<String> paramList = new ArrayList<>();
+        for (int i = 0;i < this.getParamArr().length;i++){
+            String annotation = this.getParamAnnotationArr()[i];
+            String param = this.getParamArr()[i];
+            paramList.add(annotation + " " + param);
+        }
+        builder.append("(");
+        builder.append(StringUtils.join(paramList,", "));
+        builder.append(")");
+
+        return builder.toString();
+    }
 
     /**
      * 将方法中的参数信息去掉，仅仅获取方法名
@@ -375,8 +444,101 @@ public class MethodBean {
      * 初始化
      */
     public void initInvokeRowContentList(){
-        this.setInvokeMethodList(new LinkedList<>());
-        this.setInvokeRowBeanList(new ArrayList<>());
+        if(CollectionUtils.isEmpty(invokeRowBeanList)){
+            this.setInvokeRowBeanList(new ArrayList<>());
+        }
+        if(CollectionUtils.isEmpty(invokeMethodList)){
+            this.setInvokeMethodList(new LinkedList<>());
+        }
     }
 
+
+    /**
+     * 解析方法返回参数类型，是否包含vo,dto,bo
+     * @return
+     */
+    public String getReturnClassTypeModel(){
+        if(this.getReturnClass().contains("void")){
+            return "";
+        }
+
+        if(this.getReturnClass().contains("<")){
+            String [] returnClassArr = this.getReturnClass().split("<");
+            String matchClassType = "";
+            for (String classStr : returnClassArr){
+                String classType = classStr.trim().replace(">","");
+                if(TemplateFileEnum.isClassModel(classType)){
+                    matchClassType = classType;
+                }
+            }
+            return  matchClassType;
+        }
+        return this.getReturnClass();
+    }
+
+    /**
+     * 解析方法返回参数类型，是否包含vo,dto,bo
+     * @return
+     */
+    public String getReturnClassTypeNoWrapper(){
+        if(this.getReturnClass().contains("void")){
+            return "";
+        }
+
+        if(!this.wrapperResultDto() && !this.wrapperResultDataDto()){
+            return this.getReturnClass();
+        }
+
+        if(this.getReturnClass().contains("<")){
+            int index = this.getReturnClass().indexOf("<");
+            return this.getReturnClass().substring(index+1,this.getReturnClass().length() - 1);
+        }
+        return this.getReturnClass();
+    }
+
+
+
+    /**
+     * 校验外部参数是否与方法参数匹配,这里只需要匹配一个即可
+     * @param param
+     * @return
+     */
+    public boolean paramMatchOne(String param){
+        if(this.getParamArr() == null || this.getParamArr().length == 0){
+            return false;
+        }
+        String tempParam = param;
+        if(tempParam.trim().contains(" ")){
+            tempParam = tempParam.split(" ")[0];
+        }
+        for (String paramInfo : this.getParamArr()){
+            String paramType = paramInfo;
+            if(paramInfo.trim().contains(" ")){
+                paramType = paramInfo.split(" ")[0];
+            }
+            if(paramType.toLowerCase().endsWith(tempParam.toLowerCase())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断方法是不是有包装类对象
+     * @return
+     */
+    public boolean wrapperResultDto(){
+
+        if (this.getReturnClass().contains("ResultDto")){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean wrapperResultDataDto(){
+        if(this.getReturnClass().contains("ResultDataDto")){
+            return true;
+        }
+        return false;
+    }
 }

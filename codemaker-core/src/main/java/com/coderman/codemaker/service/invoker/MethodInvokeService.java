@@ -1,19 +1,20 @@
 package com.coderman.codemaker.service.invoker;
 
 import com.coderman.codemaker.bean.invoke.InvokeContextBean;
+import com.coderman.codemaker.bean.invoke.InvokeRowBean;
 import com.coderman.codemaker.bean.plantuml.*;
-import com.coderman.codemaker.enums.TemplateFileEnum;
 import com.coderman.codemaker.enums.VisibilityEnum;
 import com.coderman.codemaker.enums.dynamic.InvokeLayerTypeEnum;
 import com.coderman.codemaker.enums.dynamic.InvokeSceneTypeEnum;
+import com.coderman.codemaker.service.ImportPackageService;
 import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.util.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 
 /**
@@ -25,7 +26,7 @@ import java.util.Optional;
  * @since JDK 1.8
  */
 @Service
-public class MethodInvokeHandler {
+public class MethodInvokeService {
 
     @Resource(name = "appRpcInvokeHandler")
     private InvokeHandler appRpcInvokeHandler;
@@ -39,21 +40,31 @@ public class MethodInvokeHandler {
     @Resource(name = "infrastInvokeHandler")
     private InvokeHandler infrastInvokeHandler;
 
+
+    @Autowired
+    private ImportPackageService importPackageService;
+
+    @Autowired
+    private ConvertInvokeService convertInvokeService;
+
+    @Autowired
+    private ReturnBodyFactoryService returnBodyFactoryService;
+
     /**
      * 处理方法调用内容
      * @param invokeBean
      */
     public void dealInvokeContent(InvokeContextBean invokeBean){
 
-        if(!invokeBean.getMethodBean().getMethodName().toLowerCase().startsWith(invokeBean.getInvokerMethod())){
+        if(!invokeBean.getInvokerMethodBean().getMethodName().toLowerCase().startsWith(invokeBean.getInvokerMethod().toLowerCase())){
             return;
         }
 
         String  providerClassMethod = getProviderClassMethod(invokeBean);
-        String returnStr = invokeBean.getProviderClassMethodReturn();
-        String invokeRowReturn = buildReturnBody(returnStr,invokeBean.getProviderClassMethod());
+        String returnStr = invokeBean.getProviderClassMethod().getReturnClass();
+        String invokeRowReturn = buildReturnBody(returnStr,invokeBean.getInvokerMethodBean());
         if (StringUtils.isNotEmpty(invokeRowReturn)) {
-            invokeRowReturn = invokeRowReturn + invokeBean.getMethodBean().getInvokeMethodList().size()+" = ";
+            invokeRowReturn = invokeRowReturn + " = ";
         }
 
         String providerClassVar = invokeBean.getProviderClassName().substring(0,1).toLowerCase()+invokeBean.getProviderClassName().substring(1);
@@ -61,7 +72,8 @@ public class MethodInvokeHandler {
         invokeBean.buildCurrentInvokeRow(invokeRowContent);
         //注册调用层,根据调用层间关系判断是否需要增加do,bo,vo之间的转换接口
         registConvertLayer(invokeBean);
-
+        //动态构建调用方的方法返回值
+        returnBodyFactoryService.refreshReturnBody(invokeBean);
     }
 
 
@@ -71,10 +83,13 @@ public class MethodInvokeHandler {
      * @return
      */
     private String getProviderClassMethod(InvokeContextBean invokeBean){
-        String  providerClassMethod = invokeBean.getProviderClassMethod();
+        String  providerClassMethod = invokeBean.getProviderClassMethod().getMethodName();
+        if(!providerClassMethod.contains("(")){
+            providerClassMethod = providerClassMethod+"()";
+        }
         String methodName = providerClassMethod.substring(0,providerClassMethod.indexOf("("));
         String params = providerClassMethod.substring(providerClassMethod.indexOf("(")+1).replace(")","");
-        providerClassMethod = methodName+"("+getProviderClassMethodParamStr(invokeBean.getMethodBean(), params)+")";
+        providerClassMethod = methodName+"("+getProviderClassMethodParamStr(invokeBean.getInvokerMethodBean(), params)+")";
         return providerClassMethod;
     }
 
@@ -88,7 +103,6 @@ public class MethodInvokeHandler {
         if(StringUtils.isEmpty(providerMethodParams)){
             return "";
         }
-
         //如果调用内容为空，则校验接口参数调用者与被调用者是否存在一致，存在则保持一致
         if(CollectionUtils.isEmpty(invokeMethod.getInvokeMethodList())){
             if(invokeMethod.getMethodName().contains("()")){
@@ -98,8 +112,17 @@ public class MethodInvokeHandler {
             String [] providerMethodParamArr = providerMethodParams.split(",");
             StringBuilder paramBuilder = new StringBuilder();
             for (int i = 0;i < providerMethodParamArr.length;i++){
-                String providerParamType = providerMethodParamArr[i].trim().split(" ")[0];
-                String providerParamVar = providerMethodParamArr[i].trim().split(" ")[1];
+                String providerParamType = "";
+                String providerParamVar = "";
+                if(providerMethodParamArr[i].contains(" ")){
+                    providerParamType = providerMethodParamArr[i].trim().split(" ")[0];
+                    providerParamVar = providerMethodParamArr[i].trim().split(" ")[1];
+                }else {
+                    providerParamType = providerMethodParamArr[i];
+                    providerParamVar = invokeMethod.getParamVar(providerParamType);
+                }
+
+
                 boolean find = false;
                 for (int j = 0;j < invokerMethodParamArr.length;j++){
                     String invokerParamType = invokerMethodParamArr[j].trim().split(" ")[0];
@@ -148,73 +171,71 @@ public class MethodInvokeHandler {
         return paramBuilder.substring(0,paramBuilder.length() - 2);
     }
 
+
     /**
      * 构建调用方法返回体
      * @param returnStr
+     * @param invokeMethodBean
      * @return
      */
-    private String buildReturnBody(String returnStr,String methodName){
+    private String buildReturnBody(String returnStr,MethodBean invokeMethodBean){
         String invokeRowReturn = "";
         if(returnStr.contains("void")){
             return invokeRowReturn;
         }
 
-        if(returnStr.toLowerCase().contains("integer")){
+        if(returnStr.toLowerCase().contains("Integer") && !returnStr.contains("<")){
             invokeRowReturn = "Integer integerVar";
-            return invokeRowReturn;
+            //return invokeRowReturn;
         }
 
-        if(returnStr.toLowerCase().contains("int")){
+        else if(returnStr.toLowerCase().contains("int")){
             invokeRowReturn = "int intVar";
-            return invokeRowReturn;
+            //return invokeRowReturn;
         }
 
 
-        if(returnStr.toLowerCase().contains("short")){
+        else if(returnStr.toLowerCase().contains("short")){
             invokeRowReturn = "short shortVar";
-            return invokeRowReturn;
+            //return invokeRowReturn;
         }
 
-        if(returnStr.toLowerCase().contains("String")){
+        else if(returnStr.toLowerCase().contains("String") && !returnStr.contains("<")){
             invokeRowReturn = "String strVar";
-            return invokeRowReturn;
+           //return invokeRowReturn;
         }
 
-
-        if(returnStr.toLowerCase().contains("boolean")){
+        else if(returnStr.toLowerCase().contains("boolean")  && !returnStr.contains("<")){
             invokeRowReturn = "boolean booleanVar";
-            return invokeRowReturn;
+            //return invokeRowReturn;
         }
 
 
-        if(returnStr.contains("Long")){
+        else if(returnStr.contains("Long") && !returnStr.contains("<")){
             invokeRowReturn = "Long longVar";
-            return invokeRowReturn;
+            //return invokeRowReturn;
         }
 
-        if(returnStr.contains("long")){
+        else if(returnStr.contains("long")){
             invokeRowReturn = "long longVar";
-            return invokeRowReturn;
+            //return invokeRowReturn;
         }
 
 
-        if(!returnStr.contains("void")){
+        else if(!returnStr.contains("void") && !returnStr.contains("<")){
             String returnVar = returnStr.substring(0,1).toLowerCase()+returnStr.substring(1);
-            if(methodName.startsWith("get")){
-                returnVar = returnVar+"Get";
-            }
-            if(methodName.startsWith("search")){
-                returnVar = returnVar+"Search";
-            }
-            if(methodName.startsWith("find")){
-                returnVar = returnVar+"Find";
-            }
-            if(methodName.startsWith("load")){
-                returnVar = returnVar+"Load";
-            }
             invokeRowReturn = returnStr + " " + returnVar;
         }
 
+        else if(returnStr.trim().toLowerCase().contains("<")){
+            invokeRowReturn = returnStr + " " +convertInvokeService.buildReturnVar(returnStr);
+        }
+
+        String finalInvokeRowReturn = invokeRowReturn;
+        Optional<InvokeRowBean> optional = invokeMethodBean.getInvokeRowBeanList().stream().filter(invokeRowBean -> finalInvokeRowReturn.endsWith(invokeRowBean.getReturnClassValue())).findFirst();
+        if(optional.isPresent()){
+            return invokeRowReturn + invokeMethodBean.getInvokeRowBeanList().size();
+        }
         return invokeRowReturn;
     }
 
@@ -237,9 +258,6 @@ public class MethodInvokeHandler {
             return;
         }
         invokerClassBean.getFieldBeanList().add(fieldBean);
-        if(org.apache.commons.collections4.CollectionUtils.isEmpty(invokerClassBean.getDynamicImportPackageList())){
-            invokerClassBean.setDynamicImportPackageList(Lists.newArrayList());
-        }
         invokerClassBean.getDynamicImportPackageList().add(providerClassBean.getPackageName()+"."+targetClassName);
     }
 
@@ -250,50 +268,30 @@ public class MethodInvokeHandler {
      * @param importClassName
      */
     public void registImportPackageByClass(AbstractClassBean invokerClassBean, PlantUmlContextBean plantUmlContextBean, String importClassName){
+        if(StringUtils.isEmpty(importClassName) || importClassName.contains("void")){
+            return;
+        }
+
+        if(CollectionUtils.isEmpty(invokerClassBean.getDynamicImportPackageList())){
+            invokerClassBean.setDynamicImportPackageList(Lists.newArrayList());
+        }
+
         importClassName = importClassName.trim();
-        //处理bo 或者do
-        if(importClassName.trim().toLowerCase()
-                .endsWith(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())
-            || importClassName.trim().toLowerCase()
-                .endsWith(TemplateFileEnum.DATA_OBJECT.getTempFileName())){
-            ClassBean classBean = plantUmlContextBean.getClassBeanMap().get(importClassName);
-            if(classBean == null) {
-                return;
+        if(importClassName.contains("<")){
+            String [] arr = importClassName.split("<");
+            for (String content : arr){
+                String tempContent = content.replace(">","").trim();
+                String packageName = importPackageService.getMatchPackageDefault(tempContent);
+
+                if(StringUtils.isEmpty(packageName)){
+                    importPackageService.dealImportPackage(invokerClassBean,plantUmlContextBean,tempContent);
+                    continue;
+                }
+                invokerClassBean.getDynamicImportPackageList().add(packageName);
             }
-            if(CollectionUtils.isEmpty(invokerClassBean.getDynamicImportPackageList())){
-                invokerClassBean.setDynamicImportPackageList(Lists.newArrayList());
-            }
-            invokerClassBean.getDynamicImportPackageList().add(classBean.getPackageName()+"."+classBean.getClassName());
+            return;
         }
-
-
-        //处理vo 或者dto
-        if((importClassName.trim().toLowerCase().endsWith(TemplateFileEnum.DTO.getTempFileName())
-                || importClassName.trim().toLowerCase().endsWith(TemplateFileEnum.VO.getTempFileName()))
-                && plantUmlContextBean.getDerivedPlantUmlContextBean() != null){
-            ClassBean classBean = plantUmlContextBean.getDerivedPlantUmlContextBean().getClassBeanMap().get(importClassName);
-            if(classBean == null) {
-                return;
-            }
-            if(CollectionUtils.isEmpty(invokerClassBean.getDynamicImportPackageList())){
-                invokerClassBean.setDynamicImportPackageList(Lists.newArrayList());
-            }
-            invokerClassBean.getDynamicImportPackageList().add(classBean.getPackageName()+"."+classBean.getClassName());
-        }
-
-
-        //处理convert
-        if(importClassName.trim().toLowerCase().endsWith(TemplateFileEnum.CONVERT.getTempFileName())
-                && plantUmlContextBean.getDerivedPlantUmlContextBean() != null){
-            InterfaceBean interfaceBean = plantUmlContextBean.getDerivedPlantUmlContextBean().getInterfaceBeanMap().get(importClassName);
-            if(interfaceBean == null) {
-                return;
-            }
-            if(CollectionUtils.isEmpty(invokerClassBean.getDynamicImportPackageList())){
-                invokerClassBean.setDynamicImportPackageList(Lists.newArrayList());
-            }
-            invokerClassBean.getDynamicImportPackageList().add(interfaceBean.getPackageName()+"."+interfaceBean.getClassName());
-        }
+        importPackageService.dealImportPackage(invokerClassBean,plantUmlContextBean,importClassName);
     }
 
     /**
