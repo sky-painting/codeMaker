@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.coderman.infosys.auth.dao.mapper.RoleMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.coderman.infosys.auth.dao.dataobject.RoleDO">
+        <result column="id" property="id" />
+        <result column="role_name" property="roleName" />
+        <result column="role_code" property="roleCode" />
+        <result column="status" property="status" />
+        <result column="date_create" property="dateCreate" />
+        <result column="date_update" property="dateUpdate" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="create_user_id" property="createUserId" />
+    </resultMap>
+
+    <!--查询总数-->
+    <resultMap type="java.lang.Integer" id="count">
+        <result column="total"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,role_name,role_code,status,date_create,date_update,update_user_id,create_user_id
+    </sql>
+
+    <insert id="insert" parameterType="com.coderman.infosys.auth.dao.dataobject.RoleDO">
+        insert into role(
+        role_name,role_code,status,date_create,date_update,update_user_id,create_user_id
+        )
+        values(
+        #{role_name},#{role_code},#{status},#{date_create},#{date_update},#{update_user_id},#{create_user_id}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.coderman.infosys.auth.dao.dataobject.RoleDO">
+        update role
+        set
+        role_name=#{role_name},role_code=#{role_code},status=#{status},date_create=#{date_create},date_update=#{date_update},update_user_id=#{update_user_id},create_user_id=#{create_user_id}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from role
+    </select>
+
+    <select id="getById" parameterType="com.coderman.infosys.auth.dao.dataobject.RoleDO"
+            resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from role  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from role where id = #{id}
+    </delete>
+
+    <select id="getPageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from role
+    </select>
+
+    <select id="getCount" resultMap="count">
+        select count(1)  from role
+    </select>
+
+
+</mapper>
