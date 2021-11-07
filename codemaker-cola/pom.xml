@@ -173,10 +173,6 @@
         <version>${rocketmq.version}</version>
       </dependency>
 
-
-
-
-
     </dependencies>
   </dependencyManagement>
 
