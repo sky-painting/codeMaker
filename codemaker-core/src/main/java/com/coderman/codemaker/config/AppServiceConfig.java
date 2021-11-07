@@ -5,7 +5,9 @@ package com.coderman.codemaker.config;
 import com.coderman.codemaker.app.AppService;
 import com.coderman.codemaker.enums.ModuleEnum;
 import com.coderman.codemaker.exceptions.ConfigException;
-import com.coderman.codemaker.service.IWriteFileService;
+import com.coderman.codemaker.app.IWriteFileService;
+import com.coderman.codemaker.service.adapter.IClazzAdapter;
+import com.coderman.codemaker.utils.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,9 @@ public class AppServiceConfig {
 
     @Value(value = "${application.global.author}")
     private String author;
+
+    @Value(value = "${application.global.package.adapterbean}")
+    private String packageAdapterBean;
 
     @Resource(name = "colaAppService")
     private AppService colaAppService;
@@ -188,6 +193,21 @@ public class AppServiceConfig {
     }
 
     /**
+     * 获取配置中的应用名称
+     * @return
+     */
+    public String getApplicationName() {
+        if (applicationType.equals(ModuleEnum.SPRING_BOOT_WEB.getAppName())) {
+            return projectTemplateSpringbootConfig.getApplicationName();
+        } else if (applicationType.equals(ModuleEnum.DUBBO_API.getAppName())) {
+            return projectTemplateDubboConfig.getApplicationName();
+        } else if (applicationType.equals(ModuleEnum.COLA_ADAPTER.getAppName())) {
+            return projectTemplateColaConfig.getApplicationName();
+        }
+        return "";
+    }
+
+    /**
      * 获取不同项目的核心模块，db-er图生成之后会在此模块存放
      * @return
      */
@@ -201,4 +221,14 @@ public class AppServiceConfig {
         }
         return null;
     }
+
+
+    /**
+     * 获取定制化的packageAdapter适配器
+     * @return
+     */
+    public IClazzAdapter getPackageAdapterBean(){
+        return SpringContextHolder.getBean(this.packageAdapterBean,IClazzAdapter.class);
+    }
+
 }
