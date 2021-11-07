@@ -1,6 +1,6 @@
 package com.coderman.codemaker.app.dynamicddd.handler;
 
-import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.service.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelement.CommandElementBean;
 import com.coderman.codemaker.bean.plantuml.ClassBean;
