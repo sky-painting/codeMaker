@@ -1,4 +1,4 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.dberpicture;
 
 import com.coderman.codemaker.dbergenerate.bean.TableBean;
 import com.coderman.codemaker.dbergenerate.service.ErPictureService;
