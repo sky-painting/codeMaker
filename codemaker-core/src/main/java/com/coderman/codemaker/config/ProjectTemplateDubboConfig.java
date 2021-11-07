@@ -26,10 +26,11 @@ public class ProjectTemplateDubboConfig {
     private String dbName;
 
     /**
-     * 项目名称
+     * 应用名称
      */
-    @Value(value = "${codemaker.pom.projectName}")
-    private String projectName;
+    @Value(value = "${dubbo.global.applicationName}")
+    private String applicationName;
+
 
     /**
      * dubbo-common模块地址
@@ -72,12 +73,12 @@ public class ProjectTemplateDubboConfig {
         this.dbName = dbName;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 
     public String getModuleCommonPath() {

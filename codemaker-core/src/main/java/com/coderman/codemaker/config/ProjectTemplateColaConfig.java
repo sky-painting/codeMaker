@@ -26,7 +26,7 @@ public class ProjectTemplateColaConfig {
     private String dbName;
 
     /**
-     * 项目名称
+     * 应用名称
      */
     @Value(value = "${cola.global.applicationName}")
     private String applicationName;
