@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.coderman.infosys.auth.dao.mapper.DataColumnConfigMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.coderman.infosys.auth.dao.dataobject.DataColumnConfigDO">
+        <result column="id" property="id" />
+        <result column="bus_database" property="busDatabase" />
+        <result column="table_name" property="tableName" />
+        <result column="table_desc" property="tableDesc" />
+        <result column="column_name" property="columnName" />
+        <result column="column_desc" property="columnDesc" />
+        <result column="bus_model" property="busModel" />
+        <result column="field_name" property="fieldName" />
+        <result column="date_create" property="dateCreate" />
+        <result column="date_update" property="dateUpdate" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="create_user_id" property="createUserId" />
+    </resultMap>
+
+    <!--查询总数-->
+    <resultMap type="java.lang.Integer" id="count">
+        <result column="total"/>
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,bus_database,table_name,table_desc,column_name,column_desc,bus_model,field_name,date_create,date_update,update_user_id,create_user_id
+    </sql>
+
+    <insert id="insert" parameterType="com.coderman.infosys.auth.dao.dataobject.DataColumnConfigDO">
+        insert into data_column_config(
+        bus_database,table_name,table_desc,column_name,column_desc,bus_model,field_name,date_create,date_update,update_user_id,create_user_id
+        )
+        values(
+        #{bus_database},#{table_name},#{table_desc},#{column_name},#{column_desc},#{bus_model},#{field_name},#{date_create},#{date_update},#{update_user_id},#{create_user_id}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.coderman.infosys.auth.dao.dataobject.DataColumnConfigDO">
+        update data_column_config
+        set
+        bus_database=#{bus_database},table_name=#{table_name},table_desc=#{table_desc},column_name=#{column_name},column_desc=#{column_desc},bus_model=#{bus_model},field_name=#{field_name},date_create=#{date_create},date_update=#{date_update},update_user_id=#{update_user_id},create_user_id=#{create_user_id}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from data_column_config
+    </select>
+
+    <select id="getById" parameterType="com.coderman.infosys.auth.dao.dataobject.DataColumnConfigDO"
+            resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from data_column_config  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from data_column_config where id = #{id}
+    </delete>
+
+    <select id="getPageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from data_column_config
+    </select>
+
+    <select id="getCount" resultMap="count">
+        select count(1)  from data_column_config
+    </select>
+
+</mapper>
