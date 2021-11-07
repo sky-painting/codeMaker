@@ -3,12 +3,11 @@ package com.coderman.codemaker.controller;
 import com.alibaba.fastjson.JSON;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
-import com.coderman.codemaker.bean.plantuml.ClassBean;
-import com.coderman.codemaker.bean.plantuml.InterfaceBean;
-import com.coderman.codemaker.service.WriteAppModuleService;
-import com.coderman.codemaker.service.WriteFileService;
-import com.coderman.codemaker.service.registry.DynamicDDDVarRegistry;
-import com.coderman.codemaker.service.registry.MapperXmlVarRegistry;
+import com.coderman.codemaker.service.WriteCodeService;
+import com.coderman.codemaker.service.WriteDynamicCodeService;
+import com.coderman.codemaker.service.write.WriteSpringbootService;
+import com.coderman.codemaker.service.registry.element.DynamicDDDVarRegistry;
+import com.coderman.codemaker.service.registry.element.MapperXmlVarRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,11 +34,13 @@ public class CodeMakerController {
 
 
     @Autowired
-    private WriteFileService writeFileService;
+    private WriteSpringbootService writeFileService;
 
     @Autowired
-    private WriteAppModuleService writeFileServiceV2;
+    private WriteDynamicCodeService writeDynamicCodeService;
 
+    @Autowired
+    private WriteCodeService writeCodeService;
     /**
      * 生成所有表对应的项目代码--极简模式
      * @return
@@ -49,7 +50,7 @@ public class CodeMakerController {
         Map<String,Object> map = mapperXmlVarRegistry.getTemplateVar();
 
         if(map.containsKey("dynamicddd")){
-            writeFileServiceV2.writeAllWithDDD(map);
+            writeDynamicCodeService.writeAllWithDDD(map);
         }else {
             Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)map.get("table");
             Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)map.get("columns");
@@ -60,14 +61,16 @@ public class CodeMakerController {
                 varMap.put("columns", columnBeanListMap.get(k));
                 varMap.put("package", map.get("package"));
                 varMap.put("author", map.get("author"));
-                writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"");
+                varMap.put("packageInfrast", map.get("packageInfrast"));
+                varMap.put("packageDomain", map.get("packageDomain"));
+
+                writeCodeService.writeAll(v.getHumpClassName(),varMap,"");
             });
             //写公共服务类
-            writeFileServiceV2.writeCommon(varMap,"");
+            writeCodeService.writeCommon(varMap,"");
             //渲染e-r图
-            writeFileServiceV2.writeERPicture(tableBeanMap,columnBeanListMap);
+            writeCodeService.writeERPicture(tableBeanMap,columnBeanListMap);
         }
-
 
         return "success";
     }
@@ -90,6 +93,9 @@ public class CodeMakerController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
+            varMap.put("packageInfrast", map.get("packageInfrast"));
+            varMap.put("packageDomain", map.get("packageDomain"));
+
             writeFileService.writeAll(v.getHumpClassName(),varMap,"/fast/");
         });
         //写公共服务类
@@ -127,7 +133,10 @@ public class CodeMakerController {
                 varMap.put("columns", columnBeanListMap.get(k));
                 varMap.put("package", map.get("package"));
                 varMap.put("author", map.get("author"));
-                writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"");
+                varMap.put("packageInfrast", map.get("packageInfrast"));
+                varMap.put("packageDomain", map.get("packageDomain"));
+
+                writeCodeService.writeAll(v.getHumpClassName(),varMap,"");
             }
         });
 
@@ -158,7 +167,10 @@ public class CodeMakerController {
                 varMap.put("columns", columnBeanListMap.get(k));
                 varMap.put("package", map.get("package"));
                 varMap.put("author", map.get("author"));
-                writeFileServiceV2.writeAll(v.getHumpClassName(),varMap,"/fast/");
+                varMap.put("packageInfrast", map.get("packageInfrast"));
+                varMap.put("packageDomain", map.get("packageDomain"));
+
+                writeCodeService.writeAll(v.getHumpClassName(),varMap,"/fast/");
             }
         });
 
@@ -169,7 +181,7 @@ public class CodeMakerController {
     @GetMapping("/makeddd")
     public String makeDynamicDDD(){
         Map<String, Object> dynamicDDDMap = dynamicDDDVarRegistry.getRegistVarMap();
-        writeFileServiceV2.writeDynamicDDD(dynamicDDDMap);
+        writeDynamicCodeService.writeDynamicDDD(dynamicDDDMap);
         return "success";
     }
 

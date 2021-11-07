@@ -1,5 +1,8 @@
 package com.coderman.codemaker.bean;
 
+import com.coderman.codemaker.bean.plantuml.FieldBean;
+import com.coderman.codemaker.enums.VisibilityEnum;
+
 /**
  * Created on 2018-7-19.
  *
@@ -187,4 +190,14 @@ public class ColumnBean {
                 ", columnComment='" + columnComment + '\'' +
                 '}';
     }
+
+    public FieldBean convert2FieldBean(){
+        FieldBean fieldBean = new FieldBean();
+        fieldBean.setDesc(columnComment);
+        fieldBean.setVisibility(VisibilityEnum.PRIVATE.getVisibility());
+        fieldBean.setDbColumnName(columnName);
+        fieldBean.setFieldName(columnTypeName+" "+ columnFieldName);
+        return fieldBean;
+    }
+
 }
