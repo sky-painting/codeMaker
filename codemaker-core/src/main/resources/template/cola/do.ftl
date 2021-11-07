@@ -1,4 +1,4 @@
-package ${package}.dao.dataobject;
+package ${packageInfrast}.dao.dataobject;
 
 import java.util.Date;
 import java.math.BigDecimal;
