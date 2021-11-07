@@ -1,14 +1,11 @@
 package com.coderman.codemaker.app.dynamicddd.handler;
 
-import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.service.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelement.GatawayElementBean;
-import com.coderman.codemaker.bean.plantuml.ClassBean;
 import com.coderman.codemaker.bean.plantuml.InterfaceBean;
-import com.coderman.codemaker.bean.plantuml.MethodBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.enums.DomainElementEnum;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
