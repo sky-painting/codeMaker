@@ -1,5 +1,6 @@
 package com.coderman.codemaker.service;
 
+import com.coderman.codemaker.app.IWriteFileService;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.bean.WriteContentBean;
@@ -9,6 +10,8 @@ import com.coderman.codemaker.bean.plantuml.InterfaceBean;
 import com.coderman.codemaker.config.AppServiceConfig;
 
 import com.coderman.codemaker.enums.TemplateFileEnum;
+import com.coderman.codemaker.service.dberpicture.DBErPictureService;
+import com.coderman.codemaker.service.template.FreemarkerService;
 import com.coderman.codemaker.utils.Constant;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ import java.util.Map;
  */
 
 @Component
-public class WriteAppModuleService {
+public class WriteDynamicCodeService {
 
     @Autowired
     private AppServiceConfig appServiceConfig;
@@ -43,128 +46,10 @@ public class WriteAppModuleService {
     private FreemarkerService freemarkerService;
 
     @Autowired
-    private WriteDynamicDDDModuleService writeDynamicDDDModuleService;
+    private WriteDynamicDDDService writeDynamicDDDModuleService;
 
-    /**
-     * 写mapper xml文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeMapperXml(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MAPPER_XML.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.MAPPER_XML.getTempFileName())
-                .humpClassName(humpClassName).build();
-
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
-     * 写entity文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeEntity(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.ENTITY.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.ENTITY.getTempFileName())
-                .humpClassName(humpClassName).build();
-
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
-     * 写do文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeDO(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.DATA_OBJECT.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.DATA_OBJECT.getTempFileName())
-                .humpClassName(humpClassName).build();
-
-        writeFileService.writeContent(writeContentBean);
-    }
-
-
-    /**
-     * 写VO文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeVO(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.VO.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.VO.getTempFileName())
-                .humpClassName(humpClassName).build();
-
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
-     * 写DTO文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeDTO(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.DTO.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.DTO.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
-     * 写BO文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeBO(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
-     * 写BO文件
-     * @param writeContentBean
-     */
-    public void writeBO(WriteContentBean writeContentBean) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        writeFileService.writeContent(writeContentBean);
-    }
+    @Autowired
+    private WriteCodeService writeCodeService;
 
     /**
      * 写BO文件
@@ -213,6 +98,32 @@ public class WriteAppModuleService {
         }
         writeDynamicDDDModuleService.writeGataWay(classBeanList,writeFileService,null);
     }
+
+
+    /**
+     * 写dynamicMapper文件
+     * @param classBeanList
+     */
+    public void writeDynamicMapper(List<InterfaceBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MAPPER_DDD.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeDynamicMapper(classBeanList,writeFileService,null);
+    }
+
+    /**
+     * 写dynamicMapperxml文件
+     * @param classBeanList
+     */
+    public void writeDynamicMapperXml(List<ClassBean> classBeanList) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MAPPER_XML_DDD.getTempFileName());
+        if (writeFileService == null) {
+            return;
+        }
+        writeDynamicDDDModuleService.writeDynamicMapperXml(classBeanList,writeFileService,null);
+    }
+
     /**
      * 写domaingatawayimpl文件
      * @param gatawayImplBeanList
@@ -308,8 +219,6 @@ public class WriteAppModuleService {
         }
         writeDynamicDDDModuleService.writeMqHandler(classBeanList,writeFileService,null);
     }
-
-
 
     /**
      * 写AppExeImpl文件
@@ -508,23 +417,6 @@ public class WriteAppModuleService {
     }
 
     /**
-     * 写mapper class文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeMapper(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.MAPPER.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.MAPPER.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
      * 写service文件
      *
      * @param content
@@ -541,74 +433,20 @@ public class WriteAppModuleService {
         writeFileService.writeContent(writeContentBean);
     }
 
-
     /**
-     * 写facade文件
+     * 写工具类文件
      *
      * @param content
-     * @param humpClassName
      */
-    public void writeFacade(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.FACADE.getTempFileName());
+    public void writeAppEventPublisher(String content) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName());
         if (writeFileService == null) {
             return;
         }
         WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.FACADE.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
+                .templateName(TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName())
+                .humpClassName("AppEventPublisher.java").build();
 
-
-    /**
-     * 写facadeimpl文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeFacadeImpl(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.FACADE_IMPL.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.FACADE_IMPL.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-
-    /**
-     * 写serviceImpl文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeServiceImpl(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.SERVICE_IMPL.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.SERVICE_IMPL.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-
-    /**
-     * 写BaseController文件
-     *
-     * @param content
-     */
-    public void writeBaseController(String content) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BASE_CONTROLLER.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.BASE_CONTROLLER.getTempFileName())
-                .humpClassName("").build();
         writeFileService.writeContent(writeContentBean);
     }
 
@@ -617,137 +455,15 @@ public class WriteAppModuleService {
      *
      * @param content
      */
-    public void writeSpringApplicationContext(String content) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName());
+    public void writeBaseEvent(String content) {
+        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.BASE_EVENT.getTempFileName());
         if (writeFileService == null) {
             return;
         }
         WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())
-                .humpClassName("SpringApplicationContext.java").build();
+                .templateName(TemplateFileEnum.BASE_EVENT.getTempFileName())
+                .humpClassName("BaseEvent.java").build();
         writeFileService.writeContent(writeContentBean);
-    }
-
-
-    /**
-     * 写测试文件
-     *
-     * @param content
-     */
-    public void writeTest(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.TEST.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.TEST.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
-     * 写应用启动类
-     *
-     * @param content
-     */
-    public void writeApplication(String content) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.APPLICATION.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.APPLICATION.getTempFileName())
-                .humpClassName("Application.java").build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-
-    /**
-     * 写应用启动类
-     *
-     * @param content
-     */
-    public void writeFacadeAop(String content) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.APPLICATION.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.FACADE_AOP.getTempFileName())
-                .humpClassName("FacadeServiceAop.java").build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-
-    /**
-     * 写controller文件
-     *
-     * @param content
-     * @param humpClassName
-     */
-    public void writeController(String content, String humpClassName) {
-        IWriteFileService writeFileService = appServiceConfig.getModuleWriteService(TemplateFileEnum.CONTROLLER.getTempFileName());
-        if (writeFileService == null) {
-            return;
-        }
-        WriteContentBean writeContentBean = WriteContentBean.builder().content(content)
-                .templateName(TemplateFileEnum.CONTROLLER.getTempFileName())
-                .humpClassName(humpClassName).build();
-        writeFileService.writeContent(writeContentBean);
-    }
-
-    /**
-     * 一次性生成单表需要的所有模块代码
-     *
-     * @param humpClassName
-     * @param varMap
-     */
-    public void writeAll(String humpClassName, Map<String, Object> varMap, String fast) {
-        if (StringUtils.isEmpty(fast)) {
-            fast = "/" + appServiceConfig.getApplicationType() + "/";
-        }
-        String entityContent = freemarkerService.parseTpl(fast + TemplateFileEnum.ENTITY.getTempFileName(), varMap);
-        this.writeEntity(entityContent, humpClassName);
-
-        String serviceContent = freemarkerService.parseTpl(fast + TemplateFileEnum.SERVICE.getTempFileName(), varMap);
-        this.writeService(serviceContent, humpClassName);
-
-        String serviceImplContent = freemarkerService.parseTpl(fast + TemplateFileEnum.SERVICE_IMPL.getTempFileName(), varMap);
-        this.writeServiceImpl(serviceImplContent, humpClassName);
-
-        String mapperXmlContent = freemarkerService.parseTpl(fast + TemplateFileEnum.MAPPER_XML.getTempFileName(), varMap);
-        this.writeMapperXml(mapperXmlContent, humpClassName);
-
-        String mapperContent = freemarkerService.parseTpl(fast + TemplateFileEnum.MAPPER.getTempFileName(), varMap);
-        this.writeMapper(mapperContent, humpClassName);
-
-        String controllerContent = freemarkerService.parseTpl(fast + TemplateFileEnum.CONTROLLER.getTempFileName(), varMap);
-        this.writeController(controllerContent, humpClassName);
-
-        String voContent = freemarkerService.parseTpl(fast + TemplateFileEnum.VO.getTempFileName(), varMap);
-        this.writeVO(voContent, humpClassName);
-
-        String testContent = freemarkerService.parseTpl(fast + TemplateFileEnum.TEST.getTempFileName(), varMap);
-        this.writeTest(testContent, humpClassName);
-
-        String boContent = freemarkerService.parseTpl(fast + TemplateFileEnum.BUSINESS_OBJECT.getTempFileName(), varMap);
-        this.writeBO(boContent, humpClassName);
-
-        String dtoContent = freemarkerService.parseTpl(fast + TemplateFileEnum.DTO.getTempFileName(), varMap);
-        this.writeDTO(dtoContent, humpClassName);
-
-
-        String facadeContent = freemarkerService.parseTpl(fast + TemplateFileEnum.FACADE.getTempFileName(), varMap);
-        this.writeFacade(facadeContent, humpClassName);
-
-
-        String facadeImplContent = freemarkerService.parseTpl(fast + TemplateFileEnum.FACADE_IMPL.getTempFileName(), varMap);
-        this.writeFacadeImpl(facadeImplContent, humpClassName);
-
-        String doContent = freemarkerService.parseTpl(fast + TemplateFileEnum.DATA_OBJECT.getTempFileName(), varMap);
-        this.writeDO(doContent, humpClassName);
-
-
     }
 
     /**
@@ -763,21 +479,14 @@ public class WriteAppModuleService {
         this.writeValueObject(valueObjectBeanList);
         this.writeEnum(enumBeanList);
 
-
-
         List<EnumBean> apiEnumBeanList = (List<EnumBean>)allMetaDataMap.get("apienum");
         this.writeAPIEnum(apiEnumBeanList);
-
-
-
 
         List<ClassBean> msgClassBeanList = (List<ClassBean>)allMetaDataMap.get("domainmsg");
         this.writeMsgBody(msgClassBeanList);
 
-
         List<ClassBean> eventClassBeanList = (List<ClassBean>)allMetaDataMap.get("domainevent");
         this.writeDomainEvent(eventClassBeanList);
-
 
         List<InterfaceBean> gatawayBeanList = (List<InterfaceBean>)allMetaDataMap.get("gataway");
         List<InterfaceBean> repositoryBeanList = (List<InterfaceBean>)allMetaDataMap.get("repository");
@@ -790,8 +499,6 @@ public class WriteAppModuleService {
         List<ClassBean> repositoryImplBeanList = (List<ClassBean>)allMetaDataMap.get("repositoryimpl");
         this.writeRepositoryImpl(repositoryImplBeanList);
 
-
-
         List<InterfaceBean> aclBeanList = (List<InterfaceBean>)allMetaDataMap.get("infrastacl");
         List<ClassBean> aclParamBeanList = (List<ClassBean>)allMetaDataMap.get("infrastaclparam");
         List<ClassBean> aclImplBeanList = (List<ClassBean>)allMetaDataMap.get("infrastaclimpl");
@@ -800,8 +507,6 @@ public class WriteAppModuleService {
         this.writeAclInterfaceParam(aclParamBeanList);
         this.writeAclInterfaceImpl(aclImplBeanList);
 
-
-
         List<ClassBean> commandBeanList = (List<ClassBean>)allMetaDataMap.get("cmd");
         this.writeCommand(commandBeanList);
 
@@ -809,7 +514,6 @@ public class WriteAppModuleService {
         List<InterfaceBean> exeInterfaceBeanList = (List<InterfaceBean>)allMetaDataMap.get("exeInterface");
         this.writeAppExeImpl(exeBeanList);
         this.writeAppExeInterface(exeInterfaceBeanList);
-
 
         List<ClassBean> factoryBeanList = (List<ClassBean>)allMetaDataMap.get("domainfactory");
         this.writeFactory(factoryBeanList);
@@ -825,11 +529,6 @@ public class WriteAppModuleService {
 
         List<ClassBean> mqHandlerBeanList = (List<ClassBean>)allMetaDataMap.get("mqhandler");
         this.writeMqHandler(mqHandlerBeanList);
-
-
-
-
-
 
         List<ClassBean> voClassBeanList = (List<ClassBean>)allMetaDataMap.get("adaptervo");
         this.writeVO(voClassBeanList);
@@ -856,31 +555,37 @@ public class WriteAppModuleService {
         List<InterfaceBean> doboconvertBeanList = (List<InterfaceBean>)allMetaDataMap.get("doboconvert");
         this.writeDOBOConvert(doboconvertBeanList);
 
+        List<InterfaceBean> dynamicMapperBeanList = (List<InterfaceBean>)allMetaDataMap.get("dynamicmapper");
+        this.writeDynamicMapper(dynamicMapperBeanList);
+
+        List<ClassBean> dynamicMapperXmlBeanList = (List<ClassBean>)allMetaDataMap.get("dynamicmapperxml");
+        this.writeDynamicMapperXml(dynamicMapperXmlBeanList);
+
         Map<String, TableBean> tableBeanMap = (Map<String, TableBean>)allMetaDataMap.get("table");
         Map<String, List<ColumnBean>> columnBeanListMap = (Map<String, List<ColumnBean>>)allMetaDataMap.get("columns");
         Map<String,Object> varMap = new HashMap<>();
+
+
 
         tableBeanMap.forEach((k,v)->{
             varMap.put("table", v);
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", allMetaDataMap.get("package"));
             varMap.put("author", allMetaDataMap.get("author"));
+            varMap.put("packageInfrast", allMetaDataMap.get("packageInfrast"));
+            varMap.put("packageDomain", allMetaDataMap.get("packageDomain"));
+
             String templateContent = freemarkerService.parseTpl(TemplateFileEnum.DATA_OBJECT.getTempFileName(),varMap);
-            this.writeDO(templateContent,v.getHumpClassName());
-
-            templateContent = freemarkerService.parseTpl(TemplateFileEnum.MAPPER.getTempFileName(),varMap);
-            this.writeMapper(templateContent,v.getHumpClassName());
-
-            templateContent = freemarkerService.parseTpl(TemplateFileEnum.MAPPER_XML.getTempFileName(),varMap);
-            this.writeMapperXml(templateContent,v.getHumpClassName());
+            writeCodeService.writeDO(templateContent,v.getHumpClassName());
 
             templateContent = freemarkerService.parseTpl(TemplateFileEnum.TEST.getTempFileName(),varMap);
-            this.writeTest(templateContent,v.getHumpClassName());
+            writeCodeService.writeTest(templateContent,v.getHumpClassName());
         });
+
         //写公共服务类
         this.writeCommon(varMap,"");
         //渲染e-r图
-        this.writeERPicture(tableBeanMap,columnBeanListMap);
+        writeCodeService.writeERPicture(tableBeanMap,columnBeanListMap);
 
     }
 
@@ -893,48 +598,27 @@ public class WriteAppModuleService {
 
 
         String baseControllerContent = freemarkerService.parseTpl(fast + TemplateFileEnum.BASE_CONTROLLER.getTempFileName(), varMap);
-        this.writeBaseController(baseControllerContent);
+        writeCodeService.writeBaseController(baseControllerContent);
 
         String SpringApplicationContextContent = freemarkerService.parseTpl(fast + TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(), varMap);
-        this.writeSpringApplicationContext(SpringApplicationContextContent);
+        writeCodeService.writeSpringApplicationContext(SpringApplicationContextContent);
 
         String application = freemarkerService.parseTpl(fast + TemplateFileEnum.APPLICATION.getTempFileName(), varMap);
-        this.writeApplication(application);
+        writeCodeService.writeApplication(application);
 
         String facadeAop = freemarkerService.parseTpl(fast + TemplateFileEnum.FACADE_AOP.getTempFileName(), varMap);
-        this.writeFacadeAop(facadeAop);
+        writeCodeService.writeFacadeAop(facadeAop);
+
+        //动态ddd支持event模型
+        if(varMap.containsKey("dynamicddd")){
+            String appEventPublisherContent = freemarkerService.parseTpl(fast + TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName(), varMap);
+            this.writeAppEventPublisher(appEventPublisherContent);
+
+            String baseEventContent = freemarkerService.parseTpl(fast + TemplateFileEnum.BASE_EVENT.getTempFileName(), varMap);
+            this.writeBaseEvent(baseEventContent);
+        }
     }
 
-    /**
-     * 整合e-r图生成工具
-     *
-     * @param tableBeanMap
-     * @param columnBeanListMap
-     */
-    public void writeERPicture(Map<String, TableBean> tableBeanMap, Map<String, List<ColumnBean>> columnBeanListMap) {
-        String filePath = appServiceConfig.getErPictureOutPath() + Constant.ER_PICTURE + "/" + appServiceConfig.getDbName() + ".puml";
-        List<com.coderman.codemaker.dbergenerate.bean.TableBean> tableBeanList = new ArrayList<>();
-        tableBeanMap.forEach((k, v) -> {
-            com.coderman.codemaker.dbergenerate.bean.TableBean tableBean = new com.coderman.codemaker.dbergenerate.bean.TableBean();
-            tableBean.setTableComment(v.getTableComment());
-            tableBean.setTableName(v.getTableName());
-            List<ColumnBean> columnBeanList = columnBeanListMap.get(k);
-            List<com.coderman.codemaker.dbergenerate.bean.ColumnBean> columnBeanList1 = new ArrayList<>();
-            columnBeanList.forEach(columnBean -> {
-                com.coderman.codemaker.dbergenerate.bean.ColumnBean columnBean1 = new com.coderman.codemaker.dbergenerate.bean.ColumnBean();
-                columnBean1.setColumnComment(columnBean.getColumnComment());
-                columnBean1.setColumnKey(columnBean.getColumnKey());
-                columnBean1.setColumnName(columnBean.getColumnName());
-                columnBean1.setTableName(columnBean.getTableName());
-                columnBean1.setColumnType(columnBean.getColumnType());
-                columnBean1.setDataType(columnBean.getDataType());
-                columnBeanList1.add(columnBean1);
-            });
-            tableBean.setColumnBeanList(columnBeanList1);
-            tableBeanList.add(tableBean);
-        });
-        erPictureService.getErPicture(filePath, tableBeanList);
-    }
 
     /**
      * 写dynamicddd模块代码生成
@@ -942,7 +626,6 @@ public class WriteAppModuleService {
      * @param dynamicDDDMap
      */
     public void writeDynamicDDD(Map<String, Object> dynamicDDDMap) {
-
         IWriteFileService writeFileService = appServiceConfig.getDynamicDDDWriteService();
         if (writeFileService == null) {
             return;

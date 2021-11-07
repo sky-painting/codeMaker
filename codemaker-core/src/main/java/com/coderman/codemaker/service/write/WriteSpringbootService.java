@@ -1,8 +1,9 @@
-package com.coderman.codemaker.service;
+package com.coderman.codemaker.service.write;
 
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateSpringbootConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
+import com.coderman.codemaker.service.dberpicture.DBErPictureService;
 import com.coderman.codemaker.utils.Constant;
 import com.coderman.codemaker.utils.FreemarkerUtils;
 import org.apache.commons.io.FileUtils;
@@ -25,7 +26,7 @@ import java.util.Map;
  * 因此需要重构，整体api不变，新服务类参考WriteAppModuleService
  */
 @Service
-public class WriteFileService {
+public class WriteSpringbootService {
 
     @Autowired
     private ProjectTemplateSpringbootConfig projectTemplateConfig;
