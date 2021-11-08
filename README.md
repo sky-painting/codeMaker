@@ -143,21 +143,21 @@ codemaker-cola:基于cola应用框架生成的代码会放在这里
 14. 读取plantuml文件对于方法的解析将方法参数独立解析出来
 
 ##### 版本-1.2.1-beta
-1.支持默认带工具类SpringEventPublisher帮助事件发布与消费异步化
-2.重构读取plantUML文件的相关逻辑降低复杂度
-3.重新梳理读取plantUML文件的相关路径,优化为按项目维度分别存放
-4.支持复杂场景下的代码绘制能力,进行精细化控制(如listbo,listvo的转换,代码参数动态绘制引用等)
-5.支持分页PageVO,PageDTO,PageBO生成到接口方法里
-6.支持通过时序图的调用方法列表补充构建接口和类的方法，辅助完善业务调用流程(如xxMapper.getByCode不在XXMapper里，则通过时序图里的信息进行动态补充)
-7.根据动态调用方法绘制内容将return body也进行动态化绘制
-8.增加适配模块解除对codemaker本身的定制化类的依赖(ResultDto,ResultDataDto,PageVO,PageDTO)，可辅助二次开发增加企业适配能力
-9.基于数据库生成模式下的底层增加分页page查询方法和count查询方法
-10.重构app层下的springboot,cola,dubbo写文件实现逻辑，降低复杂度
-11.重构service层下的模版方法模式和建造者模式代码逻辑，降低复杂度
-12.增加mapper接口和controller接口的参数校验注解(要引用的注解类可先写死，后续优化)
-13.增加时序图调用方法参数动态推导功能(如xxxGataWay.getBySystemName没有在领域文档中定义，在时序图中有定义但是没有写明参数，这里可以做动态推导)
-14.补充bo关联表时缺失的主键id
-15.增加!字符屏蔽不需要解析的planUML文档内容,便于调试代码生成
+1. 支持默认带工具类SpringEventPublisher帮助事件发布与消费异步化
+2. 重构读取plantUML文件的相关逻辑降低复杂度
+3. 重新梳理读取plantUML文件的相关路径,优化为按项目维度分别存放
+4. 支持复杂场景下的代码绘制能力,进行精细化控制(如listbo,listvo的转换,代码参数动态绘制引用等)
+5. 支持分页PageVO,PageDTO,PageBO生成到接口方法里
+6. 支持通过时序图的调用方法列表补充构建接口和类的方法，辅助完善业务调用流程(如xxMapper.getByCode不在XXMapper里，则通过时序图里的信息进行动态补充)
+7. 根据动态调用方法绘制内容将return body也进行动态化绘制
+8. 增加适配模块解除对codemaker本身的定制化类的依赖(ResultDto,ResultDataDto,PageVO,PageDTO)，可辅助二次开发增加企业适配能力
+9. 基于数据库生成模式下的底层增加分页page查询方法和count查询方法
+10. 重构app层下的springboot,cola,dubbo写文件实现逻辑，降低复杂度
+11. 重构service层下的模版方法模式和建造者模式代码逻辑，降低复杂度
+12. 增加mapper接口和controller接口的参数校验注解(要引用的注解类可先写死，后续优化)
+13. 增加时序图调用方法参数动态推导功能(如xxxGataWay.getBySystemName没有在领域文档中定义，在时序图中有定义但是没有写明参数，这里可以做动态推导)
+14. 补充bo关联表时缺失的主键id
+15. 增加!字符屏蔽不需要解析的planUML文档内容,便于调试代码生成
 
 
 ####  配置文件说明
