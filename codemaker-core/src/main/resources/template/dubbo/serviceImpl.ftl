@@ -1,12 +1,12 @@
-package ${package}.core.service.impl;
+package ${package}.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 import ${package}.dao.mapper.${table.humpClassName}Mapper;
-import ${package}.core.service.${table.humpClassName}Service;
-import ${package}.core.model.bo.${table.humpClassName}BO;
+import ${package}.service.${table.humpClassName}Service;
+import ${package}.model.bo.${table.humpClassName}BO;
 
 import java.util.List;
 
@@ -47,8 +47,12 @@ public class ${table.humpClassName}ServiceImpl implements ${table.humpClassName}
 	}
 
 	@Override
-	public ${table.humpClassName}BO update(${table.humpClassName}BO ${table.humpTableName}BO)  throws Exception {
-		return ${table.humpTableName}BO;
+	public Boolean update(${table.humpClassName}BO ${table.humpTableName}BO)  throws Exception {
+		return false;
 	}
 
+	@Override
+	public List<${table.humpClassName}BO> getPageList()  throws Exception {
+		return null;
+	}
 }

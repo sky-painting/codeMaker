@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.coderman.infosys.auth.dao.mapper.SystemMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.coderman.infosys.auth.dao.dataobject.SystemDO">
+        <result column="id" property="id" />
+        <result column="system_name" property="systemName" />
+        <result column="system_code" property="systemCode" />
+        <result column="system_url" property="systemUrl" />
+        <result column="system_picurl" property="systemPicurl" />
+        <result column="tec_admin_user_id" property="tecAdminUserId" />
+        <result column="bus_admin_user_id" property="busAdminUserId" />
+        <result column="department_id" property="departmentId" />
+        <result column="date_create" property="dateCreate" />
+        <result column="create_user_id" property="createUserId" />
+    </resultMap>
+
+    <!--查询总数-->
+    <resultMap type="java.lang.Integer" id="count">
+        <result column="total"/>
+    </resultMap>
+
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,system_name,system_code,system_url,system_picurl,tec_admin_user_id,bus_admin_user_id,department_id,date_create,create_user_id
+    </sql>
+
+    <insert id="insert" parameterType="com.coderman.infosys.auth.dao.dataobject.SystemDO">
+        insert into system(
+        system_name,system_code,system_url,system_picurl,tec_admin_user_id,bus_admin_user_id,department_id,date_create,create_user_id
+        )
+        values(
+        #{system_name},#{system_code},#{system_url},#{system_picurl},#{tec_admin_user_id},#{bus_admin_user_id},#{department_id},#{date_create},#{create_user_id}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.coderman.infosys.auth.dao.dataobject.SystemDO">
+        update system
+        set
+        system_name=#{system_name},system_code=#{system_code},system_url=#{system_url},system_picurl=#{system_picurl},tec_admin_user_id=#{tec_admin_user_id},bus_admin_user_id=#{bus_admin_user_id},department_id=#{department_id},date_create=#{date_create},create_user_id=#{create_user_id}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from system
+    </select>
+
+    <select id="getById" parameterType="com.coderman.infosys.auth.dao.dataobject.SystemDO"
+            resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from system  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from system where id = #{id}
+    </delete>
+
+    <select id="getPageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from system
+    </select>
+
+    <select id="getCount" resultMap="count">
+        select count(1)  from system
+    </select>
+
+</mapper>

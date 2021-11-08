@@ -13,10 +13,10 @@ import ${package}.entity.${table.humpClassName}Entity;
 public interface ${table.humpClassName}Mapper{
 
 	/**
-	 * 
-	 * @Title: save 
-	 * @Description:新增或修改 
-	 * @author: 
+	 *
+	 * @Title: save
+	 * @Description:新增或修改
+	 * @author:
 	 * @param @param ${table.humpTableName}Entity
 	 * @return int
 	 * @throws
@@ -24,10 +24,10 @@ public interface ${table.humpClassName}Mapper{
 	public int insert(${table.humpClassName}Entity ${table.humpTableName}Entity);
 
 	/**
-	 * 
-	 * @Title: delete 
+	 *
+	 * @Title: delete
 	 * @Description: 通过id删除数据
-	 * @author: 
+	 * @author:
 	 * @param @param id
 	 * @return int
 	 * @throws
@@ -35,10 +35,10 @@ public interface ${table.humpClassName}Mapper{
 	public int deleteById(Long id);
 
 	/**
-	 * 
-	 * @Title: getById 
+	 *
+	 * @Title: getById
 	 * @Description: 通过id查询
-	 * @author: 
+	 * @author:
 	 * @param @param id
 	 * @return ResultDataDto<${table.humpClassName}Entity>    返回类型
 	 * @throws
@@ -46,10 +46,10 @@ public interface ${table.humpClassName}Mapper{
 	public ${table.humpClassName}Entity getById(Long id);
 
 	/**
-	 * 
-	 * @Title: getAll 
-	 * @Description:查询所有数据 
-	 * @author: 
+	 *
+	 * @Title: getAll
+	 * @Description:查询所有数据
+	 * @author:
 	 * @return List<${table.humpClassName}Entity    返回类型
 	 * @throws
 	 */

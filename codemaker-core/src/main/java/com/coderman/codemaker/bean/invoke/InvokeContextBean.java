@@ -19,8 +19,9 @@ import org.apache.commons.lang3.StringUtils;
 public class InvokeContextBean {
     /**
      * 需要绘制方法内容的方法对象
+     * 调用方的方法
      */
-    private MethodBean methodBean;
+    private MethodBean invokerMethodBean;
 
     /**
      * plantuml 调用流程图中的被调用类
@@ -30,14 +31,7 @@ public class InvokeContextBean {
     /**
      * plantuml 调用流程图中的被调用方法
      */
-    private String providerClassMethod;
-
-
-    /**
-     * plantuml 调用流程图中的被调用方法返回值
-     */
-    private String providerClassMethodReturn;
-
+    private MethodBean providerClassMethod;
 
     /**
      * plantuml 调用流程图中的调用方法
@@ -48,7 +42,6 @@ public class InvokeContextBean {
     /**
      * 调用方向
      * 如 应用层->领域层,应用层->基础设施层,应用层->应用层,领域层->领域层
-     *
      */
     private String InvokeSceneType;
 
@@ -79,6 +72,14 @@ public class InvokeContextBean {
      */
     private InvokeRowBean currentInvokeRowBean;
 
+    public MethodBean getProviderClassMethod() {
+        return providerClassMethod;
+    }
+
+    public void setProviderClassMethod(MethodBean providerClassMethod) {
+        this.providerClassMethod = providerClassMethod;
+    }
+
     public InvokeRowBean getCurrentInvokeRowBean() {
         return currentInvokeRowBean;
     }
@@ -103,13 +104,6 @@ public class InvokeContextBean {
         this.invokerClassBean = invokerClassBean;
     }
 
-    public String getProviderClassMethodReturn() {
-        return providerClassMethodReturn;
-    }
-
-    public void setProviderClassMethodReturn(String providerClassMethodReturn) {
-        this.providerClassMethodReturn = providerClassMethodReturn;
-    }
 
     public String getInvokeSceneType() {
         return InvokeSceneType;
@@ -127,14 +121,13 @@ public class InvokeContextBean {
         this.methodRWType = methodRWType;
     }
 
-    public MethodBean getMethodBean() {
-        return methodBean;
+    public MethodBean getInvokerMethodBean() {
+        return invokerMethodBean;
     }
 
-    public void setMethodBean(MethodBean methodBean) {
-        this.methodBean = methodBean;
+    public void setInvokerMethodBean(MethodBean invokerMethodBean) {
+        this.invokerMethodBean = invokerMethodBean;
     }
-
 
     public String getInvokerMethod() {
         return invokerMethod;
@@ -152,13 +145,6 @@ public class InvokeContextBean {
         this.providerClassName = providerClassName;
     }
 
-    public String getProviderClassMethod() {
-        return providerClassMethod;
-    }
-
-    public void setProviderClassMethod(String providerClassMethod) {
-        this.providerClassMethod = providerClassMethod;
-    }
 
     public PlantUmlContextBean getPlantUmlContextBean() {
         return plantUmlContextBean;
@@ -170,54 +156,64 @@ public class InvokeContextBean {
 
     /**
      * 根据调用者和被调用者以及当前需要绘制的方法构判断调用场景和读写类型
+     *
      * @param invokeClassName
      * @param providerClassName
      */
-    public void buildInvokeScene(String invokeClassName,String providerClassName){
+    public void buildInvokeScene(String invokeClassName, String providerClassName) {
         String invokeScene = InvokeSceneTypeEnum.getInvokeScene(invokeClassName, providerClassName);
-        if(StringUtils.isNotEmpty(invokeScene)){
+        if (StringUtils.isNotEmpty(invokeScene)) {
             this.setInvokeSceneType(invokeScene);
         }
 
-        if(StringUtils.isNotEmpty(this.getInvokerMethod())){
-           String rwType = ReadWriteTypeEnum.getCodeByMethod(this.getInvokerMethod());
-           this.setMethodRWType(rwType);
+        if (StringUtils.isNotEmpty(this.getInvokerMethod())) {
+            String rwType = ReadWriteTypeEnum.getCodeByMethod(this.getInvokerMethod());
+            this.setMethodRWType(rwType);
         }
     }
 
     /**
      * 构建当前调用行bean
+     *
      * @param currentInvokeRowContent
      */
-    public void buildCurrentInvokeRow(String currentInvokeRowContent){
+    public void buildCurrentInvokeRow(String currentInvokeRowContent) {
         this.setCurrentInvokeRowContent(currentInvokeRowContent);
         /**
          * 如果有返回值
          */
         InvokeRowBean invokeRowBean = new InvokeRowBean();
-        String invokeBody = currentInvokeRowContent;
-        if(currentInvokeRowContent.contains("=")){
-            String [] rowContentArr = currentInvokeRowContent.split("=");
+        if (currentInvokeRowContent.contains("=")) {
+            String[] rowContentArr = currentInvokeRowContent.split("=");
             String returnBody = rowContentArr[0];
-            invokeBody = rowContentArr[1];
-            invokeRowBean.setReturnClassName(returnBody.trim().split(" ")[0]);
-            invokeRowBean.setReturnClassValue(returnBody.trim().split(" ")[1]);
+            invokeRowBean.setReturnClassName(returnBody.trim().split(" ")[0].trim());
+            invokeRowBean.setReturnClassValue(returnBody.trim().split(" ")[1].trim());
         }
-        String [] providerArr = invokeBody.split("\\.");
-        invokeRowBean.setProviderClassName(providerArr[0]);
-        String methodContent = providerArr[1];
-        if(methodContent.contains("()")){
-            invokeRowBean.setProviderMethodName(methodContent);
-            this.setCurrentInvokeRowBean(invokeRowBean);
-            return;
-        }else {
-            String [] methodArr = methodContent.split("\\(");
-            invokeRowBean.setProviderMethodName(methodArr[0]);
-            String [] paramValueArr = methodArr[1].replace(")","").split(",");
-            invokeRowBean.setProviderMethodParamValueArr(paramValueArr);
-            this.setCurrentInvokeRowBean(invokeRowBean);
-            return;
-        }
+        String classNameVar = this.getProviderClassName().substring(0,1).toLowerCase()+ this.getProviderClassName().substring(1);
+        invokeRowBean.setProviderClassNameVar(classNameVar);
+
+        invokeRowBean.setProviderClassName(this.getProviderClassName());
+        invokeRowBean.setProviderMethodName(this.getProviderClassMethod().getSimplMethodName());
+        invokeRowBean.setReturnClassName(this.getProviderClassMethod().getReturnClass());
+        this.getProviderClassMethod().buildParamArr();
+        invokeRowBean.setProviderMethodParamTypeArr(this.getProviderClassMethod().getParamArr());
+        invokeRowBean.buildParamValueArr();
+
+        this.setCurrentInvokeRowBean(invokeRowBean);
+    }
+
+    @Override
+    public String toString() {
+        return "InvokeContextBean{" +
+                "invokerMethodBean=" + invokerMethodBean +
+                ", providerClassName='" + providerClassName + '\'' +
+                ", invokerMethod='" + invokerMethod + '\'' +
+                ", InvokeSceneType='" + InvokeSceneType + '\'' +
+                ", methodRWType='" + methodRWType + '\'' +
+                ", invokerClassBean=" + invokerClassBean +
+                ", currentInvokeRowContent='" + currentInvokeRowContent + '\'' +
+                ", currentInvokeRowBean=" + currentInvokeRowBean +
+                '}';
     }
 
 }

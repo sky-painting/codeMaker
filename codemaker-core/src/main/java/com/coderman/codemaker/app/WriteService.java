@@ -6,6 +6,7 @@ import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.utils.Constant;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,5 +77,20 @@ public abstract class WriteService {
         packagePath = Constant.JAVA + "/" + packagePath;
         String fileName = classContentBean.getHumpClassName() + ".java";
         return classContentBean.getModulePath()  + packagePath + "/" + fileName;
+    }
+
+
+    /**
+     * 写路由
+     * @param classContentBean
+     */
+    protected void writeRoute(ClassContentBean classContentBean){
+        //走默认的包生成方式
+        if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+            writeClassFile(classContentBean);
+        }else {
+            //走文档里的package包生成方式
+            writeClassFileV2(classContentBean);
+        }
     }
 }

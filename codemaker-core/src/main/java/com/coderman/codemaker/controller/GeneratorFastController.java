@@ -3,8 +3,8 @@ package com.coderman.codemaker.controller;
 import com.coderman.codemaker.bean.ColumnBean;
 import com.coderman.codemaker.bean.TableBean;
 import com.coderman.codemaker.enums.TemplateFileEnum;
-import com.coderman.codemaker.service.WriteFileService;
-import com.coderman.codemaker.service.registry.*;
+import com.coderman.codemaker.service.write.WriteSpringbootService;
+import com.coderman.codemaker.service.registry.element.*;
 import com.coderman.codemaker.utils.FreemarkerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +45,7 @@ public class GeneratorFastController {
 
 
     @Autowired
-    private WriteFileService writeFileService;
+    private WriteSpringbootService writeFileService;
 
 
     /**
@@ -64,6 +64,7 @@ public class GeneratorFastController {
             varMap.put("columns", columnBeanListMap.get(k));
             varMap.put("package", map.get("package"));
             varMap.put("author", map.get("author"));
+
             String templateContent = FreemarkerUtils.parseTpl("/fast/"+ TemplateFileEnum.ENTITY.getTempFileName(),varMap);
             writeFileService.writeEntity(templateContent,v.getHumpClassName());
         });

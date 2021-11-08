@@ -1,12 +1,10 @@
 package com.coderman.codemaker.app.dynamicddd.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.bean.TableBean;
+import com.coderman.codemaker.service.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DerivedClassFactory;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.bean.GlobalConstant;
 import com.coderman.codemaker.bean.dddelement.DomainBoElementBean;
-import com.coderman.codemaker.bean.dddelementderive.DtoElementBean;
 import com.coderman.codemaker.bean.plantuml.*;
 import com.coderman.codemaker.enums.DomainElementEnum;
 import org.apache.commons.collections4.CollectionUtils;
@@ -14,8 +12,6 @@ import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.invoke.MethodHandle;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,12 +45,18 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
 
         //过滤带有数据库表映射的bo
         plantUmlContextBean.getClassBeanMap().forEach((k, v) -> {
-
-            if (v.getClassName().toLowerCase().endsWith(DomainElementEnum.BO.getElement())) {
+            //过滤掉pagebo
+            if (v.getClassName().toLowerCase().endsWith(DomainElementEnum.BO.getElement()) && !v.getClassName().equals("PageBO")) {
                 importPackageService.setPackageName(v, "domain.bo");
                 Optional<FieldBean> optionalFieldBean = v.getFieldBeanList().stream().filter(f -> f.isTableKey()).findFirst();
                 if (optionalFieldBean.isPresent()) {
                     boWithTableKeyList.add(v);
+                    //处理bo关联表的ID
+                    FieldBean idFieldBean = new FieldBean("Long id","主键ID","id");
+                    List<FieldBean> fieldBeanList = Lists.newArrayList(idFieldBean);
+                    fieldBeanList.addAll(v.getFieldBeanList());
+                    v.setFieldBeanList(fieldBeanList);
+                    setTableBean(v,plantUmlContextBean,optionalFieldBean.get().getFieldName());
                     v.getExtendFieldBean().buildTableKey(optionalFieldBean.get().getFieldName());
                 }
                 Optional<FieldBean> optionalFieldBeanDtoKey = v.getFieldBeanList().stream().filter(f -> f.isDtoKey()).findFirst();
@@ -101,7 +103,6 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
             derivedClassFactory.deriveBo2DTO(boWithDtoKeyList, plantUmlContextBean);
         }
 
-
         //处理bo-vo的派生
         if(CollectionUtils.isNotEmpty(boWithVoKeyList)){
             //基于plantuml.bo的扩展信息进行派生
@@ -123,7 +124,7 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
         }
 
         plantUmlContextBean.getClassBeanMap().forEach((k, v) -> {
-            if (v.getClassName().toLowerCase().endsWith(DomainElementEnum.BO.getElement())) {
+            if (v.getClassName().toLowerCase().endsWith(DomainElementEnum.BO.getElement()) && !v.getClassName().equals("PageBO")) {
                 //过滤扩展属性
                 List<FieldBean> beanList = v.getFieldBeanList().stream().filter(f -> !f.isTableKey()
                         && !f.isDtoKey()
@@ -151,11 +152,28 @@ public class DomainBoElementHandler implements DomainElementHandler<DomainBoElem
             }
         });
 
-
         domainBoElementBeanList.stream().forEach(v -> importPackageService.dealImportClass(v, plantUmlContextBean));
         domainBoElementBean.setClassBeanList(domainBoElementBeanList);
 
         return domainBoElementBean;
+    }
+
+
+    /**
+     * 根据table名称标示找到table对应的DO进而找到TableBean
+     * @param boClassBean
+     * @param plantUmlContextBean
+     * @param tableFieldName
+     */
+    private void setTableBean(ClassBean boClassBean,PlantUmlContextBean plantUmlContextBean,String tableFieldName){
+        String tableName = tableFieldName.toLowerCase().trim().replace("string","").replace(" ","");
+        for (Map.Entry<String, ClassBean> entry : plantUmlContextBean.getClassBeanMap().entrySet()){
+            TableBean tableBean = entry.getValue().getTableBean();
+            if(tableBean != null && tableBean.getTableName().equals(tableName)){
+                boClassBean.setTableBean(tableBean);
+            }
+        }
+
     }
 
 }

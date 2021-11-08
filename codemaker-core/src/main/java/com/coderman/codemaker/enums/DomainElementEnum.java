@@ -35,6 +35,10 @@ public enum  DomainElementEnum {
     ADAPTER_IMPL("aclimpl","适配器防腐层实现"),
     ADAPTER_ACL_IMPL("adapterimpl,aclimpl","适配器防腐层实现"),
 
+    //这里的mapper只是为了辅助代码生成，严格来说不算领域元素
+    DYNAMIC_MAPPER("mapper","动态mapper"),
+
+
     ;
     private String element;
     private String desc;

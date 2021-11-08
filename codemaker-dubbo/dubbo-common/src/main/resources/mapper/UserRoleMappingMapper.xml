@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.coderman.infosys.auth.dao.mapper.UserRoleMappingMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.coderman.infosys.auth.dao.dataobject.UserRoleMappingDO">
+        <result column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="role_code" property="roleCode" />
+    </resultMap>
+
+    <!--查询总数-->
+    <resultMap type="java.lang.Integer" id="count">
+        <result column="total"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,user_id,role_code
+    </sql>
+
+    <insert id="insert" parameterType="com.coderman.infosys.auth.dao.dataobject.UserRoleMappingDO">
+        insert into user_role_mapping(
+        user_id,role_code
+        )
+        values(
+        #{user_id},#{role_code}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.coderman.infosys.auth.dao.dataobject.UserRoleMappingDO">
+        update user_role_mapping
+        set
+        user_id=#{user_id},role_code=#{role_code}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from user_role_mapping
+    </select>
+
+    <select id="getById" parameterType="com.coderman.infosys.auth.dao.dataobject.UserRoleMappingDO"
+            resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from user_role_mapping  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from user_role_mapping where id = #{id}
+    </delete>
+
+    <select id="getPageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from user_role_mapping
+    </select>
+
+    <select id="getCount" resultMap="count">
+        select count(1)  from user_role_mapping
+    </select>
+
+
+</mapper>

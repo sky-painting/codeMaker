@@ -5,9 +5,8 @@ import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateColaConfig;
-import com.coderman.codemaker.config.ProjectTemplateDubboConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
-import com.coderman.codemaker.service.IWriteFileService;
+import com.coderman.codemaker.app.IWriteFileService;
 import com.coderman.codemaker.utils.Constant;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 /**
  * Description:
@@ -36,20 +34,16 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
     @Override
     public void writeContent(WriteContentBean writeContentBean) {
+        ClassContentBean classContentBean = writeContentBean.buildClassContentBean(projectTemplateColaConfig.getModuleInfrastPath());
+
         //写do class
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DATA_OBJECT.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("dataobject");
             classContentBean.setClassSuffix("DO.java");
             writeDO(classContentBean);
         }
         //写mapper class
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mapper");
             classContentBean.setClassSuffix("Mapper.java");
             writeMapper(classContentBean);
@@ -57,9 +51,6 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
         //写mapper.xml
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_XML.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mapper");
             classContentBean.setClassSuffix("Mapper.xml");
             writeMapperXml(classContentBean);
@@ -67,12 +58,8 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
         //写domain.gataway.impl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.GATAWAY_IMPL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("gatawayimpl");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".gatawayimpl");
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -86,13 +73,8 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
         //写domain.repository.impl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.REPOSITORY_IMPL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("repositoryimpl");
             classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".repositoryimpl");
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -106,95 +88,46 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
         //写infrast.acl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             if(writeContentBean.getHumpClassName().toLowerCase().contains(TemplateFileEnum.ACL.getTempFileName())){
                 classContentBean.setChildPackageName("infrast.acl");
             }else {
                 classContentBean.setChildPackageName("infrast.adapter");
             }
-            classContentBean.setClassSuffix("");
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
-            //走默认的包生成方式
-            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
-                writeClassFile(classContentBean);
-            }else {
-                //走文档里的package包生成方式
-                writeClassFileV2(classContentBean);
-            }
+            writeRoute(classContentBean);
         }
         //写infrast.acl.impl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL_IMPL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             if(writeContentBean.getHumpClassName().toLowerCase().contains(TemplateFileEnum.ACL.getTempFileName())){
                 classContentBean.setChildPackageName("infrast.acl.impl");
             }else {
                 classContentBean.setChildPackageName("infrast.adapter.impl");
             }
-            classContentBean.setClassSuffix("");
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
-
-            //走默认的包生成方式
-            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
-                writeClassFile(classContentBean);
-            }else {
-                //走文档里的package包生成方式
-                writeClassFileV2(classContentBean);
-            }
+            writeRoute(classContentBean);
         }
 
         //写acl.param
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL_PARAM.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
             writeClassFileV2(classContentBean);
         }
 
         //写convert
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.CONVERT.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
             classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.dataconvert");
-
             writeClassFileV2(classContentBean);
         }
 
 
         //写serviceimpl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE_IMPL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setChildPackageName("service.impl");
+            classContentBean.setChildPackageName("infrast.service.impl");
             classContentBean.setClassSuffix("ServiceImpl.java");
             classContentBean.setHumpClassName(writeContentBean.getHumpClassName().toLowerCase().endsWith("serviceimpl") ? writeContentBean.getHumpClassName() : writeContentBean.getHumpClassName()+"ServiceImpl");
-
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
-
             writeClassFile(classContentBean);
         }
 
         //写infras.mq.consumer
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_CONSUMER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mq.consumer");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -208,14 +141,7 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
         //写infras.mq.handler
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_HANDLER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mq.handler");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -228,14 +154,7 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
 
         //写infras.mq.producer
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_PRODUCER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("mq.producer");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateColaConfig.getModuleInfrastPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -247,15 +166,17 @@ public class ColaInfrastWriteServiceImpl extends WriteService implements IWriteF
         }
 
 
-    }
-
-    @Override
-    public void writeAllContent(String humpClassName, Map<String, Object> varMap, String fast) {
-
-    }
-
-    @Override
-    public void writeCommonContent(Map<String, Object> varMap, String fast) {
+        //写infrast.dao.mapper
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_DDD.getTempFileName())){
+            classContentBean.setChildPackageName("infrast.dao.mapper");
+            writeRoute(classContentBean);
+        }
+        //写mapper.xml
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_XML_DDD.getTempFileName())){
+            classContentBean.setChildPackageName("mapper");
+            classContentBean.setClassSuffix(".xml");
+            writeMapperXml(classContentBean);
+        }
 
     }
 

@@ -55,6 +55,12 @@
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
     </dependency>
+      <dependency>
+          <groupId>com.coderman.utils</groupId>
+          <artifactId>coderman-utils</artifactId>
+          <version>1.0.4-SNAPSHOT</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
 
   <build>

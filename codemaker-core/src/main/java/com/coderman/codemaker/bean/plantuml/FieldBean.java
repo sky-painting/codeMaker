@@ -26,6 +26,60 @@ public class FieldBean {
      */
     private String desc;
 
+    /**
+     * do对应class下的数据库表字段名
+     */
+    private String dbColumnName;
+
+
+    /**
+     * 属性类型
+     */
+    private String fieldType;
+
+    /**
+     * 属性简单名称
+     */
+    private String fieldSimpleName;
+
+    public String getFieldType() {
+        return fieldType;
+    }
+
+    public void setFieldType(String fieldType) {
+        this.fieldType = fieldType;
+    }
+
+    public String getFieldSimpleName() {
+        return fieldSimpleName;
+    }
+
+    public void setFieldSimpleName(String fieldSimpleName) {
+        this.fieldSimpleName = fieldSimpleName;
+    }
+
+    public FieldBean(){
+
+    }
+
+    public FieldBean(String fieldName,String desc,String dbColumnName ){
+        this(fieldName,desc,dbColumnName, VisibilityEnum.PRIVATE.getVisibility());
+    }
+
+    public FieldBean(String fieldName,String desc,String dbColumnName,String visibility ){
+        this.fieldName = fieldName;
+        this.desc = desc;
+        this.dbColumnName = dbColumnName;
+        this.visibility = visibility;
+    }
+
+    public String getDbColumnName() {
+        return dbColumnName;
+    }
+
+    public void setDbColumnName(String dbColumnName) {
+        this.dbColumnName = dbColumnName;
+    }
 
     public String getFieldName() {
         return fieldName;
@@ -108,5 +162,40 @@ public class FieldBean {
         fieldBean.setVisibility(this.getVisibility());
         fieldBean.setDesc(this.getDesc());
         return fieldBean;
+    }
+
+
+    /**
+     * 构建属性的getter方法名
+     * @return
+     */
+    public String buildGetterMethodName(){
+        String simpleFieldName = this.getFieldName();
+        if(fieldName.contains(" ")){
+            simpleFieldName = fieldName.split(" ")[1];
+        }
+        String prefix = "get";
+        //判断是否是boolean类型
+        if(this.getFieldName().toLowerCase().contains("boolean")){
+            prefix = "is";
+        }
+        return  prefix+simpleFieldName.substring(0,1).toUpperCase()+simpleFieldName.substring(1)+"()";
+    }
+
+    public void buildFieldDetail(){
+        if(this.getFieldName().contains(" ")){
+            String [] fieldArr = this.getFieldName().split(" ");
+            this.setFieldType(fieldArr[0]);
+            this.setFieldSimpleName(fieldArr[1]);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "FieldBean{" +
+                "fieldName='" + fieldName + '\'' +
+                ", desc='" + desc + '\'' +
+                ", dbColumnName='" + dbColumnName + '\'' +
+                '}';
     }
 }

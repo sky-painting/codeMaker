@@ -1,4 +1,4 @@
-package ${package}.api.dto;
+package ${package}.dto;
 
 import java.util.Date;
 import java.math.BigDecimal;

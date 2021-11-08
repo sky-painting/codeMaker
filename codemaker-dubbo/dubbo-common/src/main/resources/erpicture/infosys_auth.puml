@@ -1,0 +1,149 @@
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity " user_role_mapping 用户角色关联表" as user_role_mapping {
+    id:  主键/bigint(20) unsigned
+    user_id: 用户ID/bigint(20)
+    role_code: 角色code/varchar(50)
+}
+
+entity " user_group 用户组" as user_group {
+    id:  主键/bigint(20) unsigned
+    group_name: 用户组名/varchar(50)
+    group_code: 用户组编码/varchar(50)
+    status:  用户组状态/bigint(20)
+    user_list: 用户组内用户列表/varchar(2000)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " data_column_config 数据字段管理表" as data_column_config {
+    id:  主键/bigint(20) unsigned
+    bus_database: 数据库业务系统名称/varchar(60)
+    table_name: 表名称/varchar(60)
+    table_desc: 表描述/varchar(60)
+    column_name: 字段名称/varchar(60)
+    column_desc: 字段描述/varchar(60)
+    bus_model: 业务模块/varchar(60)
+    field_name: 业务属性名称/varchar(60)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " role 角色表" as role {
+    id:  主键/bigint(20) unsigned
+    role_name: 角色名称/varchar(50)
+    role_code: 角色编码/varchar(50)
+    status:  角色组状态/bigint(20)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " system 系统表" as system {
+    id:  主键/bigint(20) unsigned
+    system_name: 系统名称/varchar(50)
+    system_code: 系统编码/varchar(50)
+    system_url: 系统域名/varchar(50)
+    system_picurl: 系统图标/varchar(50)
+    tec_admin_user_id: 系统技术负责人/bigint(20)
+    bus_admin_user_id: 系统业务负责人/bigint(20)
+    department_id: 系统所属部门/bigint(20)
+    date_create: 创建时间/timestamp
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " role_group 角色组" as role_group {
+    id:  主键/bigint(20) unsigned
+    group_name: 角色组名/varchar(50)
+    group_code: 角色组编码/varchar(50)
+    role_code_list: 角色列表/varchar(2000)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " system_authority 系统菜单权限表" as system_authority {
+    id:  主键/bigint(20) unsigned
+    auth_code: 权限标示/varchar(50)
+    system_code: 系统编码/varchar(50)
+    module_code: 菜单编码/varchar(50)
+    menu_code: 按钮编码/varchar(50)
+    date_create: 创建时间/timestamp
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " admin_authority 行政数据权限" as admin_authority {
+    id:  主键/bigint(20) unsigned
+    auth_code: 权限标示/varchar(50)
+    department_id: 组织部门ID/bigint(20)
+    city_id: 城市权限/bigint(20)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " authority 抽象权限表" as authority {
+    id:  主键/bigint(20) unsigned
+    auth_code: 权限编码/varchar(50)
+    authority_type: 权限类型/tinyint(4)
+    role_code: 关联角色编码/varchar(50)
+    role_group_code: 关联角色组/varchar(50)
+    status: 权限状态/tinyint(4)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " module 菜单模块表" as module {
+    id:  主键/bigint(20) unsigned
+    module_name: 菜单名称/varchar(50)
+    module_code: 菜单编码/varchar(50)
+    system_code: 系统编码/varchar(50)
+    module_url: 菜单链接/varchar(50)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " menu 按钮表" as menu {
+    id:  主键/bigint(20) unsigned
+    menu_name: 按钮名称/varchar(50)
+    menu_code: 按钮编码/varchar(50)
+    module_code: 所属菜单编码/varchar(50)
+    system_code: 所属系统编码/varchar(50)
+    module_url: 菜单链接/varchar(50)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity " data_authority 数据字段权限" as data_authority {
+    id:  主键/bigint(20) unsigned
+    auth_code: 权限标示/varchar(50)
+    data_column_id: 业务数据库标示/varchar(50)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+
+
+
+
+@enduml

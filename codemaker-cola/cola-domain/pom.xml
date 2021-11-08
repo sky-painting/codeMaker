@@ -42,6 +42,12 @@
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>com.coderman.utils</groupId>
+      <artifactId>coderman-utils</artifactId>
+      <version>1.0.4-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <build>

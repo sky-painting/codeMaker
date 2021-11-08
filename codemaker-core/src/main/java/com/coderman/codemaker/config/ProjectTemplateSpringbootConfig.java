@@ -18,11 +18,11 @@ public class ProjectTemplateSpringbootConfig {
 
 
 
-    @Value(value = "${codemaker.global.dbName}")
+    @Value(value = "${springboot.global.dbName}")
     private String dbName;
 
-    @Value(value = "${codemaker.pom.projectName}")
-    private String projectName;
+    @Value(value = "${springboot.global.applicationName}")
+    private String applicationName;
 
     @Value(value = "${codemaker.pom.groupId}")
     private String groupId;
@@ -66,12 +66,12 @@ public class ProjectTemplateSpringbootConfig {
         this.dbName = dbName;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public String getApplicationName() {
+        return applicationName;
     }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 
     public String getGroupId() {
@@ -102,7 +102,7 @@ public class ProjectTemplateSpringbootConfig {
     public String toString() {
         return "ProjectTemplateSpringbootConfig{" +
                 "dbName='" + dbName + '\'' +
-                ", projectName='" + projectName + '\'' +
+                ", applicationName='" + applicationName + '\'' +
                 ", groupId='" + groupId + '\'' +
                 ", artifactId='" + artifactId + '\'' +
                 ", version='" + version + '\'' +

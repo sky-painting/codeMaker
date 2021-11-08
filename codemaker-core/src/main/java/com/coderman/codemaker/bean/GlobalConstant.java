@@ -52,4 +52,23 @@ public class GlobalConstant {
      * plantuml bo中的特殊属性-标示BO对应的业务方法调用流程
      */
     public static final String INVOKE_FILE_KEY = "invokefilekey";
+
+
+    /**
+     * 调用时序文档存储文件夹名称
+     */
+    public static final String INVOKE_SEQUENCE_FILE_DIR = "invoke-plantuml";
+
+
+    /**
+     * 领域类图模型文档存储文件夹名称
+     */
+    public static final String DOMAIN_MODLE_FILE_DIR = "ddd-plantuml";
+
+
+    /**
+     * 以!开头的则忽略解析
+     */
+    public static final String PLANT_DOC_IGNORE = "!";
+
 }

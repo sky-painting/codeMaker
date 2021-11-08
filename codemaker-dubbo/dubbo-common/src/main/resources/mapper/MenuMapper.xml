@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.coderman.infosys.auth.dao.mapper.MenuMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.coderman.infosys.auth.dao.dataobject.MenuDO">
+        <result column="id" property="id" />
+        <result column="menu_name" property="menuName" />
+        <result column="menu_code" property="menuCode" />
+        <result column="module_code" property="moduleCode" />
+        <result column="system_code" property="systemCode" />
+        <result column="module_url" property="moduleUrl" />
+        <result column="date_create" property="dateCreate" />
+        <result column="date_update" property="dateUpdate" />
+        <result column="update_user_id" property="updateUserId" />
+        <result column="create_user_id" property="createUserId" />
+    </resultMap>
+
+    <!--查询总数-->
+    <resultMap type="java.lang.Integer" id="count">
+        <result column="total"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,menu_name,menu_code,module_code,system_code,module_url,date_create,date_update,update_user_id,create_user_id
+    </sql>
+
+    <insert id="insert" parameterType="com.coderman.infosys.auth.dao.dataobject.MenuDO">
+        insert into menu(
+        menu_name,menu_code,module_code,system_code,module_url,date_create,date_update,update_user_id,create_user_id
+        )
+        values(
+        #{menu_name},#{menu_code},#{module_code},#{system_code},#{module_url},#{date_create},#{date_update},#{update_user_id},#{create_user_id}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.coderman.infosys.auth.dao.dataobject.MenuDO">
+        update menu
+        set
+        menu_name=#{menu_name},menu_code=#{menu_code},module_code=#{module_code},system_code=#{system_code},module_url=#{module_url},date_create=#{date_create},date_update=#{date_update},update_user_id=#{update_user_id},create_user_id=#{create_user_id}
+        where  id = #{id}
+    </update>
+
+    <select id="getAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from menu
+    </select>
+
+    <select id="getById" parameterType="com.coderman.infosys.auth.dao.dataobject.MenuDO"
+            resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" /> from menu  where id = #{id}
+    </select>
+
+    <delete id="deleteById" >
+        delete from menu where id = #{id}
+    </delete>
+
+    <select id="getPageList" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List" />  from menu
+    </select>
+
+    <select id="getCount" resultMap="count">
+        select count(1)  from menu
+    </select>
+
+
+</mapper>

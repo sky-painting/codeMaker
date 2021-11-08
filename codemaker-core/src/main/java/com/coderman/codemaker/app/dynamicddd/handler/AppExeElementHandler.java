@@ -1,6 +1,6 @@
 package com.coderman.codemaker.app.dynamicddd.handler;
 
-import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.service.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
 import com.coderman.codemaker.bean.dddelement.ExecutorElementBean;
 import com.coderman.codemaker.bean.plantuml.ClassBean;
@@ -53,7 +53,12 @@ public class AppExeElementHandler implements DomainElementHandler<ExecutorElemen
                 String className = v.getClassName().substring(0,1).toUpperCase().concat(v.getClassName().substring(1));
                 v.setClassName(className);
                 importPackageService.dealImportClass(v,plantUmlContextBean);
-                v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
+                List<MethodBean> methodBeanList = new ArrayList<>();
+                v.getMethodBeanList().forEach(methodBean -> {
+                    methodBean.buildDoc();
+                    methodBeanList.add(methodBean.copySelf(null));
+                });
+                v.setMethodBeanList(methodBeanList);
                 classBeanList.add(v);
             }
         });

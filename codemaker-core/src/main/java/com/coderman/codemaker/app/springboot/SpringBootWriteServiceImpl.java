@@ -1,5 +1,6 @@
 package com.coderman.codemaker.app.springboot;
 
+import com.coderman.codemaker.app.CommonWriteService;
 import com.coderman.codemaker.app.WriteService;
 import com.coderman.codemaker.bean.ClassContentBean;
 import com.coderman.codemaker.bean.ColumnBean;
@@ -8,8 +9,8 @@ import com.coderman.codemaker.bean.WriteContentBean;
 import com.coderman.codemaker.config.AppServiceConfig;
 import com.coderman.codemaker.config.ProjectTemplateSpringbootConfig;
 import com.coderman.codemaker.enums.TemplateFileEnum;
-import com.coderman.codemaker.service.DBErPictureService;
-import com.coderman.codemaker.service.IWriteFileService;
+import com.coderman.codemaker.service.dberpicture.DBErPictureService;
+import com.coderman.codemaker.app.IWriteFileService;
 import com.coderman.codemaker.utils.Constant;
 import com.coderman.codemaker.utils.FreemarkerUtils;
 import org.apache.commons.io.FileUtils;
@@ -44,18 +45,17 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
     private DBErPictureService erPictureService;
 
 
+    @Autowired
+    private CommonWriteService commonWriteService;
+
+
     @Override
     public void writeContent(WriteContentBean writeContentBean) {
+        ClassContentBean classContentBean = writeContentBean.buildClassContentBean(projectTemplateConfig.getOutPath());
         //写api.dto-ddd
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DTO_DDD.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-
             classContentBean.setChildPackageName("api.dto");
             classContentBean.setClassSuffix("DTO.java");
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -66,9 +66,6 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
         }
         //写api.dto
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DTO.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("dto");
             classContentBean.setClassSuffix("DTO.java");
             writeDTO(classContentBean);
@@ -77,10 +74,6 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写entity class
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ENTITY.getTempFileName())){
-
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("entity");
             classContentBean.setClassSuffix("Entity.java");
             writeClassFile(classContentBean);
@@ -88,19 +81,13 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写do class
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.DATA_OBJECT.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setChildPackageName("dao.dataobject");
+            classContentBean.setChildPackageName("infrast.dao.dataobject");
             classContentBean.setClassSuffix("DO.java");
-            writeDO(classContentBean);
+           // writeDO(classContentBean);
+            writeClassFile(classContentBean);
         }
         //写mapper class
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER.getTempFileName())){
-
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("dao.mapper");
             classContentBean.setClassSuffix("Mapper.java");
             writeClassFile(classContentBean);
@@ -113,10 +100,6 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写vo
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.VO.getTempFileName())){
-
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("vo");
             classContentBean.setClassSuffix("VO.java");
             writeClassFile(classContentBean);
@@ -124,14 +107,8 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写vo-ddd
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.VO_DDD.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-
             classContentBean.setChildPackageName("adapter.vo");
             classContentBean.setClassSuffix("VO.java");
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -144,10 +121,6 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写service
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE.getTempFileName())){
-
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("service");
             classContentBean.setClassSuffix("Service.java");
             writeClassFile(classContentBean);
@@ -155,9 +128,6 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写serviceImpl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SERVICE_IMPL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("service.impl");
             classContentBean.setClassSuffix("ServiceImpl.java");
             writeClassFile(classContentBean);
@@ -165,10 +135,6 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写controller
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.CONTROLLER.getTempFileName())){
-
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("controller");
             classContentBean.setClassSuffix("Controller.java");
             writeClassFile(classContentBean);
@@ -176,14 +142,8 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写controller-ddd
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.CONTROLLER_DDD.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-
             classContentBean.setChildPackageName("adapter.controller");
             classContentBean.setClassSuffix("Controller.java");
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -200,7 +160,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //指定服务类 or 工具类
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())){
-            writeSpringApplicationContext(writeContentBean.getContent());
+            commonWriteService.writeSpringApplicationContext(writeContentBean.getContent(),projectTemplateConfig.getOutPath());
         }
 
         //指定服务类 or 工具类
@@ -212,26 +172,26 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.APPLICATION.getTempFileName())){
             writeApplication(writeContentBean.getContent());
         }
+        //指定服务类 or 工具类
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName())){
+            commonWriteService.writeAppEventPublisher(writeContentBean.getContent(),projectTemplateConfig.getOutPath());
+        }
 
+        //写BaseEvent
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName())){
+            commonWriteService.writeBaseEvent(writeContentBean.getContent(),projectTemplateConfig.getOutPath());
+        }
 
 
         //写model.bo
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.BUSINESS_OBJECT.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setChildPackageName("model.bo");
+            classContentBean.setChildPackageName("bo");
             classContentBean.setClassSuffix("BO.java");
             writeClassFile(classContentBean);
         }
         //写domain.bo-ddd
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.BUSINESS_OBJECT_DDD.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.bo");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -241,25 +201,13 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
             }
         }
 
-
         //写convert
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.CONVERT.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             writeClassFileV2(classContentBean);
         }
         //写domain.enum
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ENUM.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.enums");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -271,13 +219,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写domain.valueobject
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.VALUE_OBJECT.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.valueobject");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -289,14 +231,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写domain.event
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.EVENT_BODY.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.event");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -310,14 +245,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写domain.msgbody
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MESSAGE_BODY.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.msgbody");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -330,13 +258,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写domain.gataway
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.GATAWAY.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.gataway");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -348,13 +270,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写domain.gataway.impl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.GATAWAY_IMPL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("gataway.impl");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -364,19 +280,29 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
             }
         }
 
+
+        //写domain.repository.impl
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.REPOSITORY_IMPL.getTempFileName())){
+            classContentBean.setChildPackageName("repositoryimpl");
+            classContentBean.setClassPackageName(writeContentBean.getClassPackageName()+".repositoryimpl");
+            //走默认的包生成方式
+            if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
+                writeClassFile(classContentBean);
+            }else {
+                //走文档里的package包生成方式
+                classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.repositoryimpl");
+                writeClassFileV2(classContentBean);
+            }
+        }
+
+
         //写infrast.acl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             if(writeContentBean.getHumpClassName().toLowerCase().contains(TemplateFileEnum.ACL.getTempFileName())){
                 classContentBean.setChildPackageName("infrast.acl");
             }else {
                 classContentBean.setChildPackageName("infrast.adapter");
             }
-            classContentBean.setClassSuffix("");
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -387,17 +313,11 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
         }
         //写infrast.acl.impl
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL_IMPL.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             if(writeContentBean.getHumpClassName().toLowerCase().contains(TemplateFileEnum.ACL.getTempFileName())){
                 classContentBean.setChildPackageName("infrast.acl.impl");
             }else {
                 classContentBean.setChildPackageName("infrast.adapter.impl");
             }
-            classContentBean.setClassSuffix("");
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -410,23 +330,12 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写acl.param
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.ACL_PARAM.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             writeClassFileV2(classContentBean);
         }
 
         //写app.cmd
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.CMD.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setChildPackageName("app.command");
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -437,12 +346,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
         }
         //写app.exe
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.EXE.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
             classContentBean.setChildPackageName("app.executor");
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -454,13 +358,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写domain.factory
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.FACTORY.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("domain.factory");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
 
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
@@ -474,14 +372,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写app.listener
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_LISTENER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("app.listener");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -491,39 +382,22 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
             }
         }
 
-
-
         //写infras.mq.consumer
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_CONSUMER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("infrast.mq.consumer");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
             }else {
                 //走文档里的package包生成方式
                 classContentBean.setClassPackageName(appServiceConfig.getPackage()+".infrast.mq.consumer");
-
                 writeClassFileV2(classContentBean);
             }
         }
 
         //写infras.mq.handler
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_HANDLER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("infrast.mq.handler");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -536,14 +410,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         //写infras.mq.producer
         if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MQ_PRODUCER.getTempFileName())){
-            ClassContentBean classContentBean = new ClassContentBean();
-            classContentBean.setClassContent(writeContentBean.getContent());
-            classContentBean.setHumpClassName(writeContentBean.getHumpClassName());
             classContentBean.setChildPackageName("infrast.mq.producer");
-            classContentBean.setClassSuffix("");
-            classContentBean.setClassPackageName(writeContentBean.getClassPackageName());
-            classContentBean.setModulePath(projectTemplateConfig.getOutPath());
-
             //走默认的包生成方式
             if(StringUtils.isEmpty(classContentBean.getClassPackageName())){
                 writeClassFile(classContentBean);
@@ -554,19 +421,12 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
             }
         }
 
-
+        //写infrast.dao.mapper
+        if(writeContentBean.getTemplateName().equals(TemplateFileEnum.MAPPER_DDD.getTempFileName())){
+            classContentBean.setChildPackageName("infrast.dao.mapper");
+            writeRoute(classContentBean);
+        }
     }
-
-    @Override
-    public void writeAllContent(String humpClassName, Map<String, Object> varMap, String fast) {
-        writeAll(humpClassName, varMap, fast);
-    }
-
-    @Override
-    public void writeCommonContent(Map<String, Object> varMap, String fast) {
-        writeCommon(varMap, fast);
-    }
-
 
     /**
      * 写mapper xml文件
@@ -701,25 +561,6 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
     }
 
     /**
-     * 写工具类文件
-     *
-     * @param content
-     */
-    public void writeSpringApplicationContext(String content) {
-        String packageName = appServiceConfig.getPackage();
-        String packagePath = packageName.replace(".", "/");
-        String filePath = Constant.JAVA + "/" + packagePath + "/utils";
-        String fileName = "SpringApplicationContext.java";
-        filePath = projectTemplateConfig.getOutPath()  + filePath + "/" + fileName;
-        try {
-            FileUtils.write(new File(filePath), content, "UTF-8");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
      * 写测试文件
      *
      * @param content
@@ -805,10 +646,9 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
 
         String testContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.TEST.getTempFileName(), varMap);
         this.writeTest(testContent, humpClassName);
+
+
     }
-
-
-
 
     /**
      * 写公共基础服务类
@@ -820,7 +660,7 @@ public class SpringBootWriteServiceImpl extends WriteService implements IWriteFi
         this.writeBaseController(baseControllerContent);
 
         String SpringApplicationContextContent = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(), varMap);
-        this.writeSpringApplicationContext(SpringApplicationContextContent);
+        commonWriteService.writeSpringApplicationContext(SpringApplicationContextContent,projectTemplateConfig.getOutPath());
 
         String application = FreemarkerUtils.parseTpl(fast+ TemplateFileEnum.APPLICATION.getTempFileName(), varMap);
         this.writeApplication(application);

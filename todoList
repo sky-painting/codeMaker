@@ -15,12 +15,54 @@
 
 
 10. verison 1.2.1-beta 变更(todo)
- 1.支持默认带工具类SpringEventPublisher帮助事件发布与消费异步化
- 2.支持事件发布异步化的代码绘制(产生事件->发布->消费事件)
- 3.重构读取plantUML文件的相关逻辑降低复杂度
- 4.重新梳理读取plantUML文件的相关路径,优化为按项目维度分别存放
- 5.支持复杂场景下的代码绘制能力,进行精细化控制(如listbo,listvo的转换,代码参数动态绘制引用等)
- 6.支持Page对象生成到代码里
- 7.支持通过时序图的调用方法列表补充构建接口和类的方法，辅助完善业务调用流程(如xxMapper.getByCode不在XXMapper里，则通过时序图里的信息进行动态补充)
- 8.根据动态调用方法绘制内容将return body也进行动态化绘制
- 9.增加对基础设施层-适配层的调用绘制
+ 1.支持默认带工具类SpringEventPublisher帮助事件发布与消费异步化(down)
+ 2.重构读取plantUML文件的相关逻辑降低复杂度(down)
+ 3.重新梳理读取plantUML文件的相关路径,优化为按项目维度分别存放(down)
+ 4.支持复杂场景下的代码绘制能力,进行精细化控制(如listbo,listvo的转换,代码参数动态绘制引用等)(down)
+ 5.支持分页PageVO,PageDTO,PageBO生成到接口方法里(down)
+ 6.支持通过时序图的调用方法列表补充构建接口和类的方法，辅助完善业务调用流程(如xxMapper.getByCode不在XXMapper里，则通过时序图里的信息进行动态补充)(down)
+ 7.根据动态调用方法绘制内容将return body也进行动态化绘制(down)
+ 8.增加适配模块解除对codemaker本身的定制化类的依赖(ResultDto,ResultDataDto,PageVO,PageDTO)，可辅助二次开发增加企业适配能力(down)
+ 9.基于数据库生成模式下的底层增加分页page查询方法和count查询方法(down)
+ 10.重构app层下的springboot,cola,dubbo写文件实现逻辑，降低复杂度(down)
+ 11.重构service层下的模版方法模式和建造者模式代码逻辑，降低复杂度(down)
+ 12.增加mapper接口和controller接口的参数校验注解(要引用的注解类可先写死，后续优化)(down)
+ 13.增加时序图调用方法参数动态推导功能(如xxxGataWay.getBySystemName没有在领域文档中定义，在时序图中有定义但是没有写明参数，这里可以做动态推导)
+ 14.补充bo关联表时缺失的主键id(down)
+ 15.增加!字符屏蔽不需要解析的planUML文档内容,便于调试代码生成(down)
+
+
+1.2.2 版本(主要支持配置化，插件化，模块化架构,去除对coderutils的完全依赖)
+ 1.支持按领域上下文和request,response分包策略，达到动态分包的效果
+ 2.增加接口按服务维度持久化功能,基于文件(辅助对上下游适配层进行方法生成)
+ 3.重构包动态引用模块，支持自定义引用包配置化,配置文件配置,支持插件化架构
+ 4.支持从plantuml领域文档中导出接口文档
+ 5.支持动态query查询对象完善动态查询逻辑
+ 6.增加openfeign接口生成支持,进而支持springcloud框架体系
+ 7.增加自定义class类模版，注册其他外部jar包类或者公共业务类，如PageBO,XxxUtils,MybatisConfig或者CommonService等
+ 8.支持业务领域动词注册功能，扩展读写场景模式校验 ReadWriteTypeEnum
+ 9.增加cache类代码元素
+ 10.增加create,response bo-->dto/vo的关联类型推导，辅助完善dto/vo模型
+ 11.支持事件发布异步化的代码绘制(产生事件->发布->消费事件)
+
+1.3.0 版本(进行一次整体的架构升级)
+
+ 1.支持在调用时序中增加自定义流程控制语句如if else,fori,fore,fors,filter,mappingby,groupby
+ 2.支持可配置化的多种入参校验模式策略
+ 3.支持在plantuml领域文档中增加方法注解并解析生成到项目代码里(transactional,lock,aop注解等)
+ 4.增加对基础设施层-下游适配层的调用绘制(springboot,dubbo)
+ 5.降低对数据库链接的强依赖，以数据库e-r图或者excel表作为数据库元数据信息的来源
+ 6.支持
+ 基于数据库模式，
+ 基于e-r图模式，
+ 基于领域文档模式，
+ 基于领域文档+数据库模式，
+ 基于领域文档+数据库/e-r图模式+调用时序文档模式
+
+1.4 平台化,是否具有平台化的能力
+ 1.持久层存储
+ 2.页面交互设计
+
+
+
+

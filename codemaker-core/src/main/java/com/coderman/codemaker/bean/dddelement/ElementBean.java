@@ -130,16 +130,20 @@ public abstract class ElementBean {
         List<InterfaceBean> newInterfaceBeanList = new ArrayList<>();
         plantUmlContextBean.getInterfaceBeanMap().forEach((k,v)->{
             if(v.getClassName().toLowerCase().endsWith(elementType)){
+                v.getMethodBeanList().forEach(methodBean -> methodBean.refreshMethodName());
                 newInterfaceBeanList.add(v);
             }
         });
         if(plantUmlContextBean.getDerivedPlantUmlContextBean() != null){
             plantUmlContextBean.getDerivedPlantUmlContextBean().getInterfaceBeanMap().forEach((k,v)->{
                 if(v.getClassName().toLowerCase().endsWith(elementType)){
+                    v.getMethodBeanList().forEach(methodBean -> methodBean.refreshMethodName());
                     newInterfaceBeanList.add(v);
                 }
             });
         }
+
+
         this.setInterfaceBeanList(newInterfaceBeanList);
         return this;
     }

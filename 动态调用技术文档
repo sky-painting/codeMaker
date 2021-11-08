@@ -33,3 +33,4 @@
 8.应用层(app_http)->应用层(app_rpc)-->是否需要？
    读:被调用方返回值转:bo->vo
    写:调用方参数转:vo->bo,bo->cmd,vo->cmd,cmd->event,event->msgbody
+

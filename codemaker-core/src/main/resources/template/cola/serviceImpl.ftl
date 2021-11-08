@@ -1,11 +1,11 @@
-package ${package}.service.impl;
+package ${packageInfrast}.service.impl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ${package}.dao.mapper.${table.humpClassName}Mapper;
+import ${packageInfrast}.dao.mapper.${table.humpClassName}Mapper;
 import ${package}.service.${table.humpClassName}Service;
 import ${package}.model.bo.${table.humpClassName}BO;
 
@@ -31,7 +31,7 @@ public class ${table.humpClassName}ServiceImpl implements ${table.humpClassName}
 	}
 	
 	@Override
-	public boolean delete(Long id) {
+	public Boolean delete(Long id) {
 		return false;
 	}
 	
@@ -46,8 +46,13 @@ public class ${table.humpClassName}ServiceImpl implements ${table.humpClassName}
 	}
 
 	@Override
-	public boolean update(${table.humpClassName}BO bo) {
+	public Boolean update(${table.humpClassName}BO bo) {
 		return false;
 	}
 
+
+	@Override
+	public List<${table.humpClassName}BO> getPageList()  throws Exception {
+		return null;
+	}
 }

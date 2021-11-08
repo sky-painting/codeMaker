@@ -21,6 +21,9 @@ public enum  ModuleEnum {
             Sets.newHashSet(TemplateFileEnum.APPLICATION.getTempFileName(),
                     TemplateFileEnum.MAPPER_XML.getTempFileName(),
                     TemplateFileEnum.MAPPER.getTempFileName(),
+                    TemplateFileEnum.MAPPER_DDD.getTempFileName(),
+                    TemplateFileEnum.MAPPER_XML_DDD.getTempFileName(),
+
                     TemplateFileEnum.CONTROLLER.getTempFileName(),
                     TemplateFileEnum.CONTROLLER_DDD.getTempFileName(),
                     TemplateFileEnum.SERVICE_IMPL.getTempFileName(),
@@ -61,6 +64,9 @@ public enum  ModuleEnum {
                     TemplateFileEnum.MQ_PRODUCER.getTempFileName(),
                     TemplateFileEnum.MQ_LISTENER.getTempFileName(),
                     TemplateFileEnum.MQ_HANDLER.getTempFileName(),
+                    TemplateFileEnum.MQ_HANDLER.getTempFileName(),
+                    TemplateFileEnum.BASE_EVENT.getTempFileName(),
+                    TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName(),
 
                     TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName())),
     /**
@@ -79,6 +85,9 @@ public enum  ModuleEnum {
     DUBBO_COMMON("dubbo","dubbo-common", Sets.newHashSet(
             TemplateFileEnum.MAPPER_XML.getTempFileName(),
             TemplateFileEnum.MAPPER.getTempFileName(),
+            TemplateFileEnum.MAPPER_DDD.getTempFileName(),
+            TemplateFileEnum.MAPPER_XML_DDD.getTempFileName(),
+
             TemplateFileEnum.DATA_OBJECT.getTempFileName()
     )),
     /**
@@ -117,6 +126,9 @@ public enum  ModuleEnum {
             TemplateFileEnum.EVENT_BODY.getTempFileName(),
             TemplateFileEnum.ACL_PARAM.getTempFileName(),
 
+            TemplateFileEnum.BASE_EVENT.getTempFileName(),
+            TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName(),
+
             TemplateFileEnum.MQ_CONSUMER.getTempFileName(),
             TemplateFileEnum.MQ_PRODUCER.getTempFileName(),
             TemplateFileEnum.MQ_LISTENER.getTempFileName(),
@@ -152,6 +164,7 @@ public enum  ModuleEnum {
             TemplateFileEnum.VALUE_OBJECT.getTempFileName(),
             TemplateFileEnum.MESSAGE_BODY.getTempFileName(),
             TemplateFileEnum.EVENT_BODY.getTempFileName(),
+            TemplateFileEnum.BASE_EVENT.getTempFileName(),
             TemplateFileEnum.ENUM.getTempFileName()
 
             )),
@@ -173,7 +186,10 @@ public enum  ModuleEnum {
             TemplateFileEnum.GATAWAY_IMPL.getTempFileName(),
             TemplateFileEnum.REPOSITORY_IMPL.getTempFileName(),
             TemplateFileEnum.MAPPER_XML.getTempFileName(),
+            TemplateFileEnum.MAPPER_XML_DDD.getTempFileName(),
+
             TemplateFileEnum.MAPPER.getTempFileName(),
+            TemplateFileEnum.MAPPER_DDD.getTempFileName(),
             TemplateFileEnum.DATA_OBJECT.getTempFileName(),
             TemplateFileEnum.DOBO_CONVERT.getTempFileName(),
             TemplateFileEnum.SERVICE_IMPL.getTempFileName(),
@@ -202,6 +218,7 @@ public enum  ModuleEnum {
             TemplateFileEnum.SPRING_APPLICATION_CONTEXT.getTempFileName(),
             TemplateFileEnum.DTOBO_CONVERT.getTempFileName(),
             TemplateFileEnum.FACADE_AOP.getTempFileName(),
+            TemplateFileEnum.APP_EVENT_PUBLISHER.getTempFileName(),
             TemplateFileEnum.MQ_LISTENER.getTempFileName()
 
             )),

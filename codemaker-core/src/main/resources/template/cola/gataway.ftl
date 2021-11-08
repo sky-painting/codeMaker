@@ -13,6 +13,7 @@ import ${importClass};
  */
 public interface ${class.className}{
     <#list methods as method>
+
 ${method.doc}
      ${method.returnClass} ${method.methodName};
     </#list>

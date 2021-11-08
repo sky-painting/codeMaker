@@ -1,8 +1,7 @@
 package com.coderman.codemaker.app.dynamicddd.derivedhandler;
 
-import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.service.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.bean.dddelementderive.DtoBoConvertElementBean;
 import com.coderman.codemaker.bean.dddelementderive.VoBoConvertElementBean;
 import com.coderman.codemaker.bean.plantuml.InterfaceBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;

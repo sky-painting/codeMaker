@@ -1,9 +1,7 @@
 package com.coderman.codemaker.app.dynamicddd;
 
 import com.coderman.codemaker.bean.plantuml.*;
-import com.coderman.codemaker.service.ReadInvokePlantUMLFileService;
 import org.apache.commons.collections4.CollectionUtils;
-import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -258,7 +256,7 @@ public class DerivedClassFactory {
     }
 
     /**
-     * 处理bo-dto到convert的派生
+     * 处理bo-vo到convert的派生
      * @param domainBoElementBeanList
      * @param plantUmlContextBean
      */

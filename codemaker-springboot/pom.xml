@@ -159,7 +159,7 @@
         <dependency>
             <groupId>com.coderman.utils</groupId>
             <artifactId>coderman-utils</artifactId>
-            <version>1.0.2-SNAPSHOT</version>
+            <version>1.0.4-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -184,7 +184,24 @@
 
 
     </dependencies>
-
+    <repositories>
+        <repository>
+            <id>aliyun-releases</id>
+            <name>阿里云仓库</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+        </repository>
+        <repository>
+            <id>apache.snapshots.https</id>
+            <name>Apache Development Snapshot Repository</name>
+            <url>https://repository.apache.org/content/repositories/snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>

@@ -1,8 +1,10 @@
 package com.coderman.codemaker.bean;
 
 import com.coderman.codemaker.bean.plantuml.ClassBean;
+import com.coderman.codemaker.bean.plantuml.FieldBean;
 import com.coderman.codemaker.bean.plantuml.InterfaceBean;
 import com.coderman.codemaker.bean.plantuml.MethodBean;
+import org.apache.commons.collections4.CollectionUtils;
 import org.assertj.core.util.Lists;
 
 import java.util.ArrayList;
@@ -75,14 +77,30 @@ public class TableBean {
      */
     private ClassBean classBean;
 
-    public ClassBean convertToClassBean(String packageName){
+    /**
+     * 将tablebean对象转换为classBean对象，代表DO类对象
+     * @param packageName
+     * @param columnBeanList
+     * @return
+     */
+    public ClassBean convertToClassBean(String packageName,List<ColumnBean> columnBeanList){
         ClassBean classBean = new ClassBean();
         classBean.setClassName(this.getHumpClassName()+"DO");
         classBean.setPackageName(packageName);
         classBean.setClassDesc(tableComment);
         classBean.setPlantUMLPackage("dao.dataobject");
-        classBean.setMethodBeanList(Lists.newArrayList());
 
+        classBean.setMethodBeanList(Lists.newArrayList());
+        classBean.setTableBean(this);
+        classBean.setColumnBeanList(columnBeanList);
+
+        if(CollectionUtils.isNotEmpty(columnBeanList)){
+            List<FieldBean> fieldBeanList = new ArrayList<>();
+            columnBeanList.forEach(columnBean -> fieldBeanList.add(columnBean.convert2FieldBean()));
+            classBean.setFieldBeanList(fieldBeanList);
+        }else {
+            classBean.setFieldBeanList(Lists.newArrayList());
+        }
         return classBean;
     }
 
@@ -91,23 +109,20 @@ public class TableBean {
      * @param packageName
      * @return
      */
-    public InterfaceBean convertToMapperInterface(String packageName){
+    public InterfaceBean convertToMapperInterface(String packageName,List<ColumnBean> columnBeanList){
         InterfaceBean interfaceBean = new InterfaceBean();
         interfaceBean.setClassName(this.getHumpClassName()+"Mapper");
         interfaceBean.setPackageName(packageName);
         interfaceBean.setClassDesc(tableComment);
         interfaceBean.setPlantUMLPackage("dao.mapper");
+        String doPackageName = packageName.replace("mapper","dataobject");
+        String importDO = doPackageName+"."+this.getHumpClassName()+"DO";
+        interfaceBean.setImportClassList(Lists.newArrayList(importDO));
+        interfaceBean.setMethodBeanList(getDefaultMapperMethod());
+        interfaceBean.setTableBean(this);
+        interfaceBean.setColumnBeanList(columnBeanList);
 
-        List<MethodBean> methodBeanList = new ArrayList<>();
-        String paramType = this.getHumpClassName()+"DO";
-        String varName = paramType.substring(0,1).toLowerCase()+paramType.substring(1);
-        methodBeanList.add(new MethodBean("insert("+paramType+" "+varName+")","int"));
-        methodBeanList.add(new MethodBean("update("+paramType+" "+varName+")","int"));
-        methodBeanList.add(new MethodBean("getAll()","Long"));
-        methodBeanList.add(new MethodBean("getById(Long id)","Long"));
-        methodBeanList.add(new MethodBean("deleteById(Long id)","int"));
 
-        interfaceBean.setMethodBeanList(methodBeanList);
         return interfaceBean;
     }
 
@@ -206,5 +221,19 @@ public class TableBean {
 
     public void setTableCollation(String tableCollation) {
         this.tableCollation = tableCollation;
+    }
+
+
+    public List<MethodBean> getDefaultMapperMethod(){
+        List<MethodBean> methodBeanList = new ArrayList<>();
+        String paramType = this.getHumpClassName()+"DO";
+        String varName = paramType.substring(0,1).toLowerCase()+paramType.substring(1);
+        methodBeanList.add(new MethodBean("insert("+paramType+" "+varName+")","long","保存数据记录"));
+        methodBeanList.add(new MethodBean("update("+paramType+" "+varName+")","int","更新数据记录"));
+        methodBeanList.add(new MethodBean("getAll()","List<"+paramType+">","获取所有数据记录"));
+        methodBeanList.add(new MethodBean("getById(Long id)",paramType,"根据ID获取单条记录"));
+        methodBeanList.add(new MethodBean("deleteById(Long id)","int","根据ID删除单条记录"));
+        methodBeanList.stream().forEach(methodBean -> methodBean.buildParamArr());
+        return  methodBeanList;
     }
 }

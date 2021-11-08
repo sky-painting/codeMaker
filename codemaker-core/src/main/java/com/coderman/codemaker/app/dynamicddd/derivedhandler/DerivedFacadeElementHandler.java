@@ -1,18 +1,15 @@
 package com.coderman.codemaker.app.dynamicddd.derivedhandler;
 
-import com.coderman.codemaker.app.ImportPackageService;
+import com.coderman.codemaker.service.ImportPackageService;
 import com.coderman.codemaker.app.dynamicddd.DerivedClassFactory;
 import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.bean.dddelement.DomainBoElementBean;
-import com.coderman.codemaker.bean.dddelementderive.DtoElementBean;
 import com.coderman.codemaker.bean.dddelementderive.FacadeElementBean;
-import com.coderman.codemaker.bean.plantuml.ClassBean;
 import com.coderman.codemaker.bean.plantuml.InterfaceBean;
 import com.coderman.codemaker.bean.plantuml.MethodBean;
 import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
 import com.coderman.codemaker.enums.DomainDerivedElementEnum;
-import com.coderman.codemaker.enums.DomainElementEnum;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -54,6 +51,7 @@ public class DerivedFacadeElementHandler implements DomainElementHandler<FacadeE
                 List<MethodBean> methodBeanList = v.getMethodBeanList().stream().filter(methodBean ->
                         !methodBean.getReturnClass().toLowerCase().contains("vo")
                                 &&  !methodBean.getMethodName().toLowerCase().contains("vo")
+                                && StringUtils.isEmpty(methodBean.getPathValue())
                 ).collect(Collectors.toList());
 
                 v.setMethodBeanList(methodBeanList);
@@ -67,6 +65,7 @@ public class DerivedFacadeElementHandler implements DomainElementHandler<FacadeE
                     v.setMethodBeanList(methodBeanFilterList);
                 }
                 v.getMethodBeanList().forEach(methodBean -> methodBean.buildDoc());
+                importPackageService.dealImportClass(v,plantUmlContextBean);
 
                 facadeElementBeanList.add(v);
             }

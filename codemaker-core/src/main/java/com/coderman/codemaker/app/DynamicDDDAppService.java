@@ -1,6 +1,5 @@
 package com.coderman.codemaker.app;
 
-import com.coderman.codemaker.service.IWriteFileService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

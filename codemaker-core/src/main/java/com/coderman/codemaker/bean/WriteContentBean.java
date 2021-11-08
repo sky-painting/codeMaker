@@ -20,9 +20,6 @@ public class WriteContentBean {
     private String humpClassName;
     private String classPackageName;
 
-
-
-
     private AbstractClassBean abstractClassBean;
 
     public AbstractClassBean getAbstractClassBean() {
@@ -56,4 +53,21 @@ public class WriteContentBean {
     public void setHumpClassName(String humpClassName) {
         this.humpClassName = humpClassName;
     }
+
+    /**
+     * 将writeContentbean对象转换为classcontentBean对象
+     * @return
+     */
+    public ClassContentBean buildClassContentBean(String modulePath){
+        ClassContentBean classContentBean = new ClassContentBean();
+        classContentBean.setClassContent(this.getContent());
+        classContentBean.setHumpClassName(this.getHumpClassName());
+        classContentBean.setClassPackageName(this.getClassPackageName());
+        classContentBean.setClassSuffix("");
+        classContentBean.setModulePath(modulePath);
+        return classContentBean;
+    }
+
+
+
 }

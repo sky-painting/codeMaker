@@ -13,11 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ProviderInvokeHandler {
-    public String buildProviderMethod(String providerContent, PlantUmlContextBean plantUmlContextBean){
-        String className = providerContent.trim().split("\\.")[0];
-        String method = providerContent.trim().split("\\.")[1];
-        return null;
-    }
-
 
 }
