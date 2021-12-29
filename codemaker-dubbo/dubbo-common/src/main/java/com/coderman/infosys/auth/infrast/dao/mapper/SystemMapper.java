@@ -1,7 +1,6 @@
 package com.coderman.infosys.auth.infrast.dao.mapper;
 
 import java.util.List;
-import com.coderman.utils.commonbo.PageBO;
 import com.coderman.infosys.auth.infrast.dao.dataobject.SystemDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 /**
 * @Description:系统表接口
 * @Author:
-* @CreateTime:2021-11-07 08:18:28
+* @CreateTime:2021-12-24 23:17:12
 * @version v1.0
 */
 @Mapper
@@ -54,43 +53,5 @@ public interface SystemMapper{
 	 * @return int
 	 */
 	int deleteById(@Param(value = "id") Long id);
-
-		/**
-	 *
-	 * @Description 查询
-	 * @param systemName
-	 * @return List<SystemDO>
-	 */
-	List<SystemDO> getByName(@Param(value = "systemName") String systemName);
-
-		/**
-	 *
-	 * @Description 查询
-	 * @param pageBO
-	 * @return List<SystemDO>
-	 */
-	List<SystemDO> getPageList(@Param(value = "pageBO") PageBO pageBO);
-
-		/**
-	 *
-	 * @Description 查询
-	 * @return List<SystemDO>
-	 */
-	List<SystemDO> queryByCondition();
-
-		/**
-	 *
-	 * @Description 查询
-	 * @param systemCode
-	 * @return List<SystemDO>
-	 */
-	List<SystemDO> queryBySystemCode(@Param(value = "systemCode") String systemCode);
-
-		/**
-	 *
-	 * @Description 查询
-	 * @return int
-	 */
-	int updateSystem();
 
 }
