@@ -34,7 +34,10 @@ coderMaker 立足于低代码平台，致力于解决软件开发过程中的效
 ##### 1. 工程模块架构
 
 ![image](doc/img/codeMaker模块包.png)
-详细说明:[MODULE.md](MODULE.md)
+1. 粉红色为codeMaker提供的平台能力工程
+2. 浅蓝色为生成代码架构的模板工程
+
+[模块详细说明](MODULE.md)
 
 ##### 2.  架构图
     1. v1版本
@@ -43,6 +46,8 @@ coderMaker 立足于低代码平台，致力于解决软件开发过程中的效
     2. v2版本
 ![image](doc/img/天画-低代码平台(codeMaker)-v3.png)
 
+    3. v3预览版本
+![image](doc/img/天画-低代码平台(codeMaker)-v3-预览版.png)
 
 ##### 3.  使用流程图
     1. v1版本
