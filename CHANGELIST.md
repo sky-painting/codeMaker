@@ -1,0 +1,104 @@
+# codeMaker
+
+## 版本变更说明
+
+### V1.0.0
+1. 实现codermaker-core代码生成功能
+2. 实现数据库表sql生成功能
+
+### V1.0.1
+1. 实现数据库表e-r图生成功能
+
+### V1.0.2
+1. 实现代码生成极速模式
+
+### V1.0.3
+1. 重构代码生成逻辑核心服务,引入应用层，支持多应用类型代码生成架构
+2. 支持一套api操作接口生成dubbo,springboot应用代码 
+3. 增加dubbo应用的代码模板，支持maven多模块
+4. 引入bo,facade,facadeimpl,aop,dto等代码类生成模板 
+5. dubbo项目支持facade层和service层双服务层业务架构
+6. application.properties增加application.type属性，值为springboot,dubbo,cola
+7. 增加projecttemplate-dubbo.properties属性文件，支持dubbo项目代码生成
+8. 原有配置文件projecttemplate.properties改名为projecttemplate-springboot.properties
+9. 修复若干其他bug
+
+### V1.0.4
+1. 基于plantUML文档生成代码，基于ddd思想和模式生成模块级的代码内容
+2. 增加makeddd接口，支持生成dynamicddd模块的代码
+3. 引入支持ddd代码生成的配置(projecttemplate-dynamicddd.properties)和代码模板(template/dynamicddd)
+4. codemaker-core模块resources目录增加ddd-plantuml目录存放plantUML类图
+5. 支持ddd的一些模式代码生成：实体模式,值对象模式,聚合根模式,工厂模式,仓库模式,防腐层模式,服务模式,模块模式,CQE模式,领域网关
+6. 产出部分公共代码生成服务方法
+7. 优化代码生成核心链路代码模型，针对ddd代码生成做了分层处理
+8. 修复若干其他bug
+
+### V1.1.0
+1. 支持cola应用架构代码生成,增加cola应用的template代码模板
+2. 增加基于plantuml类图的领域服务代码生成接口
+
+   /getproject/valueobject
+   /getproject/msgbody
+   /getproject/gataway
+   /getproject/acladapter
+   /getproject/command
+   /getproject/executor
+   /getproject/factory
+   /getproject/dtoboconvert
+   /getproject/voboconvert
+   /getproject/doboconvert
+3. 精简不同应用框架的代码生成配置
+
+   在每个应用框架配置下增加dubbo.domain.plantuml配置项,配置plantuml类图文件名称,支持基于类图-ddd的代码生成
+   如果不配置则不能借助plantuml类图生成基于领域服务ddd的代码，而是生成基于数据库表的常规代码
+   去除以下三个配置，集中到application.properties文件中
+   *.global.package
+   *.global.author
+   *.global.applicationName
+
+4. 在springboot,cola,dubbo的代码模板目录下增加ddd元素的tempalte代码模板
+5. 将dynamic-ddd的代码生成服务整合到springboot,cola,dubbo的代码生成服务中，支持基于DDD思想的代码生成
+6. 扩展plantuml中类图标签,基于BO派生多个代码生成对象（vo,dto,facade,doboconvert,controller,voboconvert,dtoboconvert）
+7. 整合底层代码支持一套api,一套服务支撑springboot,cola,dubbo应用级代码生成和dynamic-ddd模块级代码生成
+8. 修复多个兼容性bug
+9. 整体上支持基于数据库表结构的代码生成和基于plantUML类图文档的代码生成
+
+
+### V0.0.2
+1. 本次版本新增codemaker-dberparse模块，支持plantuml er图解析为sql ddl create语句，已集成到codemaker-dbops
+   模块中。
+
+
+### V1.2.0-alpha
+1. 支持event模型生成,
+2. 支持mqconsumer,applistener,mqproducer,mqhandler生成
+3. 屏蔽扩展类dto带有bo属性的字段
+4. 增加对plantuml domain类图内容的校验，比如重复字段和重复方法
+5. 扩展动态ddd的代码生成能力，比如一个BO下出现多个facade,controller的接口 
+6. 提高plantuml内容的解析兼容性和稳定性
+7. 支持动态链路调用plantuml-调用链路图解析
+8. 支持读写分离的dubbo,restController接口调用 
+9. 支持将领域值对象枚举类暴露到dubbo client端
+10. 优化convert代码生成
+11. gatawayimpl 与 repositoryimpl分开生成
+12. 优化包路径生成模式
+13. 优化访问描述符和代码注释
+14. 读取plantuml文件对于方法的解析将方法参数独立解析出来
+
+
+### V1.2.1-beta
+1. 支持默认带工具类SpringEventPublisher帮助事件发布与消费异步化
+2. 重构读取plantUML文件的相关逻辑降低复杂度
+3. 重新梳理读取plantUML文件的相关路径,优化为按项目维度分别存放
+4. 支持复杂场景下的代码绘制能力,进行精细化控制(如listbo,listvo的转换,代码参数动态绘制引用等)
+5. 支持分页PageVO,PageDTO,PageBO生成到接口方法里
+6. 支持通过时序图的调用方法列表补充构建接口和类的方法，辅助完善业务调用流程(如xxMapper.getByCode不在XXMapper里，则通过时序图里的信息进行动态补充)
+7. 根据动态调用方法绘制内容将return body也进行动态化绘制
+8. 增加适配模块解除对codemaker本身的定制化类的依赖(ResultDto,ResultDataDto,PageVO,PageDTO)，可辅助二次开发增加企业适配能力
+9. 基于数据库生成模式下的底层增加分页page查询方法和count查询方法
+10. 重构app层下的springboot,cola,dubbo写文件实现逻辑，降低复杂度
+11. 重构service层下的模版方法模式和建造者模式代码逻辑，降低复杂度
+12. 增加mapper接口和controller接口的参数校验注解(要引用的注解类可先写死，后续优化)
+13. 增加时序图调用方法参数动态推导功能(如xxxGataWay.getBySystemName没有在领域文档中定义，在时序图中有定义但是没有写明参数，这里可以做动态推导)
+14. 补充bo关联表时缺失的主键id
+15. 增加!字符屏蔽不需要解析的planUML文档内容,便于调试代码生成
