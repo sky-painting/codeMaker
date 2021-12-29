@@ -127,7 +127,7 @@ codeMaker支持多模式进行代码生成，具体看下列文档
 
 #### 项目计划
 1. 参考todoList文件内容
-2. [参考changeList文件内容](CHANGELIST.mdd)
+2. [参考changeList文件内容](CHANGELIST.md)
 
 
 ####  配置文件说明
