@@ -1,0 +1,122 @@
+@startuml
+
+
+
+enum "订单类型-OrderTypeEnum" as OrderTypeEnum{
+    BILL_ORDER("bill_order","账单"),
+    TRADE_ORDER("trade_order","主订单"),
+    TRADE_SUB_ORDER("trade_sub_order","子订单"),
+    TRADE_PAYMENT("trade_payment_order","支付单");
+
+    订单code:String code
+    订单描述:String desc
+    static OrderTypeEnum getByCode(String code)
+}
+
+
+
+package domain.bo {
+    class "主订单-TradeOrderBO" as TradeOrderBO{
+	    -主订单code:String tradeOrderCode
+        -主订单类型:String tradeOrderType
+	    #主订单状态:int status
+        #主业务单号:String mainBizOrderCode
+        -创建变更日志:TradeOrderLogBO buildTradeOrderLogBO()
+    }
+
+    class "子订单-TradeSubOrderBO" as TradeSubOrderBO{
+	    子订单code:String subOrderCode
+	    子订单类型:String subOrderType
+	    子订单状态: int status
+	    业务订单编号: String bizOrderCode
+	    主订单code: String tradeOrderCode
+	    TradeOrderLogBO buildTradeOrderLogBO()
+    }
+
+
+    class "订账单-TradeBillOrderBO" as TradeBillOrderBO  {
+	    账单号:String billOrderCode
+        账单金额:Long billAmount
+        创建人:String createUserId
+        创建人姓名:String createUserName
+        账单标题:String billOrderCode
+        关联的子订单列表:List<TradeSubOrderBO> tradeSubOrderBOList
+        TradeOrderLogBO buildTradeOrderLogBO()
+        .. extend info ..
+        exportaclkey:CreatePaymentRequestDTO(createUserId->payUserId,createUserName->payUserName)
+
+    }
+
+    class "账单与支付单关系-tradeBillPaymentBO" as tradeBillPaymentBO {
+	    账单号:String billOrderCode
+	    支付订单号:String paymentOrderCode
+	    支付订单金额:Long paymentAmount
+        已支付金额:Long paidAmount
+	    签名:String sign
+	    支付订单状态:int status
+	    TradeOrderLogBO buildTradeOrderLogBO()
+	    .. extend info ..
+        exportaclkey:CreatePaymentRequestDTO(paymentOrderCode>payOrderId,paymentAmount>payAmount,paidAmount)
+
+    }
+
+    class "单据操作变更日志-tradeOrderLogBO" as tradeOrderLogBO{
+        单据类型:String orderType
+        操作类型:String operationType
+        单据编号:String orderCode
+        操作前状态:int beforeStatus
+        操作后状态:int afterStatus
+        操作前单据快照:String beforeSnapShotJson
+        操作后单据快照:String afterSnapShotJson
+    }
+
+}
+
+
+package domain.msgbody {
+    class "主订单状态变更消息体-tradeOrderStatusChangeMsgBody" as TradeOrderStatusChangeMsgBody{
+	    -主订单code:String tradeOrderCode
+        #主订单状态:int status
+        #主订单状态描述:String statusStr
+        #主业务单号:String mainBizOrderCode
+    }
+
+    class "支付结果消息-paymentResultMsgBody" as PaymentResultMsgBody{
+	    -支付单号:String paymentOrderCode
+	    #支付单状态:int status
+	    #支付单状态描述:String statusStr
+        #支付金额:long paidAmount
+    }
+}
+
+package domain.gataway {
+    interface "订单仓库服务-TradeOrderRepository" as TradeOrderRepository{
+        创建主订单 String createMainOrder(TradeOrderBO tradeOrderBO)
+        创建子订单 String createSubOrder(TradeSubOrderBO tradeSubOrderBO)
+        创建账单 String  createBillOrder(TradeBillOrderBO tradeBillBO)
+        创建支付单 TradeBillPaymentBO createPaymentOrder(TradeBillPaymentBO tradeBillPaymentBO)
+    }
+
+    interface "订单查询服务-TradeOrderQueryGataway" as TradeOrderQueryGataway{
+        查询主订单 TradeOrderBO queryMainOrder(String orderCode)
+        查询子订单 TradeSubOrderBO querySubOrder(String subOrderCode)
+        查询账单 TradeBillOrderBO  queryBillOrder(String billOrderCode)
+        查询支付单 TradeBillPaymentBO queryPaymentOrder(String paymentOrderCode)
+    }
+}
+
+
+package domain.factory {
+    class "单据操作日志工厂-TradeOrderLogFactory" as TradeOrderLogFactory{
+        保存单据操作日志 String createTradeOrderLog(TradeOrderLogBO tradeOrderLogBO)
+        获取某一条单据的变更历史 List<TradeOrderLogBO> getOrderLogList(String orderType,String orderCode)
+    }
+}
+
+package   "防腐层包-infrast.acl" as   infrast.acl {
+    interface   "支付服务适配包-PayServiceAdapter" as PayServiceAdapter{
+        创建支付单: String createPayment(CreatePaymentRequestDTO createPaymentRequestDTO)
+    }
+}
+
+@enduml

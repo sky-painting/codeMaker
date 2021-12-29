@@ -6,7 +6,7 @@ participant  领域层 as  domain
 participant  基础设施层 as  infrast
 
 group 创建角色
-http --> domain: 1.创建角色\n RoleController.createRole invoke UserRoleRepository.saveRole
+app_http --> domain: 1.创建角色\n RoleController.createRole invoke UserRoleRepository.saveRole
 domain --> infrast:2.持久化角色\n UserRoleRepository.saveRole invoke RoleMapper.insert
 end
 

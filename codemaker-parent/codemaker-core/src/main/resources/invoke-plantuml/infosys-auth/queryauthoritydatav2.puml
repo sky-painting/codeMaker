@@ -3,12 +3,17 @@
 participant  应用api层 as  facade
 participant  领域层 as  domain
 participant  基础设施层 as  infrast
+participant  组织服务 as  infosysuser
+
 group 系统上下文调用流程
-facade --> domain: 1.根据权限code查询权限信息\nAuthorityFacade.getByCode invoke AuthorityFactory.buildAuthorityByCode
+app_rpc --> domain: 1.根据权限code查询权限信息\nAuthorityFacade.getByCode invoke AuthorityFactory.buildAuthorityByCode
 domain --> domain:2.查询权限详情\n AuthorityFactory.buildAuthorityByCode invoke AuthorityRepository.getByCode
 domain --> infrast:3.查询权限详情\n AuthorityRepository.getByCode invoke AuthorityMapper.getByCode
 domain --> infrast:4.查询系统权限详情\n AuthorityRepository.getByCode invoke SystemAuthorityMapper.getByCode
 domain --> infrast:5.查询行政权限详情\n AuthorityRepository.getByCode invoke AdminAuthorityMapper.getByCode
+infrast --> infrast:6.查询部门信息\n AuthorityRepository.getByCode invoke DepartmentServiceAdapter.queryDepartmentsList
+infrast -> infosysuser:7.查询部门信息\n DepartmentServiceAdapter.queryDepartmentsList invoke DepartmentQueryFacade.queryBySuperId
+
 
 end
 
