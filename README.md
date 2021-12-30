@@ -131,6 +131,8 @@ codeMaker支持多模式进行代码生成，具体看下列文档
 
 
 ####  配置文件说明
+[组件注册流程与二次开发说明文档](COMPOENTREGIST.md)
+
 [开发使用详细配置内容](CONFIG.md)
 
 [构建DDD-plantUML领域文档使用说明](DDDPLANTUMLDOC.md)
