@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 /**
 * @Description:菜单模块表接口
 * @Author:
-* @CreateTime:2021-11-07 08:18:28
+* @CreateTime:2021-12-24 23:17:12
 * @version v1.0
 */
 @Mapper
@@ -53,13 +53,5 @@ public interface ModuleMapper{
 	 * @return int
 	 */
 	int deleteById(@Param(value = "id") Long id);
-
-		/**
-	 *
-	 * @Description 查询
-	 * @param moduleName
-	 * @return List<ModuleDO>
-	 */
-	List<ModuleDO> getByName(@Param(value = "moduleName") String moduleName);
 
 }

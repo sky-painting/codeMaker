@@ -1,0 +1,20 @@
+1. 场景1
+   只需要导入包，类似PageDTO,
+   解决:通过要导入的目标类所在jar进行组件化注册，走组件化装饰，或者通过class-import.properties，
+   在动态调用绘制的时候自动进行包导入
+
+2. 场景2
+   项目第一次初始化需要导入工具类和一些BaseDAO或者配置类如MybatisConfig
+   解决:增加需要导入复制到项目里的工具类配置，如第一次全量，后面删掉配置或者增量即可
+   需要对现有的工具类统一重构
+3. 场景3
+   项目后期迭代不需要导入工具类和一些BaseDAO或者配置类如MybatisConfig
+   但是依然要导入并装饰代码类，如BaseEntity,BaseDTO,BaseDAO等等
+   对场景2和场景3的重合部分，如BaseDAO这种直接注册为single-class组件，走组件化装饰，对需要装饰的新代码进行装饰。
+   适用于初始化第一次项目和后期的迭代需求
+
+4. 场景4
+   在plantUML中依然存在需要引用BaseDAO,BaseEntity,或者AbstractXXX的地方，
+   解决:这里可以借用第一种方法进行包导入注册，对于BaseDAO,BaseEntity本身而言可以通过
+   场景2的方法来解决
+

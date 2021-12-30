@@ -1,0 +1,241 @@
+@startuml
+
+
+package domain.bo  {
+  class "操作人信息-OperatorBO"  as  OperatorBO{
+        +创建时间:Date dateCreate
+        +创建人:Long createUserId
+    }
+
+    class   "操作时间信息-OperateDateBO"    as OperateDateBO{
+        +修改时间:Date dateUpdate
+        +修改人:Long updateUserId
+    }
+
+    class "数据操作信息-BasicOperateBO" as BasicOperateBO{
+        +修改时间:Date dateUpdate
+        +创建时间:Date dateCreate
+        +修改人:Long updateUserId
+        +创建人:Long createUserId
+    }
+
+    class "系统-SystemBO" as SystemBO{
+        系统名称:String systemName
+        系统标示:String systemCode
+        系统域名:String systemUrl
+        系统图标:String systemPicUrl
+        系统技术负责人:Long tecAdminUserId
+        系统业务负责人:Long busAdminUserId
+        系统当前所在部门:Long departmentId
+        系统模块列表:List<ModuleBO> moduleBOList
+        .. extend info ..
+        tableKey:String system
+        facadeKey:String SystemFacade
+        dtoKeyList:String SystemDTO,CreateSystemRequestDTO,UpdateSystemRequestDTO
+        voKeyList:String CreateSystemRequestVO,UpdateSystemRequestVO,SystemVO
+        controllerKey:String SystemController
+        contextKey:String system
+        queryDtoKey:SystemQueryDTO String systemName,String systemCode,Long departmentId, Date startDate,Date endDate
+        queryVoKey:SystemQueryVO String systemName,String systemCode,Long departmentId, Date startDate,Date endDate
+        注册系统: SystemDTO registSystem(SystemDTO systemDTO)
+        分页获取系统: PageDTO<SystemDTO> getPageList(PageDTO pageDto)
+        获取单条系统: SystemDTO getBySystemCode(String systemCode)
+        修改系统: Boolean updateSystem(UpdateSystemRequestDTO dto)
+        搜索获取系统: List<SystemDTO> getSearchList(String search)
+
+        分页获取系统/system/pagelist: PageVO<SystemVO> getPageList(SystemVO systemVO)
+        搜索获取系统/system/search: List<SystemVO> getSearchList(String search)
+        新建系统/system/save: SystemVO saveSystem(CreateSystemRequestVO systemVO)
+        修改系统/system/update: Boolean updateSystem(UpdateSystemRequestVO systemVO)
+        通过系统编号获取系统/system/getbycode: SystemVO getByCode(String systemCode)
+    }
+
+    class "菜单/模块-ModuleBO" as ModuleBO{
+        菜单名称:String moduleName
+        菜单编码:String moduleCode
+        菜单链接:String moduleUrl
+        系统标示:String systemCode
+        按钮列表:List<MenuBO> menuBOList
+        .. extend info ..
+        tableKey:String module
+        facadeKey:String ModuleFacade
+        controllerKey:String ModcreateMenuuleController
+        dtoKeyList:String UpdateModuleRequestDTO,ModuleResponseDTO,CreateModuleRequestDTO
+        voKeyList:String ModuleVO,UpdateModuleRequestVO,CreateModuleRequestVO
+        contextKey:String system
+        创建菜单/module/createmodule: List<ModuleVO> createModule(CreateModuleRequestVO createRequest)
+        创建菜单/module/updatemodule: List<ModuleVO> updateModule(UpdateModuleRequestVO updateRequest)
+        获取系统菜单列表/module/getbysystemcode: List<ModuleVO> getBySystemCode(String systemCode)
+        获取菜单/module/getbycode: ModuleVO getByModuleCode(String moduleCode)
+        分页获取菜单/module/pagelist: PageVO<ModuleVO> getPageList()
+        导入菜单/module/import: Boolean importModuleList(List<CreateModuleRequestDTO> createRequest)
+        导出菜单/module/export: Boolean exportModuleList(String systemCode)
+    }
+
+     class "按钮-MenuBO" as MenuBO{
+         按钮名称:String menuName
+         按钮编码:String menuCode
+         按钮链接:String menuUrl
+         系统编码:String systemCode
+         菜单编码:String moduleCode
+        .. extend info ..
+        tableKey:String menu
+        facadeKey:String MenuFacade
+        feignKey:String MenuFeign
+        controllerKey:String MenuController
+        dtoKeyList:String UpdateMenuRequestDTO,MenuResponseDTO,CreateMenuRequestDTO
+        voKeyList:String MenuVO,UpdateMenuRequestVO,CreateMenuRequestVO
+        contextKey:String system
+        修改按钮/menu/updatemenu: Boolean updateMenu(UpdateMenuRequestVO updateMenuRequestVO)
+        创建按钮/menu/createmenu: MenuVO createMenu(CreateMenuRequestVO createMenuRequestVO)
+        获取按钮详情/menu/getbycode: MenuVO getByCode(String menuCode)
+        获取按钮列表/menu/pagelist: List<MenuVO> getPageList(String moduleCode )
+     }
+
+     class "数据字段-DataColumnBO" as DataColumnBO{
+         主键ID:Long id
+         数据库业务系统名称:String busDataBase
+         数据库表名称:String tableName
+         数据库表描述:String tableDesc
+         数据库字段名称:String columnName
+         数据库字段描述:String columnDesc
+         业务字段名称:String fieldName
+         .. extend info ..
+         tableKey:String data_column_config
+         controllerKey:String DataColumnController
+         voKeyList:String DataColumnResponseVO,DataColumnVO,CreateDataColumnRequestVO
+         contextKey:String datacolumn
+         queryVoKey:DataColumnQueryVO  String busDataBase,String table,String column
+         获取数据字段信息/datacolumn/getbycode: List<DataColumnVO> getListByBusDataBase(String busDataBase)
+         分页获取数据字段信息/datacolumn/pagelist: PageVO<DataColumnVO> getPageList(PageVO pageVO)
+         导入数据字段列表/datacolumn/import: Boolean importDataColumnList(List<DataColumnVO> updateMenuRequestDTO)
+     }
+
+}
+
+
+package domain.msgbody {
+    class "UserStatusChangeMsgBody-接收用户状态变更消息" as UserChangeMsgBody{
+        用户ID:Long userId
+        状态类型:Integer statusType
+    }
+}
+
+package domain.event{
+    class "MenuChangeEvent-按钮信息变更事件" as MenuChangeEvent{
+        按钮code:String menuCode
+        变更事件类型:Integer changeEventType
+        按钮内容:MenuBO menuBO
+    }
+}
+
+
+
+package domain.gataway {
+    interface "系统菜单按钮仓库服务-SystemModuleRepository" as SystemModuleRepository{
+        创建系统信息:Long saveSystem(SystemBO systemBO)
+        更新系统信息:Integer updateSystem(SystemBO systemBO)
+        创建菜单信息:Long saveModule(ModuleBO moduleBO)
+        更新菜单信息:Integer updateModule(ModuleBO moduleBO)
+        创建按钮信息:Long saveMenu(MenuBO moduleBO)
+        更新按钮信息:Integer updateMenu(MenuBO moduleBO)
+
+    }
+
+    interface "系统菜单按钮查询服务-SystemModuleQueryGataWay" as SystemModuleQueryGataWay{
+        分页查询系统列表:List<SystemBO> querySystemPage(PageBO pageBO)
+        分页查询菜单列表:List<ModuleBO> queryModulePage()
+        基于系统code查询菜单和按钮:SystemBO queryBySystemCode(String systemCode)
+        根据条件查询系统:List<SystemBO> queryByCondition(String search)
+        查询所有系统菜单和按钮:List<SystemBO> queryWithAll(String search)
+        根据code查询系统详情:SystemBO getSystemByCode(String systemCode)
+        根据code查询菜单详情:ModuleBO getModuleByCode(String moduleCode)
+        根据code查询按钮详情:MenuBO getMenu(String menuCode)
+    }
+}
+
+
+package   "防腐层包-infrast.acl" as   infrast.acl {
+    interface   "部门查询服务适配器-DepartmentServiceAdapter" as DepartmentServiceAdapter{
+        查询所有有效的部门: List<DepartmentResponseDTO> queryAllDepartment(DepartmentQueryDTO queryDto)
+        查询子部门: List<DepartmentResponseDTO> queryDepartmentsList(Long pId)
+    }
+
+    interface   "省份城市查询服务适配器-AreaServiceAdapter" as AreaServiceAdapter{
+        查询所有的省份: List<ProvinceResponseDTO> queryAllProvince()
+        查询省份下所有城市: List<CityResponseDTO> queryCityByProvinceid(Long provinceId)
+    }
+
+}
+
+package   "缓存包-infrast.cache" as   infrast.cache {
+      class "系统上下文缓存服务包括系统，菜单，按钮-SystemCache" as SystemCache{
+            +创建/更新系统缓存:void putSystem(SystemBO systeBO)
+            +创建/更新模块缓存:void putModule(ModuleBO moduleBO)
+            +获取系统缓存:SystemBO getSystem(String systemCode)
+      }
+}
+
+
+
+package app.exe {
+
+    interface  "命令执行接口-CmdExeService"     as    CmdExeService{
+        命令执行入口:String exe(AbstractCmd abstractCmd)
+    }
+
+    class "用户组cmd处理类-UserGroupCmdExe" as UserGroupCmdExe{
+
+    }
+
+    class "用户cmd处理类-UserCmdExe" as UserCmdExe{
+
+    }
+
+    class "用户权限cmd处理类-UserAuthCmdExe" as UserAuthCmdExe{
+
+    }
+
+
+    class "角色权限cmd处理类-RoleAuthCmdExe" as RoleAuthCmdExe{
+
+    }
+
+    UserGroupCmdExe ..|> CmdExeService
+    UserCmdExe ..|> CmdExeService
+    UserAuthCmdExe ..|> CmdExeService
+    RoleAuthCmdExe ..|> CmdExeService
+
+}
+
+
+
+
+package   "基础设施层消息生产者-mq.producer" as   mq.producer {
+    class "权限上下文消息生产者-AuthorityMqProducer" as AuthorityMqProducer{
+         +权限创建:void authorityCreate(String authCode)
+         +权限更新:void authorityUpdate(String authCode)
+    }
+
+    class "系统上下文消息生产者-SystemMqProducer" as SystemMqProducer{
+         +事务提交后权限变更监听:void systemChange(MenuChangeEvent event)
+    }
+}
+
+package   "基础设施层消息消费者-mq.consumer" as   mq.consumer {
+    class "用户上下文消息消费者或者监听-UserMqConsumer" as UserMqConsumer{
+         +监听用户状态变更:void consumeUserStatusChange(String mqBody)
+    }
+    class "组织上下文消息消费者或者监听-DepartmentMqConsumer" as DepartmentMqConsumer{
+         +监听组织状态变更:void consumeDepartmentStatusChange(String mqBody)
+    }
+}
+
+
+package   "基础设施层消息消费处理器或者直接在基础设施层处理消息代码方案一-mq.handler" as   mq.handler {
+    class "用户上下文消息处理器-UserMqHandler" as UserMqHandler{
+         +处理用户状态变更的权限信息:void handleUserStatusChange(String mqBody)
+    }
+}
+
+@enduml

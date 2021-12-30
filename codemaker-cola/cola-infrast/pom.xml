@@ -44,6 +44,12 @@
     </dependency>
 
     <dependency>
+      <groupId>cn.hutool</groupId>
+      <artifactId>hutool-core</artifactId>
+    </dependency>
+
+
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
@@ -78,6 +84,20 @@
           <version>3.4.6</version>
           <scope>compile</scope>
       </dependency>
+
+    <dependency>
+      <groupId>com.coderman.infosys.plat.user</groupId>
+      <artifactId>user-client</artifactId>
+    </dependency>
+    <!-- Dubbo -->
+    <dependency>
+      <groupId>org.apache.dubbo</groupId>
+      <artifactId>dubbo-spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.dubbo</groupId>
+      <artifactId>dubbo</artifactId>
+    </dependency>
 
   </dependencies>
 

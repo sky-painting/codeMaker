@@ -1,0 +1,25 @@
+@startuml
+
+participant  应用facade层 as  facade
+participant  应用http层 as  http
+participant  领域层 as  domain
+participant  基础设施层 as  infrast
+
+group 导入数据字段内容
+app_http --> domain: 1.导入数据\n DataColumnController.importDataColumnList invoke DataColumnConfigGataway.saveBatchDataColumn
+domain --> infrast:2.持久化系统数据\n DataColumnConfigGataway.saveBatchDataColumn invoke DataColumnConfigMapper.insertBatch(List<DataColumnConfigDO>)
+end
+
+
+group 分页查询
+app_http --> domain: 3.注册系统\n DataColumnController.getPageList invoke DataColumnConfigGataway.getPageList
+domain --> infrast:4.持久化系统数据\n DataColumnConfigGataway.getPageList invoke DataColumnConfigMapper.getPageList(PageBO)
+end
+
+group
+app_http --> domain: 3.注册系统\n DataColumnController.getListByBusDataBase invoke DataColumnConfigGataway.getByDBCode
+domain --> infrast:4.持久化系统数据\n DataColumnConfigGataway.getByDBCode invoke DataColumnConfigMapper.getByDBCode(String busDataBase)
+end
+
+
+@enduml
