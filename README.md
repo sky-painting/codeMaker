@@ -122,7 +122,8 @@ codeMaker支持多模式进行代码生成，具体看下列文档
 简介: 重构codeMaker整体代码内容，降低代码复杂度，增强基于调用时序文档构建代码的能力
 
 ##### 版本-1.2.2
-简介: 进行组件化架构升级,开放低代码模型和扩展接口能力,增加springcloud-feign应用框架代码生成能力
+简介: 进行组件化架构升级,开放低代码模型和扩展接口能力,重构codemaker-core模块,移动到codemaker-parent模块统一维护,
+增加springcloud-feign应用框架代码生成能力
 
 
 #### 项目计划
@@ -139,16 +140,16 @@ codeMaker支持多模式进行代码生成，具体看下列文档
 
 #### 代码生成服务使用流程
 ##### 1.应用级项目生成
-1.  配置codemaker-core的application.properties中的数据库访问配置项，配置需要生成的应用类型(application.type取值:支持springboot,dubbo,cola)
+1.  配置codemaker-parent/codemaker-core的application.properties中的数据库访问配置项，配置需要生成的应用类型(application.type取值:支持springboot,dubbo,cola)
 2.  根据应用类型配置对应的projecttemplate-*.properties配置文件
-3.  配置完成之后启动codemaker-core工程，默认端口为8099
+3.  配置完成之后启动codemaker-parent/codemaker-core工程，默认端口为8099
 4.  打开浏览器访问http://localhost:8099/makeall生成极简模式代码，生成的代码会放在codemaker-web下面的对应目录下
 5.  打开浏览器访问http://localhost:8099/makeallfast生成极速模式代码，生成的代码会放在codemaker-web下面的对应目录下
-6.  如有特殊需求进行定制则可通过codemaker-core工程中的resources/template模板进行调整
+6.  如有特殊需求进行定制则可通过codemaker-parent/codemaker-core工程中的resources/template模板进行调整
 
 
 ##### 2.dynamicddd模块级代码生成
-1. 将项目的plantUML类图放到codemaker-core的resources下的ddd-plantuml文件夹
+1. 将项目的plantUML类图放到codemaker-parent/codemaker-core的resources下的ddd-plantuml文件夹
 2. 配置projecttemplate-dynamicddd.properties
 3. 启动服务,浏览器打开输入http://localhost:8099/makeddd
 4. 执行完毕查看codemaker-dynamicddd工程模块下的代码是否已经生成
