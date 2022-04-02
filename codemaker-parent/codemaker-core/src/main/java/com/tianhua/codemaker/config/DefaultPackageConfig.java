@@ -1,7 +1,7 @@
-package com.coderman.codemaker.config;
+package com.tianhua.codemaker.config;
 
-import com.coderman.codemaker.service.adapter.PackgeConstants;
-import com.coderman.codemaker.service.packageimport.PackageImportService;
+import com.tianhua.codemaker.service.adapter.PackgeConstants;
+import com.tianhua.codemaker.service.packageimport.PackageImportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  * Description:
  * date: 2021/6/30
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */
@@ -50,4 +50,9 @@ public class DefaultPackageConfig {
         }
         return "";
     }
+
+    public void addPackage(String className,String packageName){
+        defaultPackageMap.put(className, packageName);
+    }
+
 }

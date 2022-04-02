@@ -1,4 +1,4 @@
-package com.coderman.codemaker.service.adapter;
+package com.tianhua.codemaker.service.adapter;
 
 import org.springframework.stereotype.Service;
 
@@ -9,7 +9,7 @@ import java.util.Map;
  * Description:codeMaker的默认实现
  * date: 2021/10/26
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  * 该组件已过期，整体逻辑已通过组件化升级完成

@@ -1,11 +1,11 @@
-package com.coderman.codemaker.component.scan;
+package com.tianhua.codemaker.component.scan;
 
-import com.coderman.codemaker.api.ICompScanService;
-import com.coderman.codemaker.bean.GlobalConstant;
-import com.coderman.codemaker.bean.component.ComponentConfigBean;
-import com.coderman.codemaker.bean.component.ComponentContextBean;
-import com.coderman.codemaker.classloader.CompClassLoadService;
-import com.coderman.codemaker.component.CompPropReadService;
+import com.tianhua.codemaker.api.ICompScanService;
+import com.tianhua.codemaker.bean.GlobalConstant;
+import com.tianhua.codemaker.bean.component.ComponentConfigBean;
+import com.tianhua.codemaker.bean.component.ComponentContextBean;
+import com.tianhua.codemaker.classloader.CompClassLoadService;
+import com.tianhua.codemaker.component.CompPropReadService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import java.util.Map;
  * Description:组件扫描注册服务类
  * date: 2021/11/22
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */
@@ -46,6 +46,7 @@ public class DefaultCompScanServiceImpl implements ICompScanService {
             }
             ComponentContextBean  componentContextBean = compClassLoadService.loadComponent(componentConfigBean);
             componentContextBean.setComponentName(compName);
+            componentContextBean.setComponentConfigBean(componentConfigBean);
             componentContextBeanMap.put(compName,componentContextBean);
         }
         return componentContextBeanMap;

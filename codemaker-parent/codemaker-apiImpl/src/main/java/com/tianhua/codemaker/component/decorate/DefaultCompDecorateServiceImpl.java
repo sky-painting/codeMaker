@@ -1,11 +1,11 @@
-package com.coderman.codemaker.component.decorate;
+package com.tianhua.codemaker.component.decorate;
 
-import com.coderman.codemaker.api.ICompDecorateService;
-import com.coderman.codemaker.bean.component.ComponentContextBean;
-import com.coderman.codemaker.bean.plantuml.*;
-import com.coderman.codemaker.constant.ArchConstant;
-import com.coderman.codemaker.element.ElementDecorateHandler;
-import com.coderman.codemaker.factory.SpringClassBeanFactory;
+import com.tianhua.codemaker.api.ICompDecorateService;
+import com.tianhua.codemaker.bean.component.ComponentContextBean;
+import com.tianhua.codemaker.bean.plantuml.*;
+import com.tianhua.codemaker.constant.ArchConstant;
+import com.tianhua.codemaker.element.ElementDecorateHandler;
+import com.tianhua.codemaker.factory.SpringClassBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * date: 2021/11/23
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */

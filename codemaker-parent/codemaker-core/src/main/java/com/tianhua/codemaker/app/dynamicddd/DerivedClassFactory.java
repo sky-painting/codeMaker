@@ -1,7 +1,7 @@
-package com.coderman.codemaker.app.dynamicddd;
+package com.tianhua.codemaker.app.dynamicddd;
 
-import com.coderman.codemaker.bean.plantuml.*;
-import com.coderman.codemaker.enums.TemplateFileEnum;
+import com.tianhua.codemaker.bean.plantuml.*;
+import com.tianhua.codemaker.enums.TemplateFileEnum;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +13,7 @@ import java.util.*;
  * 派生类工厂服务
  * date: 2021/7/8
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */
@@ -83,6 +83,9 @@ public class DerivedClassFactory {
     public void deriveDOBOConvert(List<ClassBean> boElementBeanList, PlantUmlContextBean plantUmlContextBean) {
         Map<String, Object> convertMap = classConvertFactory.getDOBOConvertInterfaceList(boElementBeanList);
         List<InterfaceBean> doboConvertInterfaceList = (List<InterfaceBean>) convertMap.get("doboConvertList");
+        if(CollectionUtils.isEmpty(doboConvertInterfaceList)){
+            return;
+        }
         Map<String, String> BoConvertRelationMap = (Map<String, String>) convertMap.get("doboConvertRelationMap");
 
         //将派生类放到派生类上下文里面
@@ -135,6 +138,7 @@ public class DerivedClassFactory {
                     interfaceBean.setAuthor(v.getAuthor());
                     interfaceBean.setContext(v.getContext());
                     interfaceBean.setDerived(v.isDerived());
+                    v.getDynamicImportPackageList().forEach(str -> interfaceBean.addDynamicImportClass(str));
                     plantUmlContextBean.getDerivedPlantUmlContextBean().addInterfaceBean(interfaceBean);
                 }
             } else {
@@ -204,6 +208,7 @@ public class DerivedClassFactory {
                     classBean.setImplInterfaceBean(v.getImplInterfaceBean());
                     classBean.setAuthor(v.getAuthor());
                     classBean.setDerived(v.isDerived());
+                    classBean.setAnnotationTagList(v.getAnnotationTagList());
                     plantUmlContextBean.getDerivedPlantUmlContextBean().addClassBean(classBean);
                 }
             } else {
@@ -299,6 +304,20 @@ public class DerivedClassFactory {
         return gatawayImplList;
     }
 
+
+    /**
+     * 处理gataway到gatawayimpl的派生
+     *
+     * @param serviceElementBeanList
+     * @param plantUmlContextBean
+     */
+    public List<ClassBean> deriveService2ServiceImpl(List<InterfaceBean> serviceElementBeanList, PlantUmlContextBean plantUmlContextBean) {
+        List<ClassBean> gatawayImplList = classConvertFactory.geServiceImplList(serviceElementBeanList);
+        if (CollectionUtils.isNotEmpty(gatawayImplList)) {
+            gatawayImplList.forEach(classBean -> plantUmlContextBean.getClassBeanMap().put(classBean.getClassName(), classBean));
+        }
+        return gatawayImplList;
+    }
 
     /**
      * 处理infrast acl到infrastaclimpl的派生
