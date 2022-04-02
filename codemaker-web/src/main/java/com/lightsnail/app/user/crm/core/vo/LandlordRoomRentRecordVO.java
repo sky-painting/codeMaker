@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.ToString;
 /**
 * @Description:房源出租记录表VO类
-* @Author:fanchunshuai
+* @Author:shenshuai
 * @CreateTime:2020-11-17 00:02:54
 * @version v1.0
 */

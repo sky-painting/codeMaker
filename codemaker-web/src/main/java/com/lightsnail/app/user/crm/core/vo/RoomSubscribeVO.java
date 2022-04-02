@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.ToString;
 /**
 * @Description:代理人-预约看房记录表VO类
-* @Author:fanchunshuai
+* @Author:shenshuai
 * @CreateTime:2020-11-17 00:02:53
 * @version v1.0
 */

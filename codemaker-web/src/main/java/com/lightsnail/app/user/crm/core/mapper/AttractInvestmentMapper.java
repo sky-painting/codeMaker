@@ -6,7 +6,7 @@ import com.lightsnail.app.user.crm.core.entity.AttractInvestmentEntity;
 
 /**
  * @Description:招商服务注册表mapperDAO接口
- * @Author:fanchunshuai
+ * @Author:shenshuai
  * @CreateTime:2020-11-17 00:02:53
  * @version v1.0
  */

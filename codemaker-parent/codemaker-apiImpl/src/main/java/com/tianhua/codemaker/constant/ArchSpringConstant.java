@@ -1,10 +1,10 @@
-package com.coderman.codemaker.constant;
+package com.tianhua.codemaker.constant;
 
 /**
  * Description:
  * date: 2021/12/13
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */

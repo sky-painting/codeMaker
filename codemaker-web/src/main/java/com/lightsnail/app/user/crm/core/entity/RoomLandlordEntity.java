@@ -7,7 +7,7 @@ import lombok.ToString;
 
  /**
  * @Description:房东表Entity类
- * @Author:fanchunshuai
+ * @Author:shenshuai
  * @CreateTime:2020-11-17 00:02:53
  * @version v1.0
  */

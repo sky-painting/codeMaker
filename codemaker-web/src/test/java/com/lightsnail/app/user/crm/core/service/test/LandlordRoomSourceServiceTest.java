@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
 * @Description:房东-房源表单元测试
-* @Author:fanchunshuai
+* @Author:shenshuai
 * @CreateTime:2020-11-17 00:02:53
 * @version v1.0
 */
