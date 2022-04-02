@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created  on 2018-7-19.
  *
- * @author: fanchunshuai
+ * @author: shenshuai
  * @version: V1.0
  * @Desc:表信息描述
  */

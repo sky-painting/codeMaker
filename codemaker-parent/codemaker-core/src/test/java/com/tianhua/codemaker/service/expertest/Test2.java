@@ -1,11 +1,12 @@
-import com.coderman.codemaker.bean.ClassContentBean;
-import com.coderman.codemaker.bean.plantuml.ClassBean;
+package com.tianhua.codemaker.service.expertest;
+
+import com.tianhua.codemaker.bean.ClassContentBean;
+import com.tianhua.codemaker.bean.plantuml.ClassBean;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.lang.reflect.*;
 
 import java.util.*;
 
@@ -13,7 +14,7 @@ import java.util.*;
  * Description:
  * date: 2021/12/18
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */

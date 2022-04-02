@@ -1,25 +1,22 @@
-import com.coderman.codemaker.bean.ClassContentBean;
-import com.coderman.codemaker.bean.plantuml.ClassBean;
+package com.tianhua.codemaker.service.expertest;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import com.tianhua.codemaker.bean.ClassContentBean;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
  * Description:
  * date: 2021/12/18
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */
 public class Test3 {
     public static void main(String[] args) throws NoSuchMethodException, SecurityException {
-        String paramStr = "java.util.List<com.coderman.codemaker.bean.plantuml.ClassBean>";
+        String paramStr = "java.util.List<com.tianhua.codemaker.bean.plantuml.ClassBean>";
         String [] paramArr = paramStr.split("\\.");
         List<String> paramList = new ArrayList<>();
 
