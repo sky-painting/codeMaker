@@ -24,7 +24,7 @@ spring.datasource.password=
 mybatis.config-locations=classpath:mybatis-config.xml
 mybatis.mapper-locations=classpath:mapper/*.xml
 #配置模型路径
-mybatis.type-aliases-package=com.coderman.codemaker.bean
+mybatis.type-aliases-package=com.tianhua.codemaker.bean
 spring.application.name=codemaker
 #生成的应用类型，支持springboot,dubbo,cola,springcloud
 application.type=dubbo
@@ -122,7 +122,7 @@ codemaker.domain.plantuml=
 #目标工程根包名称
 dynamicddd.global.package=com.lightsnail.snailapp.usercrm
 #作者
-dynamicddd.global.author=fanchunshuai
+dynamicddd.global.author=shenshuai
 
 #目标工程输出目录，这里填写对应的codemaker-dynamicddd工程的绝对路径
 dynamicddd.code.outpath=E:\\workspace\\tianhua-workspace\\code-maker\\codemaker-dynamicddd
