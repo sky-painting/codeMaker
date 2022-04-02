@@ -1,10 +1,10 @@
-package com.coderman.codemaker.app.dynamicddd.derivedhandler;
+package com.tianhua.codemaker.app.dynamicddd.derivedhandler;
 
-import com.coderman.codemaker.service.ImportPackageService;
-import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.bean.dddelementderive.EnumElementBean;
-import com.coderman.codemaker.bean.plantuml.*;
-import com.coderman.codemaker.enums.DomainDerivedElementEnum;
+import com.tianhua.codemaker.service.packageimport.ImportPackageServiceImpl;
+import com.tianhua.codemaker.api.DomainElementHandler;
+import com.tianhua.codemaker.bean.dddelementderive.EnumElementBean;
+import com.tianhua.codemaker.bean.plantuml.*;
+import com.tianhua.codemaker.enums.DomainDerivedElementEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  * Description:
  * date: 2021/7/8
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  * 处理派生类domain.enum->rpc.client.enum
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class DerivedEnumElementHandler implements DomainElementHandler<EnumElementBean> {
 
     @Autowired
-    private ImportPackageService importPackageService;
+    private ImportPackageServiceImpl importPackageService;
 
     @Override
     public EnumElementBean getElementBeanList(PlantUmlContextBean plantUmlContextBean) {

@@ -1,11 +1,11 @@
-package com.coderman.codemaker.app.dynamicddd.derivedhandler;
+package com.tianhua.codemaker.app.dynamicddd.derivedhandler;
 
-import com.coderman.codemaker.service.ImportPackageService;
-import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.bean.dddelementderive.DtoBoConvertElementBean;
-import com.coderman.codemaker.bean.plantuml.InterfaceBean;
-import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
-import com.coderman.codemaker.enums.DomainDerivedElementEnum;
+import com.tianhua.codemaker.service.packageimport.ImportPackageServiceImpl;
+import com.tianhua.codemaker.api.DomainElementHandler;
+import com.tianhua.codemaker.bean.dddelementderive.DtoBoConvertElementBean;
+import com.tianhua.codemaker.bean.plantuml.InterfaceBean;
+import com.tianhua.codemaker.bean.plantuml.PlantUmlContextBean;
+import com.tianhua.codemaker.enums.DomainDerivedElementEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * Description:
  * date: 2021/7/8
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  * 处理派生类bo->dto
@@ -25,7 +25,7 @@ import java.util.List;
 public class DerivedDTOBOConvertElementHandler implements DomainElementHandler<DtoBoConvertElementBean> {
 
     @Autowired
-    private ImportPackageService importPackageService;
+    private ImportPackageServiceImpl importPackageService;
 
     @Override
     public DtoBoConvertElementBean getElementBeanList(PlantUmlContextBean plantUmlContextBean) {
@@ -40,6 +40,9 @@ public class DerivedDTOBOConvertElementHandler implements DomainElementHandler<D
                 importPackageService.setPackageName(v,"app.convert");
                 String className = v.getClassName().substring(0,1).toUpperCase().concat(v.getClassName().substring(1));
                 v.setClassName(className);
+                v.setDerived(true);
+                //这里清除已经导入的类,里面的类可能都是不对的
+                v.getImportClassList().clear();
                 convertElementBeanList.add(v);
             }
         });

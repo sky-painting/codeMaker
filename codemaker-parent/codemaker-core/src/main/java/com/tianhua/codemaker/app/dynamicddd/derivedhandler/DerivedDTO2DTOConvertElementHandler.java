@@ -1,12 +1,11 @@
-package com.coderman.codemaker.app.dynamicddd.derivedhandler;
+package com.tianhua.codemaker.app.dynamicddd.derivedhandler;
 
-import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.bean.dddelementderive.Dto2DtoConvertElementBean;
-import com.coderman.codemaker.bean.dddelementderive.VoBoConvertElementBean;
-import com.coderman.codemaker.bean.plantuml.InterfaceBean;
-import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
-import com.coderman.codemaker.enums.DomainDerivedElementEnum;
-import com.coderman.codemaker.service.ImportPackageService;
+import com.tianhua.codemaker.api.DomainElementHandler;
+import com.tianhua.codemaker.bean.dddelementderive.Dto2DtoConvertElementBean;
+import com.tianhua.codemaker.bean.plantuml.InterfaceBean;
+import com.tianhua.codemaker.bean.plantuml.PlantUmlContextBean;
+import com.tianhua.codemaker.enums.DomainDerivedElementEnum;
+import com.tianhua.codemaker.service.packageimport.ImportPackageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,7 @@ import java.util.List;
  * Description:
  * date: 2021/7/8
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  * 处理派生类bo->dto
@@ -26,7 +25,7 @@ import java.util.List;
 public class DerivedDTO2DTOConvertElementHandler implements DomainElementHandler<Dto2DtoConvertElementBean> {
 
     @Autowired
-    private ImportPackageService importPackageService;
+    private ImportPackageServiceImpl importPackageService;
 
     @Override
     public Dto2DtoConvertElementBean getElementBeanList(PlantUmlContextBean plantUmlContextBean) {

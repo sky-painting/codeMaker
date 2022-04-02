@@ -1,28 +1,23 @@
-package com.coderman.codemaker.app.dynamicddd.derivedhandler;
+package com.tianhua.codemaker.app.dynamicddd.derivedhandler;
 
-import com.coderman.codemaker.app.dynamicddd.DerivedClassFactory;
-import com.coderman.codemaker.app.dynamicddd.DomainElementHandler;
-import com.coderman.codemaker.bean.dddelementderive.FacadeElementBean;
-import com.coderman.codemaker.bean.dddelementderive.FeignElementBean;
-import com.coderman.codemaker.bean.plantuml.InterfaceBean;
-import com.coderman.codemaker.bean.plantuml.MethodBean;
-import com.coderman.codemaker.bean.plantuml.PlantUmlContextBean;
-import com.coderman.codemaker.enums.DomainDerivedElementEnum;
-import com.coderman.codemaker.service.ImportPackageService;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.tianhua.codemaker.app.dynamicddd.DerivedClassFactory;
+import com.tianhua.codemaker.api.DomainElementHandler;
+import com.tianhua.codemaker.bean.dddelementderive.FeignElementBean;
+import com.tianhua.codemaker.bean.plantuml.InterfaceBean;
+import com.tianhua.codemaker.bean.plantuml.PlantUmlContextBean;
+import com.tianhua.codemaker.enums.DomainDerivedElementEnum;
+import com.tianhua.codemaker.service.packageimport.ImportPackageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Description:
  * date: 2021/7/8
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  * 处理派生类bo->dto
@@ -33,7 +28,7 @@ public class DerivedFeignElementHandler implements DomainElementHandler<FeignEle
     private DerivedClassFactory derivedClassFactory;
 
     @Autowired
-    private ImportPackageService importPackageService;
+    private ImportPackageServiceImpl importPackageService;
 
     @Override
     public FeignElementBean getElementBeanList(PlantUmlContextBean plantUmlContextBean) {
