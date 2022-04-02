@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import ${importClass};
 </#list>
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 * @version v1.0
 */
 @RestController
+<#list class.annotationTagList as annotation>
+${annotation}
+</#list>
 public class ${class.className} ${class.relationClassStr}{
 	
 	protected Logger logger = LoggerFactory.getLogger(${class.className}.class);
@@ -29,7 +32,10 @@ public class ${class.className} ${class.relationClassStr}{
 <#list methods as method>
 
 ${method.doc}
-	@Override
+	<#list method.annotationTagList as annotation>
+	${annotation}
+	</#list>
+	@RequestMapping(value = "${method.pathValue}")
 	public ${method.returnClass} ${method.methodName}{
 ${method.methodContent}
 		${method.returnBody}

@@ -1,0 +1,317 @@
+@startuml
+
+package domain.enum{
+    enum  "物品类型-ItemTypeEnum"  as  ExpressageTypeEnum{
+        FOOD(1,"食品"),
+        CLOTHES(2,"衣服"),
+        ELECTRONICS(3,"电子产品"),
+        DRUG(4,"药品"),
+        OTHER(4,"其他");
+        快递类型:Integer code
+        快递类型描述:String desc
+        static ItemTypeEnum getByCode(Integer code)
+        .. extend info ..
+        toRpcClient:String yes
+    }
+
+    enum  "快递业务类型-ExpressBusTypeEnum"  as  ExpressBusTypeEnum{
+        BIG_EXPRESS(1,"大件"),
+        SAME_CITY(2,"同城送"),
+        BATCH_EXPRESS(3,"批量寄"),
+        COOL_EXPRESS(4,"冷链生鲜");
+        快递业务类型类型:Integer code
+        快递业务类型描述:String desc
+        static ExpressBusTypeEnum getByCode(Integer code)
+        .. extend info ..
+        toRpcClient:String yes
+    }
+
+    enum "付款方式-PayMethodEnum" as PayMethodEnum{
+        ADDRESSER_PAY(1,"现寄现付")
+        RECIPIENT_PAY(2,"现寄到付")
+        MONTHLY_PAY(3,"月结支付")
+
+        付款方式类型:Integer code
+        付款方式描述:String desc
+        static PayMethodEnum getByCode(Integer code)
+        .. extend info ..
+        toRpcClient:String yes
+    }
+
+    enum "订单来源-OrderSourceEnum" as OrderSourceEnum{
+        MICR_SITE(1,"小程序"),
+        APP_SITE(2,"APP"),
+        WEB_SITE(3,"web网站"),
+        订单来源类型:Integer code
+        订单来源描述:String desc
+        static OrderSourceEnum getByCode(Integer code)
+        .. extend info ..
+        toRpcClient:String yes
+
+    }
+
+    enum "快递站点合作方式-CooperationTypeEnum" as CooperationTypeEnum{
+        JOIN(1,"加盟"),
+        SLEF_SUPPORT(2,"自营"),
+        合作方式类型:Integer code
+        合作方式描述:String desc
+        static CooperationTypeEnum getByCode(Integer code)
+        .. extend info ..
+        toRpcClient:String yes
+    }
+}
+
+
+package domain.bo  {
+    class "发件人-AddresserBO"  as  AddresserBO{
+        电话号码:String telPhone
+        发件人姓名:String chineseName
+        用户ID:String userId
+        地址列表:List<AddressBO> addressBOList
+        .. extend info ..
+
+        tableKey:String address_list
+
+        facadeKey:String AddresserFacade
+
+        dtoKeyList:String UpdateAddressRequestDTO,AddressDTO,CreateAddressRequestDTO
+
+        contextKey:String user
+
+        获取用户常用发件地址: List<AddressDTO> getByUserId(String userId)
+        增加发件地址: Boolean addAddress(CreateAddressRequestDTO createAddressRequestDTO).@I
+    }
+
+    class "地址-AddressBO"    as AddressBO{
+        省份ID:String provinceID
+        省份名称:String proviceName
+        城市ID:String cityID
+        城市名称:String cityName
+        区域ID:String areaID
+        区域名称:String areaName
+        街道ID:String streetID
+        街道名称:String streetName
+        地址描述:String detailAddress
+    }
+
+    class "收件人-RecipientBO" as RecipientBO{
+        电话号码:String telPhone
+        收件人姓名:String chineseName
+        用户ID:String userId
+    }
+
+    class "快件-ExpressItemsBO" as ExpressItemsBO{
+        物品类型名词:String itemTypeName
+        预估重量/kg:String weight
+        备注:String remark
+        物品体积/立方米:Integer volume
+        .. extend info ..
+        tableKey:String express_items
+        contextKey:String express
+
+    }
+
+    class "快递员-CourierBO" as CourierBO{
+        电话号码:String telPhone
+        快递员姓名:String chineseName
+        快递员工号:String staffNum
+
+    }
+
+    class "快递订单-ExpressOrderBO" as ExpressOrderBO{
+        发件人信息:AddresserBO addresserBO
+        收件人信息:RecipientBO recipientBO
+        订单状态:Integer orderStatus
+        订单创建时间:Date dateCreate
+        发件人地址:AddressBO addressSendBO
+        收件人地址:AddressBO addressReceiveBO
+        订单金额:Long price
+        快递单号:String orderCode
+        订单来源:String orderSource
+        订单业务类型:String expressOrderBusType
+        物品信息:ExpressItemsBO expressItemsBO
+        +支付订单: void payOrder()
+        +关闭订单: void closeOrder()
+
+        .. extend info ..
+
+        tableKey:String express_order
+        facadeKey:String ExpressOrderFacade
+
+        dtoKeyList:String CreateOrderRequestDTO,ExpressOrderDTO
+
+        contextKey:String order
+
+        创建快递订单: String createOrder(CreateOrderRequestDTO createOrderRequestDTO)
+    }
+
+    class "快递网点-ExpressSiteBO" as ExpressSiteBO{
+        网点地址:AddressBO addressFirstBO
+        快递网点负责人姓名:String ownerName
+        快递网点负责人电话:String telPhone
+        合作方式:Integer cooperationType
+        .. extend info ..
+
+        tableKey:String express_site
+        facadeKey:String ExpressSiteFacade
+
+        dtoKeyList:String CreateSiteRequestDTO,ExpressSiteDTO
+
+        contextKey:String express
+
+        创建快递网点: String ExpressSiteFacade.create(CreateSiteRequestDTO createSiteRequestDTO)
+    }
+
+    class "快递物流轨迹-ExpressTraceBO" as ExpressTraceBO{
+        快递单号:String orderCode
+        快递到达地点:String addressName
+        物流轨迹描述:String desc
+        物流轨迹上传来源:String sourceCode
+        快递到达时间:Date arriveDate
+        轨迹创建时间:Date dateCreate
+        .. extend info ..
+
+        tableKey:String express_trace
+        facadeKey:String ExpressTraceFacade
+
+        dtoKeyList:String ExpressTraceDTO
+
+        contextKey:String express
+
+        创建快递网点: List<ExpressTraceDTO> selectTrace(String expressOrderCode)
+    }
+
+
+  class "快递价格计算slot-PriceSlotBO" as PriceSlotBO{
+      发件人地址:AddressBO addressFirstBO
+      收件人地址:AddressBO addressSecondBO
+      订单业务类型:String expressOrderBusType
+      物品信息:ExpressItemsBO expressItemsBO
+  }
+
+}
+
+
+package domain.msgbody {
+    class "OrderPayedMsgBody-接收订单支付消息" as OrderPayedMsgBody{
+
+    }
+
+    class "ExpressTracePushMsgBody-接收物流轨迹上传消息" as ExpressTracePushMsgBody{
+
+    }
+}
+
+package domain.event{
+    class "OrderCreatedEvent-订单创建事件" as OrderCreatedEvent{
+        订单号:String orderCode
+    }
+
+    class "OrderPayedEvent-订单支付事件" as OrderPayedEvent{
+        订单号:String orderCode
+    }
+
+    class "OrderCompletedEvent-订单完成事件" as OrderCompletedEvent{
+        订单号:String orderCode
+    }
+}
+
+
+
+package domain.service {
+    interface "用户服务网关-UserGataway" as UserGataway{
+        根据电话号码和姓名查询是否已注册用户:String getUserId(String telPhone,String chineseName)
+    }
+
+
+    interface "地址服务网关-AddressGataway" as AddressGataway{
+        根据条件查询地址列表:List<AddressBO> searchAddress()
+    }
+
+
+    interface "快递订单服务-OrderService" as OrderService{
+        创建快递订单: String createOrder(ExpressOrderBO expressOrderBO)
+        取消快递订单: boolean cancelOrder(String orderCode)
+        根据订单号聚合查询订单信息: ExpressOrderBO queryOrderByCode(String orderCode)
+    }
+
+
+
+    interface "物流轨迹服务-ExpressTraceService" as ExpressTraceService{
+        推送物流轨迹: String pushTrace(ExpressTraceBO expressTraceBO)
+    }
+
+    interface "快递网点服务-ExpressSiteService" as ExpressSiteService{
+        创建快递网点信息: String createOrder(ExpressSiteBO expressSiteBO)
+    }
+
+}
+
+
+package "领域工厂服务包-domain.factory" {
+    class "快递订单工厂-OrderFactory" as OrderFactory{
+        构建快递订单:ExpressOrderBO build(String orderCode)
+    }
+
+}
+
+
+
+package app.command {
+
+    class "抽象命令类-AbstractCmd" as AbstractCmd{
+        +操作时间: Date operateTime
+        +操作人ID: Long userId
+        +命令类: Class commandClass
+        +命令数据: String payLoad;
+
+    }
+
+    class "创建订单命令-CreateOrderCmd"   as CreateOrderCmd{
+
+    }
+
+
+    CreateOrderCmd --|> AbstractCmd
+
+}
+
+package app.exe {
+
+    interface  "命令执行接口-CmdExeService"     as    CmdExeService{
+        命令执行入口:String exe(AbstractCmd abstractCmd)
+    }
+
+    class "订单cmd处理类-OrderCmdExe" as OrderCmdExe{
+
+    }
+
+    class "价格计算组件-CalculateCmp" as CalculateCmp{
+    }
+    OrderCmdExe ..|> CmdExeService
+
+}
+
+
+
+package "应用层事件监听器包支持域内消息和域外消息，在应用层处理消息-app.listener"  as app.listener{
+    class "支付结果监听-PayOrderResultListener" as PayOrderResultListener{
+         +事务提交后权限变更监听:void authorityCreate(String authCode)
+    }
+}
+
+
+
+package   "基础设施层消息生产者-mq.producer" as   mq.producer {
+    class "权限上下文消息生产者-ExpressOrderMqProducer" as ExpressOrderMqProducer{
+         +订单创建:void orderCreate(String orderCode)
+    }
+}
+
+package   "基础设施层消息消费者-mq.consumer" as   mq.consumer {
+    class "支付服务消息消费者或者监听-PaymentMqConsumer" as PaymentMqConsumer{
+         +监听支付单结果消息:void consumePayOrderChange(String mqBody)
+    }
+}
+
+@enduml

@@ -59,17 +59,17 @@ package domain.bo  {
 
 
         分页获取用户组信息: PageDTO<UserGroupDTO> UserGroupQueryFacade.getPageList()
-        创建用户组: UserGroupDTO UserGroupFacade.createUserGroup(CreateUserGroupRequestDTO createUserGroupRequestDTO)
-        修改用户组信息: Boolean UserGroupFacade.updateUserGroup(UpdateUserGroupRequestDTO updateUserGroupRequestDTO)
-        设置用户组状态: Boolean UserGroupFacade.updateUserGroupStatus(String groupCode,Integer status)
+        创建用户组: UserGroupDTO UserGroupFacade.createUserGroup(CreateUserGroupRequestDTO createUserGroupRequestDTO).@I
+        修改用户组信息: Boolean UserGroupFacade.updateUserGroup(UpdateUserGroupRequestDTO updateUserGroupRequestDTO).@I
+        设置用户组状态: Boolean UserGroupFacade.updateUserGroupStatus(String groupCode,Integer status).@I
         根据code获取用户组详情: UserGroupDTO UserGroupQueryFacade.getByGroupCode(String groupCode)
         根据code或者名称搜索用户组信息: List<UserGroupDTO> UserGroupQueryFacade.search(String search)
 
 
         分页获取用户组信息/usergroup/pagelist: PageVO<UserGroupVO> userGroupQueryController.getPageList(PageVO<UserGroupVO> pageVO )
-        创建用户组/usergroup/create: UserGroupVO UserGroupController.createUserGroup(CreateUserGroupRequestVO createUserGroupRequestVO)
-        修改用户组信息/usergroup/upate: Boolean UserGroupController.updateUserGroup(UpdateUserGroupRequestVO updateUserGroupRequestVO)
-        设置用户组状态/usergroup/changestatus: Boolean UserGroupController.updateUserGroupStatus(String groupCode,Integer status)
+        创建用户组/usergroup/create: UserGroupVO UserGroupController.createUserGroup(CreateUserGroupRequestVO createUserGroupRequestVO).@I
+        修改用户组信息/usergroup/upate: Boolean UserGroupController.updateUserGroup(UpdateUserGroupRequestVO updateUserGroupRequestVO).@I
+        设置用户组状态/usergroup/changestatus: Boolean UserGroupController.updateUserGroupStatus(String groupCode,Integer status).@I
         根据code获取用户组详情/usergroup/detail: UserGroupDTO UserGroupQueryController.getByGroupCode(String groupCode)
         根据code或者名称搜索用户组信息/usergroup/search: List<UserGroupDTO> UserGroupQueryController.search(String search)
 
@@ -105,19 +105,22 @@ package domain.bo  {
         queryVoKey:RoleQueryVO String roleCode,String roleCode,Integer status
 
         contextKey:String role
-
+        validateKey:String roleName,roleCode
         !invokeFileKey:String rolecontextseq.puml
-        创建角色/role/create: RoleVO RoleController.createRole(CreateRoleRequestVO createRoleRequestVO)
+
+
+
+        创建角色/role/create: RoleVO RoleController.createRole(CreateRoleRequestVO createRoleRequestVO).@I.@T
         根据编码获取角色详情/role/getbyrolecode: RoleVO RoleQueryController.getByRoleCode(String roleCode)
-        禁用角色/role/disable: Boolean RoleController.disable(String roleCode)
-        启用角色/role/enable: Boolean RoleController.enable(String roleCode)
+        禁用角色/role/disable: Boolean RoleController.disable(String roleCode).@I.@T
+        启用角色/role/enable: Boolean RoleController.enable(String roleCode).@I.@T
         分页获取角色信息/role/pagelist: PageVO<RoleVO> RoleQueryController.getPageList(PageVO<RoleVO> pageVO)
-        角色关联用户/role/relatetouser: Boolean RoleController.relateToUser(String userIds)
+        角色关联用户/role/relatetouser: Boolean RoleController.relateToUser(String userIds).@I.@T
 
 
         分页获取角色信息: PageDTO<RoleDTO> RoleQueryFacade.getPageList(PageDTO<RoleDTO> pageDTO)
-        创建角色: RoleDTO RoleFacade.createRole(CreateRoleRequestDTO createRoleRequestDTO)
-        修改角色信息: Boolean RoleFacade.updateRole(UpdateRoleRequestDTO updateRoleRequestDTO)
+        创建角色: RoleDTO RoleFacade.createRole(CreateRoleRequestDTO createRoleRequestDTO).@I.@T
+        修改角色信息: Boolean RoleFacade.updateRole(UpdateRoleRequestDTO updateRoleRequestDTO).@I.@T
         设置角色状态: Boolean RoleFacade.updateRoleStatus(String groupCode,Integer status)
         根据code获取角色详情: RoleDTO RoleQueryFacade.getByRoleCode(String groupCode)
         根据code或者名称搜索角色信息: List<RoleDTO> RoleQueryFacade.search(String search)
@@ -125,8 +128,8 @@ package domain.bo  {
     }
 
     class "角色组-RoleGroupBO" as RoleGroupBO{
-        角色组名称:String roleName
-        角色组编码:String roleCode
+        角色组名称:String roleGroupName
+        角色组编码:String roleGroupCode
         组内角色列表:List<RoleBO> roleList
         角色状态:Integer status
         .. extend info ..
@@ -145,6 +148,7 @@ package domain.bo  {
 
 
         contextKey:String role
+        validateKey:String roleGroupName,roleGroupCode
 
 
         创建角色组/rolegroup/create: RoleVO RoleGroupController.createRole(CreateRoleGroupRequestVO createRoleRequestVO)
@@ -194,7 +198,7 @@ package domain.bo  {
         根据用户和系统获取系统权限信息: AuthorityDTO AuthorityQueryFacade.getUserSystemAuth(Long userId,String systemCode)
         根据权限code获取权限信息: AuthorityDTO AuthorityQueryFacade.getByCode(String authCode)
         分页获取权限信息: PageDTO<AuthorityDTO> AuthorityQueryFacade.getPageList(String authCode)
-        给角色授权: AuthorityDTO AuthorityFacade.saveAuthority(CreateAuthorityRequestDTO createAuthorityRequestDTO)
+        给角色授权: AuthorityDTO AuthorityFacade.saveAuthority(CreateAuthorityRequestDTO createAuthorityRequestDTO).@I.@T
         修改授权信息: Boolean AuthorityFacade.updateAuthority(UpdateAuthorityRequestDTO updateAuthorityRequestDTO)
 
 
@@ -260,7 +264,7 @@ package domain.bo  {
 
 
         获取系统菜单权限信息: SystemAuthorityDTO SystemAuthorityQueryFacade.getByCode(String authCode)
-        给角色授权系统菜单权限: DataAuthorityDTO SystemAuthorityFacade.saveSystemAuthority(CreateSystemAuthorityRequestDTO createAuthorityRequestDTO)
+        给角色授权系统菜单权限: DataAuthorityDTO SystemAuthorityFacade.saveSystemAuthority(CreateSystemAuthorityRequestDTO createAuthorityRequestDTO).@I.@T
         修改角色授权系统菜单权限: Boolean SystemAuthorityFacade.saveSystemAuthority(UpdateSystemAuthorityRequestDTO createAuthorityRequestDTO)
 
         获取系统菜单权限信息/systemauthority/getbycode: SystemAuthorityDTO SystemAuthorityQueryController.getByCode(String authCode)
@@ -322,13 +326,13 @@ package domain.bo  {
         controllerKey:String SystemController,SystemQueryController
 
         dtoKeyList:String UpdateSystemRequestDTO,SystemDTO,CreateSystemRequestDTO
-        voKeyList:String UpdateSystemRequestVO,SystemVO,CreateSystemRequestVO
+        voKeyList:String UpdateSystemRequestVO,SystemVO,
 
         queryDtoKey:SystemQueryDTO String systemName,String systemCode,Long tecAdminUserId,Long departmentId
         queryVoKey:SystemQueryVO String systemName,String systemCode,Long tecAdminUserId,Long departmentId
 
         contextKey:String system
-
+        validateKey:String systemName,systemCode,departmentId
 
         invokeFileKey:String systemcontextseq.puml
         注册系统: SystemDTO SystemFacade.registSystem(SystemDTO systemDTO)
@@ -623,7 +627,25 @@ package   "缓存包-infrast.cache" as   infrast.cache {
 
 }
 
+package app.validator{
+    class "RoleValidator-角色相关校验处理服务" as RoleValidator{
 
+        +创建逻辑校验:void validate(UpdateRoleRequestDTO updateRoleRequestDTO)
+        +修改逻辑校验:void validate(CreateRoleRequestDTO createRoleRequestDTO)
+
+    }
+
+    class "AuthorityValidator-权限相关校验处理服务" as AuthorityValidator{
+
+    }
+
+
+    class "SystemValidator-系统相关校验处理服务" as SystemValidator{
+        +创建逻辑校验:void validate(CreateSystemRequestDTO createSystemRequestDTO)
+        +修改逻辑校验:void validate(UpdateSystemRequestDTO updateSystemRequestDTO)
+    }
+
+}
 
 package app.command {
 
@@ -683,7 +705,7 @@ package app.command {
 package app.exe {
 
     interface  "命令执行接口-CmdExeService"     as    CmdExeService{
-        命令执行入口:String exe(AbstractCmd abstractCmd)
+        命令执行入口:String exe(AbstractCmd abstractCmd).@T
     }
 
     class "用户组cmd处理类-UserGroupCmdExe" as UserGroupCmdExe{
@@ -714,12 +736,12 @@ package app.exe {
 
 package "应用层事件监听器包支持域内消息和域外消息，在应用层处理消息-app.listener"  as app.listener{
     class "权限变更监听器-AuthorityChangeListener" as AuthorityChangeListener{
-         +事务提交后权限变更监听:void authorityCreate(String authCode)
-         +用户状态信息变更监听消费:void userStatusChange(Long userId)
+         +事务提交后权限变更监听:void authorityCreate(String authCode).@TE
+         +用户状态信息变更监听消费:void userStatusChange(Long userId).@TE
     }
 
     class "系统菜单按钮变更监听器-SystemChangeListener" as SystemChangeListener{
-         +事务提交后权限变更监听:void systemChange(MenuChangedEvent event)
+         +事务提交后权限变更监听:void systemChange(MenuChangedEvent event).@TE
     }
 }
 
@@ -727,8 +749,8 @@ package "应用层事件监听器包支持域内消息和域外消息，在应�
 
 package   "基础设施层消息生产者-mq.producer" as   mq.producer {
     class "权限上下文消息生产者-AuthorityMqProducer" as AuthorityMqProducer{
-         +权限创建:void authorityCreate(String authCode)
-         +权限更新:void authorityUpdate(String authCode)
+         +权限创建:void authorityCreate(String authCode).@TE
+         +权限更新:void authorityUpdate(String authCode).@TE
     }
 
     class "系统上下文消息生产者-SystemMqProducer" as SystemMqProducer{
@@ -737,17 +759,17 @@ package   "基础设施层消息生产者-mq.producer" as   mq.producer {
 }
 
 package   "基础设施层消息消费者-mq.consumer" as   mq.consumer {
-    class "用户上下文消息消费者或者监听-UserMqConsumer" as UserMqConsumer{
+    class "用户上下文消息消费者或者监听-UserMqConsumer.@M" as UserMqConsumer{
          +监听用户状态变更:void consumeUserStatusChange(String mqBody)
     }
-    class "组织上下文消息消费者或者监听-DepartmentMqConsumer" as DepartmentMqConsumer{
+    class "组织上下文消息消费者或者监听-DepartmentMqConsumer.@M" as DepartmentMqConsumer{
          +监听组织状态变更:void consumeDepartmentStatusChange(String mqBody)
     }
 }
 
 
 package   "基础设施层消息消费处理器或者直接在基础设施层处理消息代码方案一-mq.handler" as   mq.handler {
-    class "用户上下文消息处理器-UserMqHandler" as UserMqHandler{
+    class "用户上下文消息处理器-UserMqHandler.@M" as UserMqHandler{
          +处理用户状态变更的权限信息:void handleUserStatusChange(String mqBody)
     }
 }

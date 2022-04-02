@@ -1,7 +1,7 @@
 package ${class.packageName};
 
 <#list imports as importClass>
-	import ${importClass};
+import ${importClass};
 </#list>
 
 import lombok.Data;
@@ -18,20 +18,24 @@ import lombok.ToString;
 public class ${class.className} ${class.relationClassStr}{
 
 <#list fields as field>
-	/** ${field.desc} **/
 
+	/** ${field.desc} **/
+	<#list field.annotationTagList as annotation>
+	${annotation}
+	</#list>
 	${field.visibility} ${field.fieldName};
 </#list>
 
 <#list methods as method>
 	/**
-	*
-	* @Description:${method.desc}
-	* @return ${method.returnClass}
-	*/
-	${method.visibility} ${method.returnClass} ${method.methodName}{
-	${method.returnBody}
-	}
+	 *
+	 * @Description:${method.desc}
+	 * @return ${method.returnClass}
+	 */
+	 ${method.visibility} ${method.returnClass} ${method.methodName}{
+${method.methodContent}
+	 ${method.returnBody}
+	 }
 </#list>
 
 }

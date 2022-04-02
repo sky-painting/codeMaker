@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import ${package}.service.${table.humpClassName}Service;
 import ${package}.vo.${table.humpClassName}VO;
 
+import ${package}.controller.BaseController;
+
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
 

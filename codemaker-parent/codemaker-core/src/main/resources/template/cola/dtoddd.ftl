@@ -18,8 +18,11 @@ import lombok.ToString;
 public class ${class.className} ${class.relationClassStr}{
 
 <#list fields as field>
-	/** ${field.desc} **/
 
+	/** ${field.desc} **/
+	<#list field.annotationTagList as annotation>
+	${annotation}
+	</#list>
 	${field.visibility} ${field.fieldName};
 </#list>
 
@@ -30,7 +33,8 @@ public class ${class.className} ${class.relationClassStr}{
 	 * @return ${method.returnClass}
 	 */
 	 ${method.visibility} ${method.returnClass} ${method.methodName}{
-	 ${method.returnBody}
+	${method.methodContent}
+	${method.returnBody}
 	 }
 </#list>
 

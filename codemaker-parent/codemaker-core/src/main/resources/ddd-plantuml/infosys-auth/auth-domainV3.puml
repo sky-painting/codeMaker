@@ -448,7 +448,7 @@ package app.command {
 package app.exe {
 
     interface  "命令执行接口-CmdExeService"     as    CmdExeService{
-        命令执行入口:String exe(AbstractCmd abstractCmd)
+        命令执行入口:String exe(AbstractCmd abstractCmd).@T.@L
     }
 
     class "用户组cmd处理类-UserGroupCmdExe" as UserGroupCmdExe{
@@ -479,30 +479,29 @@ package app.exe {
 
 package "应用层事件监听器包支持域内消息和域外消息，在应用层处理消息-app.listener"  as app.listener{
     class "权限变更监听器-AuthorityChangeListener" as AuthorityChangeListener{
-         +事务提交后权限变更监听:void authorityCreate(String authCode)
-         +用户状态信息变更监听消费:void userStatusChange(Long userId)
+         +事务提交后权限变更监听:void authorityCreate(String authCode).@TE
+         +用户状态信息变更监听消费:void userStatusChange(Long userId).@TE
     }
 
     class "系统菜单按钮变更监听器-SystemChangeListener" as SystemChangeListener{
-         +事务提交后权限变更监听:void systemChange(MenuChangeEvent event)
+         +事务提交后权限变更监听:void systemChange(MenuChangeEvent event).@TE
     }
 }
-
 
 
 package   "基础设施层消息生产者-mq.producer" as   mq.producer {
     class "权限上下文消息生产者-AuthorityMqProducer" as AuthorityMqProducer{
-         +权限创建:void authorityCreate(String authCode)
-         +权限更新:void authorityUpdate(String authCode)
+         +权限创建:void authorityCreate(String authCode).@TE
+         +权限更新:void authorityUpdate(String authCode).@TE
     }
 
     class "系统上下文消息生产者-SystemMqProducer" as SystemMqProducer{
-         +事务提交后权限变更监听:void systemChange(MenuChangeEvent event)
+         +事务提交后权限变更监听:void systemChange(MenuChangeEvent event).@TE
     }
 }
 
 package   "基础设施层消息消费者-mq.consumer" as   mq.consumer {
-    class "用户上下文消息消费者或者监听-UserMqConsumer" as UserMqConsumer{
+    class "用户上下文消息消费者或者监听-UserMqConsumer.@M" as UserMqConsumer{
          +监听用户状态变更:void consumeUserStatusChange(String mqBody)
     }
     class "组织上下文消息消费者或者监听-DepartmentMqConsumer" as DepartmentMqConsumer{

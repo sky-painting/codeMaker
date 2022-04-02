@@ -1,0 +1,12 @@
+spring:
+  cloud:
+    nacos:
+      # ?????nacos.core.auth.enabled=true ?????
+      username: ${nacos.username}
+      password: ${nacos.password}
+      config:
+        server-addr: ${nacos.server-addr}
+        namespace: ${nacos.namespace}
+        prefix: nacos-config-base
+        file-extension: yaml
+        group: SPRING_CLOUD_EXAMPLE_GROUP

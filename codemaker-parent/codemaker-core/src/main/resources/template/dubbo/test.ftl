@@ -1,4 +1,4 @@
-package ${package}.core.test;
+package ${package}.test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,7 @@ import ${package}.api.dto.${table.humpClassName}DTO;
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
 
-import ${package}.core.Application;
+import ${package}.Application;
 
 import org.apache.dubbo.config.annotation.Reference;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,14 +17,13 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-import com.alibaba.fastjson.JSON;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 /**
 * @Description:单元测试
-* @Author:fanchunshuai
+* @Author:shenshuai
 * @CreateTime:2021-06-25 09:19:38
 * @version v1.0
 */

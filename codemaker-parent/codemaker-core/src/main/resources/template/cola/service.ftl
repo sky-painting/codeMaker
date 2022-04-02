@@ -1,8 +1,8 @@
-package ${package}.service;
+package ${package}.domain.service;
 
 import java.util.List;
 
-import ${package}.model.bo.${table.humpClassName}BO;
+import ${package}.domain.bo.${table.humpClassName}BO;
 
 /**
  * @Description:${table.tableComment}Service接口

@@ -1,4 +1,4 @@
-package ${package}.vo;
+package ${package}.adapter.vo;
 
 import java.util.Date;
 import java.math.BigDecimal;

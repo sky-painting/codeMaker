@@ -1,0 +1,22 @@
+@startuml
+
+
+participant  SystemModuleRepository as  s
+participant  infrast as  i
+
+group 禁用权限资源:registSystemMeta(systemBO)
+s -> i: systemDO=varc(systemBO)
+s -> a: ifnotempty(systemDO.systemCode) => systemMapper.insert(systemDO)
+s -> i: ifnotemptys(systemBO.moduleBOList) => ret(systemDO.id)
+
+s -> i: moduleBOList = systemBO.moduleBOList.sfilter.isnotempty(moduleBO.moduleCode).cl
+s -> i: ifnotemptys(moduleBOList) => ret(systemDO.id)
+s -> i: moduleMapper.insertBatch(varc(moduleBOList))
+
+s -> i: systemBO.moduleBOList.sfore(moduleBO) => ifnotemptys(moduleBO.menuBOList) => menuMapper.insertBatch(varc(moduleBO.menuBOList))
+
+end
+
+
+
+@enduml

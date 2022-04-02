@@ -27,6 +27,7 @@ public class ${class.className}{
      * @return ${method.returnClass}
      */
     ${method.visibility} ${method.returnClass} ${method.methodName}{
+${method.methodContent}
         ${method.returnBody}
     }
     </#list>

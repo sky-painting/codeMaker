@@ -1,4 +1,4 @@
-package ${package}.service.test;
+package ${package}.test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class ${table.humpClassName}ServiceTest{
 		${table.humpClassName}VO vo = new ${table.humpClassName}VO();
 
 		ResultDto resultDto = restTemplate.postForEntity("/${table.humpTableName}/add",vo, ResultDto.class).getBody();
-		System.out.println(JSON.toJSONString(resultDto));
+		//System.out.println(JSON.toJSONString(resultDto));
     }
 
 	/**
@@ -58,7 +58,7 @@ public class ${table.humpClassName}ServiceTest{
 		//todo test code
 		${table.humpClassName}VO vo = new ${table.humpClassName}VO();
 		ResultDto resultDto = restTemplate.postForEntity("/${table.humpTableName}/update",vo, ResultDto.class).getBody();
-		System.out.println(JSON.toJSONString(resultDto));
+		//System.out.println(JSON.toJSONString(resultDto));
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class ${table.humpClassName}ServiceTest{
 		//todo test code
 		long id = 1L;
 		ResultDto resultDto = restTemplate.postForEntity("/${table.humpTableName}/delete",id, ResultDto.class).getBody();
-		System.out.println(JSON.toJSONString(resultDto));
+		//System.out.println(JSON.toJSONString(resultDto));
 	}
 
 	/**
@@ -79,7 +79,7 @@ public class ${table.humpClassName}ServiceTest{
 	public void testGetById(){
 		//todo test code
 		ResultDataDto resultDataDto = restTemplate.getForEntity("/${table.humpTableName}/get?id=1",ResultDataDto.class).getBody();
-		System.out.println(JSON.toJSONString(resultDataDto));
+		//System.out.println(JSON.toJSONString(resultDataDto));
 	}
 
 	/**

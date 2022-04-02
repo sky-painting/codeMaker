@@ -29,6 +29,7 @@ public class ${class.className} ${class.relationClassStr}{
      * @return ${method.returnClass}
      */
     ${method.visibility} ${method.returnClass} ${method.methodName}{
+${method.methodContent}
         ${method.returnBody}
     }
     </#list>

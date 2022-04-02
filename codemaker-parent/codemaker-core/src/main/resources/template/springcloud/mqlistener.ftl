@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
  * @version v1.0
  */
 @Service
+<#list class.annotationTagList as annotation>
+${annotation}
+</#list>
 public class ${class.className}{
 
 	<#list fields as field>
@@ -26,6 +29,9 @@ public class ${class.className}{
      * @Description:${method.desc}
      * @return ${method.returnClass}
      */
+    <#list method.annotationTagList as annotation>
+    ${annotation}
+    </#list>
     ${method.visibility} ${method.returnClass} ${method.methodName}{
         ${method.returnBody}
     }
