@@ -8,8 +8,8 @@ import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
 import com.coderman.utils.response.PageDTO;
 
-import ${package}.api.facade.${table.humpClassName}Facade;
-import ${package}.api.dto.${table.humpClassName}DTO;
+import ${package}.client.api.facade.${table.humpClassName}Facade;
+import ${package}.client.api.dto.${table.humpClassName}DTO;
 
 import java.util.List;
 

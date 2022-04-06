@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.coderman.codemaker.dao.SqlMapper">
+<mapper namespace="com.tianhua.codemaker.dao.SqlMapper">
 
-    <select id="getColumnBeanList" parameterType="java.lang.String" resultType="com.coderman.codemaker.bean.ColumnBean" useCache="false">
+    <select id="getColumnBeanList" parameterType="java.lang.String" resultType="com.tianhua.codemaker.bean.ColumnBean" useCache="false">
         SELECT TABLE_NAME AS tableName ,COLUMN_NAME columnName,
           COLUMN_DEFAULT AS columnDefaultValue,DATA_TYPE AS dataType,
          EXTRA AS extraInfo ,COLUMN_KEY AS columnKey,IS_NULLABLE AS isNullable,
@@ -11,7 +11,7 @@
         WHERE TABLE_SCHEMA = #{dbName}
     </select>
 
-    <select id="getDBTableBeanList" parameterType="java.lang.String" resultType="com.coderman.codemaker.bean.TableBean" useCache="false">
+    <select id="getDBTableBeanList" parameterType="java.lang.String" resultType="com.tianhua.codemaker.bean.TableBean" useCache="false">
         SELECT  TABLE_NAME AS tableName,TABLE_COMMENT AS tableComment FROM information_schema.TABLES WHERE TABLE_SCHEMA = #{dbName}
     </select>
 

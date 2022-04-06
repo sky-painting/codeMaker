@@ -17,6 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @version v1.0
  */
 @Service
+<#list class.annotationTagList as annotation>
+${annotation}
+</#list>
 public class ${class.className} ${class.relationClassStr}{
 
 	private  Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -28,6 +31,9 @@ public class ${class.className} ${class.relationClassStr}{
 
     <#list methods as method>
 
+    <#list method.annotationTagList as annotation>
+    ${annotation}
+    </#list>
     @Override
 	public ${method.returnClass} ${method.methodName}{
 ${method.methodContent}

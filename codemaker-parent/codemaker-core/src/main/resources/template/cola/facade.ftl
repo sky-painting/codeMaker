@@ -1,11 +1,11 @@
-package ${package}.api.facade;
+package ${package}.client.api.facade;
 
 import java.util.List;
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;
 import com.coderman.utils.response.PageDTO;
 
-import ${package}.api.dto.${table.humpClassName}DTO;
+import ${package}.client.api.dto.${table.humpClassName}DTO;
 
 /**
  * @Description:${table.tableComment}Facade接口

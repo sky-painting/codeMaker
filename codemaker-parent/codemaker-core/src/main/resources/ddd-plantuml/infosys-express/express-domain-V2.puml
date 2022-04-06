@@ -1,0 +1,33 @@
+@startuml
+
+package domain.bo  {
+
+    class "快递订单-ExpressOrderBO" as ExpressOrderBO{
+        发件人信息:AddresserBO addresserBO
+        收件人信息:RecipientBO recipientBO
+        订单状态:Integer orderStatus
+        订单创建时间:Date dateCreate
+        发件人地址:AddressBO addressSendBO
+        收件人地址:AddressBO addressReceiveBO
+        订单金额:Long price
+        快递单号:String orderCode
+        订单来源:String orderSource
+        订单业务类型:String expressOrderBusType
+        物品信息:ExpressItemsBO expressItemsBO
+        +支付订单: void payOrder()
+        +关闭订单: void closeOrder()
+        +初始化订单对象:static ExpressOrderBO getInstance(String orderCode)
+        .. extend info ..
+        tableKey:String express_order
+        contextKey:String order
+    }
+}
+
+
+
+
+
+
+
+
+@enduml

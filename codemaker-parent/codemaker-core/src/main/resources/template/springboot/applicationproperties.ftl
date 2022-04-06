@@ -16,6 +16,6 @@ spring.datasource.password=root
 mybatis.config-locations=classpath:mybatis-config.xml
 mybatis.mapper-locations=classpath:mapper/*.xml
 #配置模型路径
-mybatis.type-aliases-package=com.coderman.codemaker.bean
+mybatis.type-aliases-package=com.tianhua.codemaker.bean
 
 

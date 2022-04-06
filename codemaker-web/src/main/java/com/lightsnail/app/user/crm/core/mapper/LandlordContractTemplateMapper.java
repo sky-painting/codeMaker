@@ -6,7 +6,7 @@ import com.lightsnail.app.user.crm.core.entity.LandlordContractTemplateEntity;
 
 /**
  * @Description:房东合同模板表mapperDAO接口
- * @Author:fanchunshuai
+ * @Author:shenshuai
  * @CreateTime:2020-11-17 00:02:53
  * @version v1.0
  */

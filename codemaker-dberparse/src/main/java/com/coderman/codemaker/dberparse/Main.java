@@ -1,6 +1,5 @@
 package com.coderman.codemaker.dberparse;
 
-import com.coderman.codemaker.dberparse.bean.ParseRequestBean;
 import org.apache.commons.io.FileUtils;
 import org.springframework.util.ResourceUtils;
 
@@ -12,13 +11,13 @@ import java.util.List;
  * Description:
  * date: 2021/8/12
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */
 public class Main {
     public static void main(String[] args) {
-        ERPantUMLParseService erPantUMLParseService = new ERPantUMLParseServiceImpl();
+        ERPlantUMLParseService erPantUMLParseService = new ERPlantUMLParseServiceImpl();
 
         erPantUMLParseService.parseERPlantUML(readPlantUMLContent());
     }

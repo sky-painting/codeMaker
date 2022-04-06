@@ -4,7 +4,7 @@ package com.coderman.codemaker.dberparse.bean;
  * Description:
  * date: 2021/8/12
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  * 表字段模型

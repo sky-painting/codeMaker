@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
 * @Description:代理人-房源发布表控制层
-* @Author:fanchunshuai
+* @Author:shenshuai
 * @CreateTime:2020-11-17 00:02:53
 * @version v1.0
 */

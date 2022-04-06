@@ -17,7 +17,10 @@ import org.springframework.web.bind.annotation.*;
 * @version v1.0
 */
 @RestController
-public class ${class.className} {
+<#list class.annotationTagList as annotation>
+${annotation}
+</#list>
+public class ${class.className} ${class.relationClassStr}{
 	
 	protected Logger logger = LoggerFactory.getLogger(${class.className}.class);
 
@@ -29,6 +32,9 @@ public class ${class.className} {
 <#list methods as method>
 
 ${method.doc}
+	<#list method.annotationTagList as annotation>
+	${annotation}
+	</#list>
 	@RequestMapping(value = "${method.pathValue}")
 	public ${method.returnClass} ${method.methodName}{
 ${method.methodContent}

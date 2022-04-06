@@ -1,6 +1,5 @@
 package com.coderman.codemaker.dbops.controller;
 
-import com.coderman.codemaker.dberparse.bean.ParseRequestBean;
 import com.coderman.codemaker.dbops.service.DBErParseService;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import java.io.IOException;
  * Description:
  * date: 2021/8/24
  *
- * @author fanchunshuai
+ * @author shenshuai
  * @version 1.0.0
  * @since JDK 1.8
  */

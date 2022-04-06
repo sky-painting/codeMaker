@@ -11,6 +11,8 @@ import com.coderman.utils.response.ResultDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.coderman.utils.error.CommonErrorEnum;
+
 
 /**
 * @Description:${table.tableComment}控制层
@@ -38,7 +40,7 @@ public class ${table.humpClassName}Controller extends BaseController{
 			return ${table.humpTableName}Service.save(${table.humpTableName}Vo);
 		} catch (Exception e) {
 			log.error("保存失败",e);
-			return ResultDto.setErrorCodeMsg("保存失败");
+			return ResultDto.fail(CommonErrorEnum.DEFAULT_ERROR.getErrorCode(),"保存失败");
 		}
 
     }
@@ -55,7 +57,7 @@ public class ${table.humpClassName}Controller extends BaseController{
 			return ${table.humpTableName}Service.update(${table.humpTableName}Vo);
 		} catch (Exception e) {
 			log.error("修改失败",e);
-			return ResultDto.setErrorCodeMsg("修改失败");
+			return ResultDto.fail(CommonErrorEnum.DEFAULT_ERROR.getErrorCode(),"修改失败");
 		}
 	}
 
@@ -82,7 +84,7 @@ public class ${table.humpClassName}Controller extends BaseController{
 			return ${table.humpTableName}Service.getById(id);
 		} catch (Exception e) {
 			log.error("获取数据失败",e);
-			return ResultDataDto.setErrorCodeMsg("获取数据失败");
+			return ResultDataDto.fail(CommonErrorEnum.DEFAULT_ERROR.getErrorCode(), "获取数据失败");
 		}
 	}
 

@@ -1,0 +1,30 @@
+一、多种方式的参数校验实现策略
+1.-->导入api参数模型dto/vo-->结合bo
+2.-->plantuml bo中走extend key构建必填参数校验属性
+3.-->必填参数校验实现走配置化
+  1.在dto,vo中构建参数验证逻辑,-->代码片段模式(down)
+  2.独立构建一个validator包
+  3.走aop+属性注解(相当于自定义实现)(down)
+  4.走工具类+反射的方式(down)
+  5.spring validator注解
+
+
+
+二、以数据库e-r图或者excel表作为数据库元数据信息的来源(e-r图模式down)
+
+三、自定义代码元素模板/片段
+代码片段模型 走note 标签--函数
+SegmentBean
+String code:代码段内容
+List<String> packageNameList:代码段中需要导入的包
+String identifer: 代码段类型标示
+String segmentTemplate:代码段模板
+Map<String,Object> templateVarMap:代码段模板对应的变量列表map
+String relationClassName: 关联的代码类名称
+
+
+
+
+1. 自定义代码元素模板解析走重构(down)
+2. 项目配置文件相关走自定义代码元素模板，这里pom也可以(down)
+3. pom.xml文件按项目格式走，定义pom相关的服务名等(down)

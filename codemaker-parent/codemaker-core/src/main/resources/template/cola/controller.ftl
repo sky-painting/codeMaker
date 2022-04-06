@@ -1,10 +1,12 @@
-package ${package}.controller;
+package ${package}.adapter.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ${package}.service.${table.humpClassName}Service;
-import ${package}.vo.${table.humpClassName}VO;
+import ${package}.controller.BaseController;
+
+import ${package}.domain.service.${table.humpClassName}Service;
+import ${package}.adapter.vo.${table.humpClassName}VO;
 
 import com.coderman.utils.response.ResultDataDto;
 import com.coderman.utils.response.ResultDto;

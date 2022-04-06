@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
 * @Description:代理人-签单表单元测试
-* @Author:fanchunshuai
+* @Author:shenshuai
 * @CreateTime:2020-11-17 00:02:54
 * @version v1.0
 */

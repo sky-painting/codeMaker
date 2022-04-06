@@ -1,4 +1,4 @@
-package ${packageInfrast}.service.impl;
+package ${packageInfrast}.serviceimpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ${packageInfrast}.dao.mapper.${table.humpClassName}Mapper;
-import ${package}.service.${table.humpClassName}Service;
-import ${package}.model.bo.${table.humpClassName}BO;
+import ${package}.domain.service.${table.humpClassName}Service;
+import ${package}.domain.bo.${table.humpClassName}BO;
 
 import java.util.List;
 

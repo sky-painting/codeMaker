@@ -1,0 +1,14 @@
+@startuml
+participant  各个端侧入口 as  endpoint
+participant  物流订单系统 as  order
+participant  支付系统 as  payment
+participant  快递终端服务 as  endexpress
+endpoint -> order : 创建订单
+order -> order : api层校验转换cmd
+order -> order : 进入应用层cmdexecutor
+order -> order : 进入应用层-价格计算组件计算订单金额
+order -> order : 进入应用层保存业务订单
+order -> payment : 创建支付单并支付
+payment --> order : 消息回调支付完成
+order --> endexpress : 订单发出支付完成消息,通知揽收
+@enduml

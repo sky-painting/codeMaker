@@ -1,12 +1,9 @@
-package ${package}.service.impl;
+package ${package}.serviceimpl;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.coderman.utils.response.ResultDataDto;
-import com.coderman.utils.response.ResultDto;
 
 import ${package}.dao.mapper.${table.humpClassName}Mapper;
 import ${package}.service.${table.humpClassName}Service;
@@ -14,7 +11,6 @@ import ${package}.bo.${table.humpClassName}BO;
 
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-import com.alibaba.fastjson.JSONObject;
 
 /**
  * @Description:${table.tableComment}Service接口实现类

@@ -1,0 +1,24 @@
+@startuml
+
+
+participant  AuthorityRepository as  c
+participant  infrast as  s
+
+group 禁用权限资源:disableAuthority(code,)
+a -> i: bo=authorityMapper.getByCode(code).convert()
+a -> a: ifnull(bo).throw(E1000002)
+a -> a: bo.disable()
+a -> i: bo.convertdo().mapper.update() => ret(var==1)
+end
+
+group 禁用权限资源:updateAuthToRole(bo)
+a -> i: adminAuthorityMapper.deleteByAuthCode(bo.authCode)
+a -> i: systemAuthorityMapper.deleteByAuthCode(bo.authCode)
+a -> i: dataAuthorityMapper.deleteByAuthCode(bo.authCode)
+
+a -> a: ifnotempty(bo.dataAuthorityBOList) => fore(bo.dataAuthorityBOList) => dataAuthorityMapper.insert
+
+end
+
+
+@enduml

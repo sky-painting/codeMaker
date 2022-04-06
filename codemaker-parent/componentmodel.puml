@@ -1,0 +1,66 @@
+@startuml
+
+class FtlBean as "自定义模板bean-FtlBean"{
+     String moduleName:模块名称
+
+     String classType:class类型
+
+     String codeTempFileName:代码元素模板名称
+
+     String ftlStr:自定义模板配置字符串
+}
+
+class ConfigFileBean as "配置文件模型bean-ConfigFileBean"{
+
+     String configFileName:文件名
+
+     String configFileSuffix:文件后缀
+
+     String moduleName:所属模块
+
+     String templateName:ftl文件模板名称
+}
+
+
+class AnnotationTagBean as "自定义注解模型Bean-AnnotationTagBean"{
+
+     String packageName:注解所在包
+ 
+     String classAlias:注解在plantuml 文档中的别名
+
+     String annotation:注解在方法或者类上的展示形式
+
+     String className:注解类名称
+}
+
+class GAVBean as  "mavenGAV模型bean-GAVBean"{
+     String groupId
+     String artifactId
+     String version
+     String type
+     String scope
+     String componentName:所属服务组件名称
+}
+
+class PomBean as "Pom文件的bean模型-PomBean"{
+
+     String modulePrefix:模块前缀
+     String appName
+     String url:pom.url
+     String moduleName:模块名称
+     String groupId
+     String artifactId
+     String version
+     String templateCode
+     String moduleCode
+     List<GAVBean> dependencyList:依赖的mv
+}
+
+class ProjectBean as "项目模型bean-ProjectBean"{
+     String packageName:全局包名
+     String applicationName:应用名
+     String dataBaseName:数据库名
+     Map<String, ComponentConfigBean> configFileMap:业务配置信息
+}
+
+@enduml

@@ -1,0 +1,109 @@
+@startuml
+' hide the spot
+hide circle
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+entity "address_list 发件人常用地址" as address_list {
+    id:  主键/bigint(20) unsigned
+    province_id: 所在省份ID/varchar(20)
+    city_id: 所在城市ID/varchar(20)
+    area_id: 所在区域ID/varchar(20)
+    street_id: 所在街道ID/varchar(20)
+    site_code: 快递站点编码/varchar(30)
+    address_detail: 具体地址/varchar(256)
+    user_id: 用户ID/varchar(20)
+    is_often: 是否是常用地址/int(11)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity "express_items 快递物品信息" as express_items {
+    id:  主键/bigint(20) unsigned
+    item_type: 物品类型/int(11)
+    forecast_weight: 预估重量/int(11)
+    remark: 备注/varchar(256)
+    volume: 物品体积/int(11)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity "express_order 快递订单信息" as express_order {
+    id:  主键/bigint(20) unsigned
+    addresser_user_id: 发件人id/varchar(20)
+    addresser_user_name: 发件人姓名/varchar(20)
+    addresser_telphone: 发件人电话/varchar(20)
+    send_address: 发件人地址/varchar(256)
+    recipient_user_id: 收件人id/varchar(20)
+    recipient_user_name: 收件人姓名/varchar(20)
+    recipient_telphone: 收件人电话/varchar(20)
+    order_status: 订单状态/int(11)
+    receive_address: 收件人地址/varchar(256)
+    price: 订单金额/bigint(20)
+    order_code: 订单编号/varchar(64)
+    order_source: 订单来源/varchar(64)
+    express_order_bus_type: 订单业务类型/int(11)
+    express_item_id: 物品ID/bigint(11)
+    date_create: 订单创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+    mark_content: 快递备注/varchar(256)
+}
+
+
+entity "express_order_trace 快递订单轨迹信息" as express_order_trace {
+    id:  主键/bigint(20) unsigned
+
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+
+entity "express_site 快递站点信息" as express_site {
+    id: 主键/bigint(20) unsigned
+    province_id: 所在省份ID/varchar(20)
+    city_id: 所在城市ID/varchar(20)
+    area_id: 所在区域ID/varchar(20)
+    street_id: 所在街道ID/varchar(20)
+    site_code: 快递站点编码/varchar(30)
+    address_detail: 具体地址/varchar(256)
+    owner_name: 快递网点负责人姓名/varchar(20)
+    tel_phone: 快递网点负责人电话/varchar(20)
+    cooperation_type: 合作方式/int(11)
+}
+
+entity "express_trace 快递物流轨迹信息" as express_trace {
+    id:  主键/bigint(20) unsigned
+    order_code: 快递订单号/varchar(64)
+    address_name: 快递到达地点/varchar(128)
+    desc: 物流轨迹描述/varchar(256)
+    source_code: 物流轨迹上传来源/varchar(64)
+    arrive_date: 快递到达时间/timestamp
+    date_create: 轨迹创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+entity "price_config 快递价格配置" as price_config {
+    id:  主键/bigint(20) unsigned
+    start_province: 发送省份/varchar(20)
+    end_province: 接收省份/varchar(20)
+    weight_basic: 基本重量/int(11)
+    price_basic: 基本价格/int(11)
+    over_weight_price: 超重价格/int(11)
+    date_create: 创建时间/timestamp
+    date_update: 修改时间/timestamp
+    update_user_id: 修改人/bigint(20)
+    create_user_id: 创建人/bigint(20)
+}
+
+@enduml

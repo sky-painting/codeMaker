@@ -1,0 +1,21 @@
+@startuml
+
+participant  角色服务 as  roleFacade
+participant  角色服务 as  roleFacade
+
+participant  领域层 as  domain
+participant  基础设施层 as  infrast
+participant  组织服务 as  infosysuser
+
+group 创建角色:createRole
+roleFacade -> domain:userRoleRepository.saveRole.rets
+end
+
+group 修改角色:updateRole
+roleFacade -> domain:var=userRoleRepository.updateRole
+note left: 我借钱肯定会还你的！
+alt ifrets(var>0)
+else retf
+end
+
+@enduml

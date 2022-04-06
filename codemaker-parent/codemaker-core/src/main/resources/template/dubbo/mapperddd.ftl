@@ -14,7 +14,7 @@ import org.apache.ibatis.annotations.Param;
 * @version v1.0
 */
 @Mapper
-public interface ${class.className}{
+public interface ${class.className} ${class.relationClassStr}{
 
 <#list methods as method>
 	${method.doc}

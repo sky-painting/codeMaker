@@ -1,7 +1,7 @@
-package ${package}.dao.mapper;
+package ${package}.common.dao.mapper;
 
 import java.util.List;
-import ${package}.dao.dataobject.${table.humpClassName}DO;
+import ${package}.infrast.dao.dataobject.${table.humpClassName}DO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
